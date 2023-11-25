@@ -4,6 +4,7 @@ import java.math.RoundingMode;
 
 public class Product {
     private String productCode;
+    private String brandName;
     private String productName;
     private  BigDecimal retailPrice;
     private Integer stock;
@@ -11,8 +12,9 @@ public class Product {
     private String eraCode;
     private String dccCode;
 
-    public Product(String productCode, String productName, BigDecimal retailPrice, Integer stock, String gauge, String eraCode, String dccCode){
+    public Product(String productCode,String brandName, String productName, BigDecimal retailPrice, Integer stock, String gauge, String eraCode, String dccCode){
         this.setProductCode(productCode);
+        this.setBrandName(brandName);
         this.setProductName(productName);
         this.setRetailPrice(retailPrice);
         this.setStock(stock);
@@ -24,6 +26,10 @@ public class Product {
     //get methods
     public String getProductCode() {
         return productCode;
+    }
+
+    public String getBrandName() {
+        return brandName;
     }
 
     public String getProductName() {
@@ -56,6 +62,14 @@ public class Product {
             this.productCode = productCode;
         } else {
             throw new IllegalArgumentException("Invalid Product Code");
+        }
+    }
+
+    public void setBrandName(String brandName) {
+        if (isBrandNameValid(brandName)) {
+            this.brandName = brandName;
+        } else {
+            throw new IllegalArgumentException("Invalid Brand Name");
         }
     }
 
@@ -111,6 +125,10 @@ public class Product {
     // validator methods
     private boolean isProductCodeValid(String productCode){
         return productCode != null && productCode.length() <= 10;
+    }
+
+    private boolean isBrandNameValid(String brandName){
+        return brandName != null && brandName.length() <= 60;
     }
 
     private boolean isProductNameValid(String productName){
