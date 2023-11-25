@@ -1,6 +1,7 @@
 package trainStore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 
 public class Product {
     private String productCode;
@@ -11,6 +12,7 @@ public class Product {
     private String gauge;
     private String eraCode;
     private String dccCode;
+    private char productType;
 
     public Product(String productCode,String brandName, String productName, BigDecimal retailPrice, Integer stock, String gauge, String eraCode, String dccCode){
         this.setProductCode(productCode);
@@ -21,6 +23,7 @@ public class Product {
         this.setGauge(gauge);
         this.setEraCode(eraCode);
         this.setDccCode(dccCode);
+        this.setProductType();
     }
 
     //get methods
@@ -56,9 +59,14 @@ public class Product {
         return dccCode;
     }
 
+    public char getProductType() {
+        return productType;
+    }
+
     //set methods
     public void setProductCode(String productCode) {
         if (isProductCodeValid(productCode)) {
+            productCode.toUpperCase();
             this.productCode = productCode;
         } else {
             throw new IllegalArgumentException("Invalid Product Code");
@@ -119,6 +127,16 @@ public class Product {
             this.dccCode = dccCode;
         } else {
             throw new IllegalArgumentException("Invalid DCC Code");
+        }
+    }
+
+    public void setProductType() {
+        char typeCode = this.productCode.charAt(0);
+        char[] codes = {'C', 'L', 'M', 'R', 'S', 'P'};
+        if (Arrays.binarySearch(codes, typeCode) >= 0){
+            this.productType = typeCode;
+        } else {
+            this.productType = '?';
         }
     }
 
