@@ -8,7 +8,6 @@ public class DatabaseConnectionHandler {
     private static final String DB_USER = "team063";
     private static final String DB_PASSWORD = "Uavee7nae";
 
-    // Define the connection as a class member to share it across the application.
     private Connection connection = null;
 
     public void openConnection() throws SQLException {
@@ -21,8 +20,6 @@ public class DatabaseConnectionHandler {
     }
 
     public void closeConnection() {
-        // Close the connection in a separate method to ensure proper resource
-        // management.
         if (connection != null) {
             try {
                 connection.close();
