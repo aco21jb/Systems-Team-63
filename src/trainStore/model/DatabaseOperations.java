@@ -1,4 +1,6 @@
-package trainStore;
+package trainStore.model;
+
+import trainStore.Product;
 
 import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import java.sql.Connection;
