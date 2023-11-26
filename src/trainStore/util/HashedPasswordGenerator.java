@@ -8,10 +8,14 @@ public class HashedPasswordGenerator {
 
     //private static final String SALT = "MyStaticSalt";
 
-
-
-    public static String hashPassword(char[] password, byte[] salt) {
+    public static String hashPassword(char[] password) {
         try {
+
+            // Generating a random salt
+            SecureRandom random = new SecureRandom();
+            byte[] salt = new byte[16];
+            random.nextBytes(salt);
+
             // Create a MessageDigest instance for SHA-256
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 
@@ -46,12 +50,8 @@ public class HashedPasswordGenerator {
 
     public static void main(String[] args) {
 
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-
         char[] password = "asd@456".toCharArray();
-        String hashedPassword = hashPassword(password, salt);
+        String hashedPassword = hashPassword(password);
 
         System.out.println("Original Password: " + String.valueOf(password));
         System.out.println("Hashed Password: " + hashedPassword);
