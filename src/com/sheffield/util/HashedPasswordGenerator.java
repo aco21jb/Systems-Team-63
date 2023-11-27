@@ -2,17 +2,23 @@ package com.sheffield.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 public class HashedPasswordGenerator {
-    private static final String SALT = "MyStaticSalt"; // Replace with your own static salt
+    //private static final String SALT = "MyStaticSalt"; // Replace with your own static salt
 
     public static String hashPassword(char[] password) {
         try {
+
+            SecureRandom random = new SecureRandom();
+            byte[] salt = new byte[16];
+            random.nextBytes(salt);
+
             // Create a MessageDigest instance for SHA-256
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 
             // Concatenate the salt and password bytes
-            byte[] saltedPasswordBytes = concatenateBytes(SALT.getBytes(), new String(password).getBytes());
+            byte[] saltedPasswordBytes = concatenateBytes(salt, new String(password).getBytes());
 
             // Update the digest with the salted password bytes
             md.update(saltedPasswordBytes);
