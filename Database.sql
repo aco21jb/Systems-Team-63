@@ -1,73 +1,104 @@
--- Create a table named 'User' to store user information
+CREATE TABLE `ADDRESS` (
+  `houseNumber` int NOT NULL,
+  `postcode` varchar(30) NOT NULL,
+  `roadName` varchar(100) DEFAULT NULL,
+  `cityName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`houseNumber`,`postcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE USER (
-    userID int NOT NULL AUTO_INCREMENT,  -- Unique user identifier
-    email varchar(100) NOT NULL,               -- User's email address
-    password  varchar(64) NOT NULL,        -- Securely hashed password
-    forename varchar(50) ,
-    surname varchar(50) ,
-    houseNumber int  ,
-    postcode varchar(30) ,
-    PRIMARY KEY (userId)
+CREATE TABLE `BANK_DETAILS` (
+  `userID` int NOT NULL,
+  `bankCardName` varchar(100) DEFAULT NULL,
+  `cardHolderName` varchar(100) DEFAULT NULL,
+  `cardNumber` varchar(30) DEFAULT NULL,
+  `cardExpiryDate` date DEFAULT NULL,
+  `securityCode` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-)
+CREATE TABLE `ORDER_LINES` (
+  `orderNumber` int NOT NULL,
+  `orderLineNumber` int NOT NULL,
+  `quantity` int DEFAULT NULL,
+  `lineCost` float DEFAULT NULL,
+  `productCode` varchar(10) NOT NULL,
+  PRIMARY KEY (`orderNumber`,`orderLineNumber`),
+  KEY `fk_productCode_idx` (`productCode`),
+  CONSTRAINT `fk_orderNumber` FOREIGN KEY (`orderNumber`) REFERENCES `ORDERS` (`orderNumber`),
+  CONSTRAINT `fk_productCode` FOREIGN KEY (`productCode`) REFERENCES `PRODUCTS` (`productCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `ORDERS` (
+  `orderNumber` int NOT NULL AUTO_INCREMENT,
+  `orderDate` date DEFAULT NULL,
+  `orderStatus` enum('Pending','Confirmed','Fulfilled') DEFAULT NULL,
+  `userID` int NOT NULL,
+  PRIMARY KEY (`orderNumber`),
+  KEY `userID_idx` (`userID`),
+  CONSTRAINT `fk_userID` FOREIGN KEY (`userID`) REFERENCES `USER` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `PRODUCTS` (
+  `productCode` varchar(10) NOT NULL,
+  `brandName` varchar(60) NOT NULL,
+  `productName` varchar(200) NOT NULL,
+  `retailPrice` decimal(8,2) NOT NULL,
+  `stock` int NOT NULL,
+  `gauge` varchar(9) DEFAULT NULL,
+  `eraCode` varchar(15) DEFAULT NULL,
+  `dccCode` varchar(50) DEFAULT NULL,
+  `productType` char(1) NOT NULL,
+  PRIMARY KEY (`productCode`),
+  UNIQUE KEY `productCode_UNIQUE` (`productCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `ROLES` (
+  `userID` int NOT NULL,
+  `role` enum('Customer','Staff','Manager') DEFAULT NULL,
+  PRIMARY KEY (`userID`),
+  CONSTRAINT `userID` FOREIGN KEY (`userID`) REFERENCES `USER` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `SETS` (
+  `setCode` varchar(10) NOT NULL,
+  `productCode` varchar(10) NOT NULL,
+  PRIMARY KEY (`setCode`,`productCode`),
+  KEY `productCode_idx` (`productCode`),
+  CONSTRAINT `productCode` FOREIGN KEY (`productCode`) REFERENCES `PRODUCTS` (`productCode`) ON DELETE CASCADE,
+  CONSTRAINT `setCode` FOREIGN KEY (`setCode`) REFERENCES `PRODUCTS` (`productCode`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `TRACK_PACK` (
+  `trackPackCode` varchar(10) NOT NULL,
+  `productCode` varchar(10) NOT NULL,
+  PRIMARY KEY (`trackPackCode`,`productCode`),
+  KEY `productCode_idx` (`productCode`),
+  CONSTRAINT `trackPackCode` FOREIGN KEY (`trackPackCode`) REFERENCES `PRODUCTS` (`productCode`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `USERS` (
+  `userID` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `passwordHash` varchar(100) NOT NULL,
+  `lastLogin` timestamp NULL DEFAULT NULL,
+  `failedLoginAttempts` int DEFAULT '0',
+  `accountLocked` tinyint DEFAULT '0',
+  `name` varchar(100) DEFAULT NULL,
+  `houseNumber` int NOT NULL,
+  `postcode` varchar(30) NOT NULL,
+  PRIMARY KEY (`userID`),
+  KEY `houseNumber_idx` (`houseNumber`) /*!80000 INVISIBLE */,
+  KEY `postcode_idx` (`postcode`),
+  CONSTRAINT `houseNumber` FOREIGN KEY (`houseNumber`) REFERENCES `ADDRESS` (`houseNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
---  ADD CONSTRAINT FK_housenumpostal
---     FOREIGN KEY (houseNumber) REFERENCES USERS_ADDRESS(houseNumber)
---     FOREIGN KEY (postcode) REFERENCES USERS_ADDRESS(postcode)
--- CREATE TABLE `USER` (
---   `userID` int NOT NULL AUTO_INCREMENT,
---   `email` varchar(100) DEFAULT NULL,
---   `password` varchar(100) DEFAULT NULL,
---   `forename` varchar(50) DEFAULT NULL,
---   `surname` varchar(50) DEFAULT NULL,
---   `houseNumber` int NOT NULL,
---   `postcode` varchar(30) NOT NULL,
---   PRIMARY KEY (`userID`),
---   KEY `postcode_idx` (`postcode`),
---   KEY `houseNumber_idx` (`houseNumber`),
---   KEY `fk_housenumber_idx` (`houseNumber`),
---   KEY `fk_postcode_idx` (`postcode`),
---   KEY `postcode_idx1` (`houseNumber`,`postcode`)
--- )
--- --  FOREIGN KEY (houseNumber) REFERENCES USERS_ADDRESS(houseNumber) ,  -- Foreign key relationship with Address
--- FOREIGN KEY (postcode) REFERENCES USERS_ADDRESS(postcode)
-
---  KEY `fk_postcode_idx` (`postcode`),
--- KEY `postcode_idx1` (`houseNumber`,`postcode`)
-
-CREATE TABLE ADDRESS (
-  housenumber int NOT NULL,
-  postcode varchar(30) NOT NULL,
-  roadName varchar(100) DEFAULT NULL,
-  cityName varchar(50) DEFAULT NULL,
-  PRIMARY KEY (housenumber,postcode)
-)
-
--- Create a table named 'Roles' to store user roles for each user
-CREATE TABLE ROLES (
-   userID int NOT NULL,
-   role ENUM('Manager', 'Staff', 'Customer') NOT NULL,
-   PRIMARY KEY (userId, role),
-   FOREIGN KEY (userId) REFERENCES User(userId)
-);
-
--- CREATE TABLE Users (
---       userId VARCHAR(50) NOT NULL PRIMARY KEY,  -- Unique user identifier
---       email VARCHAR(100) NOT NULL,               -- User's email address
---       username VARCHAR(50) NOT NULL,             -- User's username
---       password_hash VARCHAR(64) NOT NULL,        -- Securely hashed password
---       last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Timestamp of the last login (default to the current timestamp)
---       failed_login_attempts INT DEFAULT 0,       -- Number of failed login attempts (default to 0)
---       account_locked BOOLEAN DEFAULT FALSE      -- Flag to indicate if the account is locked (default to false)
--- );
 
 -- Insert sample data into the 'User' table
 INSERT INTO User (email, forename, surname , password_hash)
 VALUES
     ( 'manager@example.com',  'manager', 'manager', '423e16e053d0121774ce4e0a42556837fbfe0d9f74dcd4ef3966a5e5194ceceb') ;  -- User: Manager
-
 
 -- Insert sample data into the 'Roles' table to associate users with roles
 INSERT INTO Roles (userId, role)
