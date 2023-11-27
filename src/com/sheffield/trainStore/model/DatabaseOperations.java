@@ -66,7 +66,7 @@ public class DatabaseOperations {
 
     public void removeOrderLine(Connection con, OrderLine orderLine) throws SQLException {
         try {
-            String removeStatement = "DELETE FROM ORDER_LINES WHERE orderLineNumber = ?";
+            String removeStatement = "DELETE FROM ORDER_LINES WHERE (orderNumber, orderLineNumber) IN (?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(removeStatement);
             preparedStatement.setInt(2, orderLine.getOrderLineNumber());
             preparedStatement.executeUpdate();
