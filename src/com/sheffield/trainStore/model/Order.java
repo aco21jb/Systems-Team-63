@@ -7,13 +7,16 @@ public class Order {
 
     private int orderNumber;
     private Date orderDate;
-    private List<OrderStatus> orderStatusList;
+    private OrderStatus orderStatus;
     private String userId;
+    private List<OrderLine> orderLines;
 
-    public Order(int orderNumber, Date orderDate, List<OrderStatus> orderStatusList, String userId) {
+    public Order(int orderNumber, Date orderDate, OrderStatus orderStatus, String userId,
+                 List<OrderLine> orderLines) {
         this.orderNumber = orderNumber;
         this.orderDate = orderDate;
-        this.orderStatusList = orderStatusList;
+        this.orderStatus = orderStatus;
         this.userId = userId;
+        this.orderLines = orderLines;
     }
 }

@@ -15,4 +15,24 @@ public class OrderLine {
         this.lineCost = lineCost;
         this.productCode = productCode;
     }
+
+    public int getOrderNumber() {
+        return orderNumber;
+    }
+
+    public int getOrderLineNumber() {
+        return orderLineNumber;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public float getLineCost() {
+        return lineCost;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
 }
