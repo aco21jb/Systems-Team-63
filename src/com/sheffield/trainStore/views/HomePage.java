@@ -110,12 +110,19 @@ public class HomePage extends JFrame {
 
                 List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                 if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                       // Open a new window (replace NewWindowClass with the actual class you want to open)
+                       PromoteUserView newWindow = null;
+                       try {
+                           newWindow = new PromoteUserView(connection);
+                       } catch (SQLException ex) {
+                           throw new RuntimeException(ex);
+                       }
+                       newWindow.setVisible(true);
+                   } else {
+                       JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+                   }
 
-            }
+              }
         });
 
         managerMenuItem.addActionListener(new ActionListener() {

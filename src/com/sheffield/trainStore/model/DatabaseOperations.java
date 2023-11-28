@@ -43,4 +43,37 @@ public class DatabaseOperations {
         }
     }
 
+    public void addOrderLine(Connection con, OrderLine orderLine) throws SQLException {
+        try {
+            String insertStatement = "INSERT INTO ORDER_LINES (orderNumber, orderLineNumber, quantity, " +
+                    "lineCost, productCode) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(insertStatement);
+            preparedStatement.setInt(1, orderLine.getOrderNumber());
+            preparedStatement.setInt(2, orderLine.getOrderLineNumber());
+            preparedStatement.setInt(3, orderLine.getQuantity());
+            preparedStatement.setFloat(4, orderLine.getLineCost());
+            preparedStatement.setString(5, orderLine.getProductCode());
+
+            preparedStatement.executeUpdate();
+
+            // check if you need to insert into trackPAck or sets tables and if so insert (do later somewhere)
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public void removeOrderLine(Connection con, OrderLine orderLine) throws SQLException {
+        try {
+            String removeStatement = "DELETE FROM ORDER_LINES WHERE (orderNumber, orderLineNumber) IN (?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(removeStatement);
+            preparedStatement.setInt(2, orderLine.getOrderLineNumber());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
 }

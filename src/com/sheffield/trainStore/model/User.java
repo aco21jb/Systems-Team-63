@@ -22,10 +22,10 @@ public class User {
     private String postcode;
 
 
-      public User( String emailId, char[] password, String forename,
+      public User( String userId, String emailId, char[] password, String forename,
         String surname, Integer housenumber, String postcode) {
 
-        // this.userId = userId;
+        this.userId = userId;
         this.emailId = emailId;
         // this.roles = roles;
 

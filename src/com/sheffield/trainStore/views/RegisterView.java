@@ -5,6 +5,8 @@ import com.sheffield.trainStore.model.DatabaseOperationsUser;
 import com.sheffield.trainStore.model.Role;
 import com.sheffield.trainStore.model.User;
 
+import com.sheffield.util.UniqueUserIDGenerator;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -15,6 +17,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+
+
 
 /**
  * The LoginView class represents the GUI window for user login.
@@ -116,6 +120,10 @@ public class RegisterView extends JFrame {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                   
+                
+                      //  new today
+                    String uniqueUserID = UniqueUserIDGenerator.generateUniqueUserID() ;
 
                     String emailId = emailField.getText();
                     char[] passwordChars = passwordField.getPassword();
@@ -126,20 +134,25 @@ public class RegisterView extends JFrame {
                     Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
                     String postcode = postcodeField.getText();
                     String roadName = roadnameField.getText();
-                    String cityName = postcodeField.getText();
+                    String cityName = citynameField.getText();
 
 
                     DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
 
-                    // Secure disposal of the password
-                    // Arrays.fill(passwordChars, '\u0000');
-
-
+                    
                     try {
 
                         if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
-                            databaseOperationsUser.registerUser(connection, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
-                       
+
+                            //  new today
+                            // databaseOperationsUser.registerUser(connection, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
+
+                            databaseOperationsUser.registerUser(connection, uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
+
+                           // Secure disposal of the password
+                           Arrays.fill(passwordChars, '\u0000');
+
+
                             //  NEED TO CLEAR THE FILEDS VALUES
                             // Close the current window
 
