@@ -23,7 +23,7 @@ public class Product {
         this.setGauge(gauge);
         this.setEraCode(eraCode);
         this.setDccCode(dccCode);
-        this.setProductType();
+        this.setProductType(productCode.toUpperCase());
     }
 
     //get methods
@@ -130,14 +130,16 @@ public class Product {
         }
     }
 
-    public void setProductType() {
-        char typeCode = this.productCode.charAt(0);
-        char[] codes = {'C', 'L', 'M', 'R', 'S', 'P'};
-        if (Arrays.binarySearch(codes, typeCode) >= 0){
-            this.productType = typeCode;
-        } else {
-            this.productType = '?';
-        }
+    public void setProductType(String productCode) {
+        if (isProductCodeValid(productCode)){
+            char typeCode = this.productCode.charAt(0);
+            char[] codes = {'C', 'L', 'M', 'R', 'S', 'P'};
+            if (Arrays.binarySearch(codes, typeCode) >= 0){
+                this.productType = typeCode;
+            } else {
+                this.productType = '?';
+            }
+        } this.productType = '?';
     }
 
     // validator methods
@@ -162,15 +164,22 @@ public class Product {
     }
 
     private boolean isGaugeValid(String gauge){
-        return gauge.length() <= 10;
+        if (gauge != null){
+            return gauge.length() <= 10;
+        } else {return true;}
     }
 
     private boolean isEraCodeValid(String eraCode){
-        return eraCode.length() <= 20;
+        if (eraCode != null) {
+            return eraCode.length() <= 20;
+        } else {return true;}
+
     }
 
     private boolean isDccCodeValid(String dccCode){
-        return dccCode.length() <= 50;
+        if (dccCode != null) {
+            return dccCode.length() <= 50;
+        } else {return true;}
     }
 
 }

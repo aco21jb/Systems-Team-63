@@ -2,10 +2,14 @@
 package com.sheffield.trainStore;
 
 import com.sheffield.trainStore.model.DatabaseConnectionHandler;
+import com.sheffield.trainStore.model.DatabaseOperations;
+import com.sheffield.trainStore.model.Product;
 import com.sheffield.trainStore.views.LoginView;
+import com.sheffield.trainStore.views.ProductsPage;
 import com.sheffield.trainStore.views.RegisterView;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,16 +17,22 @@ public class Main {
 
         // Create an instance of DatabaseConnectionHandler for managing database connections
         DatabaseConnectionHandler databaseConnectionHandler = new DatabaseConnectionHandler();
+        DatabaseOperations dbop = new DatabaseOperations();
+
 
         // Execute the Swing GUI application on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
             RegisterView RegisterView = null;
+            ProductsPage productsPage = null;
             try {
                 // Open a database connection
                 databaseConnectionHandler.openConnection();
+                // dbop.addProduct(databaseConnectionHandler.getConnection(),(new Product("Rfdsf","Hornby","trains track",new BigDecimal(8.20),5,"gfd","50",null)));
 
-                RegisterView = new RegisterView(databaseConnectionHandler.getConnection());
-                RegisterView.setVisible(true);
+                //RegisterView = new RegisterView(databaseConnectionHandler.getConnection());
+                //RegisterView.setVisible(true);
+                productsPage = new ProductsPage(databaseConnectionHandler.getConnection());
+                productsPage.setVisible(true);
 
             } catch (Throwable t) {
                 // Close connection if database crashes.
