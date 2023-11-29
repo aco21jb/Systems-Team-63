@@ -68,6 +68,7 @@ public class DatabaseOperations {
         try {
             String removeStatement = "DELETE FROM ORDER_LINES WHERE (orderNumber, orderLineNumber) IN (?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(removeStatement);
+            preparedStatement.setInt(1, orderLine.getOrderNumber());
             preparedStatement.setInt(2, orderLine.getOrderLineNumber());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
