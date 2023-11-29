@@ -43,12 +43,12 @@ public class LoginView extends JFrame {
 
         // Set a layout manager for the panel (e.g., GridLayout)
         panel.setLayout(new GridLayout(5, 2));
-        
+
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
         panel.setBorder(blackline);
 
         // Create JLabels for username and password
-        JLabel emailLabel = new JLabel("Username:");
+        JLabel emailLabel = new JLabel("Emailid:");
         JLabel passwordLabel = new JLabel("Password:");
 
         // Create JTextFields for entering username and password
@@ -84,7 +84,7 @@ public class LoginView extends JFrame {
                     // Secure disposal of the password
                     Arrays.fill(passwordChars, '\u0000');
 
-                   
+
                     try {
                         // Close the current window
 
@@ -102,9 +102,6 @@ public class LoginView extends JFrame {
                 } else {
                     // Handle unsuccessful login (show a message, etc.)
                     JOptionPane.showMessageDialog(LoginView.this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
-
-                    // Secure disposal of the password
-                    Arrays.fill(passwordChars, '\u0000');
                 }
                 // Secure disposal of the password
                 Arrays.fill(passwordChars, '\u0000');

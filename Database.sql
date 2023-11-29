@@ -1,3 +1,8 @@
+
+
+--  BELOW (CREATE TABLE) DDL's SHOULD BE APPLIED IN BELOW OREDER
+--  BECAUSE THERE IS A DEPEDENCY AMONST TABLES BECAUSE OF FOREIGHN KEY CONSTRAINT
+
 CREATE TABLE `ADDRESS` (
   `houseNumber` int NOT NULL,
   `postcode` varchar(30) NOT NULL,
@@ -6,36 +11,52 @@ CREATE TABLE `ADDRESS` (
   PRIMARY KEY (`houseNumber`,`postcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+CREATE TABLE `USERS` (
+  `userID` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `passwordHash` varchar(64) NOT NULL,
+  `forename` varchar(50) DEFAULT NULL,
+  `surname` varchar(50) DEFAULT NULL,
+  'last_login TIMESTAMP' DEFAULT CURRENT_TIMESTAMP,  -- Timestamp of the last login (default to the current timestamp)
+  `failedLoginAttempts` int DEFAULT '0',
+  'account_locked' BOOLEAN DEFAULT FALSE      -- Flag to indicate if the account is locked (default to false)
+  `houseNumber` int NOT NULL,
+  `postcode` varchar(30) NOT NULL,
+  PRIMARY KEY (`userID`),
+  KEY `houseNumber_idx` (`houseNumber`) /*!80000 INVISIBLE */,
+  KEY `postcode_idx` (`postcode`),
+  CONSTRAINT `houseNumberpostcode` FOREIGN KEY (`houseNumber`, `postcode` ) REFERENCES `ADDRESS` (`houseNumber`, `postcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+CREATE TABLE `ROLES` (
+  `userID` varchar(50) NOT NULL,
+  `role` enum('Customer','Staff','Manager') NOT NULL,
+  PRIMARY KEY (`userID`, `role`),
+  CONSTRAINT `Roles_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
 CREATE TABLE `BANK_DETAILS` (
-  `userID` int NOT NULL,
+  `userID` varchar(50) NOT NULL,
   `bankCardName` varchar(100) DEFAULT NULL,
   `cardHolderName` varchar(100) DEFAULT NULL,
   `cardNumber` varchar(30) DEFAULT NULL,
   `cardExpiryDate` date DEFAULT NULL,
   `securityCode` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`userID`)
+  PRIMARY KEY (`userID`),
+  CONSTRAINT `Bank_Details_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE `ORDER_LINES` (
-  `orderNumber` int NOT NULL,
-  `orderLineNumber` int NOT NULL,
-  `quantity` int DEFAULT NULL,
-  `lineCost` float DEFAULT NULL,
-  `productCode` varchar(10) NOT NULL,
-  PRIMARY KEY (`orderNumber`,`orderLineNumber`),
-  KEY `fk_productCode_idx` (`productCode`),
-  CONSTRAINT `fk_orderNumber` FOREIGN KEY (`orderNumber`) REFERENCES `ORDERS` (`orderNumber`),
-  CONSTRAINT `fk_productCode` FOREIGN KEY (`productCode`) REFERENCES `PRODUCTS` (`productCode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 CREATE TABLE `ORDERS` (
   `orderNumber` int NOT NULL AUTO_INCREMENT,
   `orderDate` date DEFAULT NULL,
   `orderStatus` enum('Pending','Confirmed','Fulfilled') DEFAULT NULL,
-  `userID` int NOT NULL,
+  `userID` varchar(50) NOT NULL,
   PRIMARY KEY (`orderNumber`),
   KEY `userID_idx` (`userID`),
-  CONSTRAINT `fk_userID` FOREIGN KEY (`userID`) REFERENCES `USER` (`userID`)
+  CONSTRAINT `fk_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 CREATE TABLE `PRODUCTS` (
@@ -52,12 +73,19 @@ CREATE TABLE `PRODUCTS` (
   UNIQUE KEY `productCode_UNIQUE` (`productCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE `ROLES` (
-  `userID` int NOT NULL,
-  `role` enum('Customer','Staff','Manager') DEFAULT NULL,
-  PRIMARY KEY (`userID`),
-  CONSTRAINT `userID` FOREIGN KEY (`userID`) REFERENCES `USER` (`userID`)
+
+CREATE TABLE `ORDER_LINES` (
+  `orderNumber` int NOT NULL,
+  `orderLineNumber` int NOT NULL,
+  `quantity` int DEFAULT NULL,
+  `lineCost` float DEFAULT NULL,
+  `productCode` varchar(10) NOT NULL,
+  PRIMARY KEY (`orderNumber`,`orderLineNumber`),
+  KEY `fk_productCode_idx` (`productCode`),
+  CONSTRAINT `fk_orderNumber` FOREIGN KEY (`orderNumber`) REFERENCES `ORDERS` (`orderNumber`),
+  CONSTRAINT `fk_productCode` FOREIGN KEY (`productCode`) REFERENCES `PRODUCTS` (`productCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 
 CREATE TABLE `SETS` (
   `setCode` varchar(10) NOT NULL,
@@ -76,42 +104,28 @@ CREATE TABLE `TRACK_PACK` (
   CONSTRAINT `trackPackCode` FOREIGN KEY (`trackPackCode`) REFERENCES `PRODUCTS` (`productCode`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE `USERS` (
-  `userID` varchar(50) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `passwordHash` varchar(100) NOT NULL,
-  `lastLogin` timestamp NULL DEFAULT NULL,
-  `failedLoginAttempts` int DEFAULT '0',
-  `accountLocked` tinyint DEFAULT '0',
-  `name` varchar(100) DEFAULT NULL,
-  `houseNumber` int NOT NULL,
-  `postcode` varchar(30) NOT NULL,
-  PRIMARY KEY (`userID`),
-  KEY `houseNumber_idx` (`houseNumber`) /*!80000 INVISIBLE */,
-  KEY `postcode_idx` (`postcode`),
-  CONSTRAINT `houseNumber` FOREIGN KEY (`houseNumber`) REFERENCES `ADDRESS` (`houseNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
 
--- Insert sample data into the 'User' table
-INSERT INTO User (email, forename, surname , password_hash)
+-- Insert Manager data into the 'User' table
+INSERT INTO USERS (email, forename, surname , password_hash)
 VALUES
     ( 'manager@example.com',  'manager', 'manager', '423e16e053d0121774ce4e0a42556837fbfe0d9f74dcd4ef3966a5e5194ceceb') ;  -- User: Manager
 
 -- Insert sample data into the 'Roles' table to associate users with roles
-INSERT INTO Roles (userId, role)
+INSERT INTO ROLES (userId, role)
 VALUES
-    ('1', 'Manager');   -- Manager
+    ('<User ID from Users table>', 'Manager');   -- Manager
 
-INSERT INTO Roles (userId, role)
+--turn a user into a manager
+INSERT INTO ROLES (userId, role)
+VALUES
+    ('1998c6f7-cf0b-41e2-9958-000065a9270e', 'Manager');
+
+
+INSERT INTO ROLES (userId, role)
 VALUES
     ('1', 'Staff');   --
 
-INSERT INTO Roles (userId, role)
-VALUES
-    ('1', 'Customer') ;  --
-
 -- Select all rows from the 'User' table
-SELECT * FROM User;
+SELECT * FROM USERS;
