@@ -76,4 +76,24 @@ public class DatabaseOperations {
         }
     }
 
+    public ResultSet getAllProducts(Connection con) {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+
+        try {
+            // Execute the query to select all products from the "PRODUCTS" table
+            String query = "SELECT p.productCode, p.brandName, p.productName, p.retailPrice, p.stock, " +
+                    "p.gauge, p.eraCode, p.dccCode FROM PRODUCTS p";
+
+            // Create a statement
+            statement = con.prepareStatement(query);
+
+            resultSet = statement.executeQuery(query);
+            return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+        }
+        return null;
+    }
+
 }

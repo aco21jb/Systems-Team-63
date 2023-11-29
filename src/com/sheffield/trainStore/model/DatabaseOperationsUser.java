@@ -2,6 +2,8 @@ package com.sheffield.trainStore.model;
 
 import com.sheffield.util.HashedPasswordGenerator;
 
+import com.sheffield.trainStore.model.OrderStatus;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -393,6 +395,52 @@ public class DatabaseOperationsUser {
         return null;
     }
 
+
+
+    /**
+     * Retrieves a result set containing  order table.
+     *
+     * @param connection The database connection.
+     * @return A result set containing all usernames.
+     */
+    public ResultSet getOrderDetails(Connection connection ,  OrderStatus orderStatus ){
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+
+        // REATE TABLE `ORDERS` (
+        //     `orderNumber` int NOT NULL AUTO_INCREMENT,
+        //     `orderDate` date DEFAULT NULL,
+        //     `orderStatus` enum('Pending','Confirmed','Fulfilled') DEFAULT NULL,
+        //     `userID` varchar(50) NOT NULL,
+
+
+        // `orderNumber` int NOT NULL,
+        // `orderLineNumber` int NOT NULL,
+        // `quantity` int DEFAULT NULL,
+        // `lineCost` float DEFAULT NULL,
+        // `productCode` varchar(10) NOT NULL,
+        
+        // `orderStatus` enum('Pending','Confirmed','Fulfilled') DEFAULT NULL,
+
+        // " = " + "\'" + Role.STAFF + "\'";
+
+
+        try {
+            // Execute the query to select all usernames from the 'Users' table
+            String query = "SELECT o.orderNumber, o.orderDate, o.userId, od.orderNumber, od.quantity, od.lineCost " 
+               + "FROM ORDERS o, ORDER_LINES od WHERE o.orderNumber=od.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\'";
+
+
+            // Create a statement
+            statement = connection.prepareStatement(query);
+
+            resultSet = statement.executeQuery(query);
+            return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+        }
+        return null;
+    }
 
     /**
      * Retrieves a result set containing all usernames from the 'Users' table.

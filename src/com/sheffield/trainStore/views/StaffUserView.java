@@ -3,7 +3,7 @@ package com.sheffield.trainStore.views;
 import com.sheffield.trainStore.model.CurrentUserManager;
 import com.sheffield.trainStore.model.DatabaseOperations;
 import com.sheffield.trainStore.model.DatabaseOperationsUser;
-
+import com.sheffield.trainStore.model.OrderStatus;
 import com.sheffield.trainStore.model.Role;
 
 import javax.swing.*;
@@ -19,61 +19,114 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * The PromoteUserView class represents the GUI window for promoting users to Moderator.
+ * The StaffUserView class represents the GUI window for promoting users to Moderator.
  */
-public class PromoteUserView extends JFrame {
-    private JComboBox<String> staffComboBox;
+public class StaffUserView extends JFrame {
+
     private final DatabaseOperationsUser databaseOperationsUser;
 
-    private JTable staffTable;
-    DefaultTableModel staffTableModel = new DefaultTableModel();
+    private JTable orderTable;
+    DefaultTableModel orderTableModel = new DefaultTableModel();
 
     private JPanel mainPanel;
+    private JTabbedPane tabbedPanel;
 
-    private JPanel topPanel;
-    private JPanel btnPanel;
+    private JPanel newOrderPanel;
+    private JPanel oldOrderPanel;
+
+    private JPanel productPanel;
     private JPanel bottomPanel;
 
     private JScrollPane scrollPane;
 
 
+    private JTextField orderNumberField ;
+    private JTextField orderDateField ;
+    private JTextField orderUserField ;
+
 
 
     /**
-     * Constructor for the PromoteUserView.
+     * Constructor for the StaffUserView.
      *
      * @param connection The database connection.
      * @throws SQLException if a database access error occurs.
      */
-    public PromoteUserView(Connection connection) throws SQLException {
+    public StaffUserView(Connection connection) throws SQLException {
       
         databaseOperationsUser = new DatabaseOperationsUser();
 
         // Set properties for the new window
-        setTitle("Manager");
-        setSize(600, 600);
+        setTitle("Staff");
+        setSize(800, 600);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 
         // Create a JPanel for the new window
         JPanel mainPanel = new JPanel();
-        JPanel topPanel = new JPanel();
-        JPanel btnPanel = new JPanel();
-        JPanel bottomPanel = new JPanel();
+        // mainPanel.setLayout(new FlowLayout());
+        mainPanel.setLayout(new GridLayout());
+
+        JPanel newOrderPanel = new JPanel();
+        JPanel productPanel = new JPanel();
+        JPanel oldOrderPanel = new JPanel();
+
+        oldOrderPanel.setLayout(new GridLayout(5,2));
+        // oldOrderPanel.setLayout(new BorderLayout());
 
 
-        mainPanel.setLayout(new FlowLayout());
+        // JPanel bottomPanel = new JPanel();        
 
-        JButton removeStaffButton = new JButton("Remove Staff Role");
-        JButton promoteButton = new JButton("Promote to Staff");
+        tabbedPanel = new JTabbedPane();
+        tabbedPanel.setSize(200,600);
+        // tabbedPanel.addTab("New Orders", newOrderPanel);
+        // tabbedPanel.addTab("Products",  productPanel);
+        // tabbedPanel.addTab("Old Orders",  oldOrderPanel);
+
+        // mainPanel.add(tabbedPanel);
 
 
+        JLabel orderLabel = new JLabel("Order Number:");
+        JLabel orderDateLabel = new JLabel("Order Date:");
+        JLabel orderUserLabel = new JLabel("Order User:");
+        // oldOrderPanel.add(orderLabel, BorderLayout.WEST);
+        // oldOrderPanel.add(orderDateLabel, BorderLayout.WEST);
+        // oldOrderPanel.add(orderUserLabel, BorderLayout.WEST);
+
+
+        orderNumberField = new JTextField(20);
+        orderNumberField.setEditable(false);
+
+        orderDateField = new JTextField(20);
+        orderDateField.setEditable(false);
+
+        orderUserField = new JTextField(20);     
+        orderUserField.setEditable(false);
+
+        oldOrderPanel.add (orderLabel);
+        oldOrderPanel.add (orderNumberField);
+        oldOrderPanel.add (orderUserLabel);
+        oldOrderPanel.add (orderUserField);
+        oldOrderPanel.add (orderDateLabel);
+        oldOrderPanel.add (orderDateField);
+        
+        oldOrderPanel.add(new JLabel()); 
+        oldOrderPanel.add(new JLabel()); 
+
+
+        // JButton fullfillOrderButton = new JButton("Fullfill Order");
+        // JButton deleteOrderButton = new JButton("Delete Order");
+
+        JButton newProductButton = new JButton("Add Product");
+        JButton editProductButton = new JButton("Edit Product");
+        // JButton deleteProductButton = new JButton("Delete Product");
+        // JButton updateProductButton = new JButton("Update Stock");
 
         getContentPane().add(mainPanel);  
-        mainPanel.add(topPanel);
-        mainPanel.add(btnPanel);
-        mainPanel.add(bottomPanel);
+        // mainPanel.add(orderPanel);
+        // mainPanel.add(productPanel);
+        // mainPanel.add(bottomPanel);
 
 
         // Set a layout manager for the panel (e.g., GridLayout)
@@ -82,48 +135,45 @@ public class PromoteUserView extends JFrame {
         
         
         // new 28-nov
-            // DefaultTableModel tableModel = new DefaultTableModel();
-        staffTable= new JTable(staffTableModel);
-        staffTableModel.addColumn("Email");
-        staffTableModel.addColumn("Forename");
-        staffTableModel.addColumn("Surname");
+        orderTable= new JTable(orderTableModel);
+        orderTableModel.addColumn("Order numer");
+        orderTableModel.addColumn("DATE");
+        orderTableModel.addColumn("Surname");
 
-        populatestaffTable(connection);
-        staffTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);     
+        orderTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);     
 
             // Create a JScrollPane to display the table
-        JScrollPane scrollPane = new JScrollPane(staffTable);
+        JScrollPane scrollPane = new JScrollPane(orderTable);
         scrollPane.setSize(10,10);
-        scrollPane.setViewportView(staffTable);        
-        topPanel.add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setViewportView(orderTable);        
+        oldOrderPanel.add(scrollPane, BorderLayout.CENTER);
 
-        topPanel.add(removeStaffButton);
+        tabbedPanel.addTab("New Orders", newOrderPanel);
+        tabbedPanel.addTab("Products",  productPanel);
+        tabbedPanel.addTab("Old Orders",  oldOrderPanel);
+        // tabbedPanel.
+        mainPanel.add(tabbedPanel,BorderLayout.CENTER);
 
-        JLabel emailLabel = new JLabel("Enter Email ID:");
-        JTextField emailField= new JTextField(20);
+
+        populateOrderTable(connection,  OrderStatus.FULFILLED);
 
 
-        bottomPanel.add(emailLabel);
-        bottomPanel.add(emailField);
-
-        bottomPanel.add(new JLabel());
-        bottomPanel.add(promoteButton);
-
+        // mainPanel.visible
             
             // Add action listener to the button
-        removeStaffButton.addActionListener(new ActionListener() {
+        newProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // if (isUserAuthorised(Role.ADMIN)) {
                     // Get the selected user from the combo box
 
-                    int row = staffTable.getSelectedRow();
+                    int row = orderTable.getSelectedRow();
                     // String selectedUser = String.valueOf(staffComboBox.getSelectedItem());
 
                     // Check if a user is selected
                     if (row >= 0) {
                         // String emailId = (String) staffTable.getValueAt(row,0) ;
-                        String emailId = String.valueOf(staffTable.getValueAt(row,0)) ;
+                        String emailId = String.valueOf(orderTable.getValueAt(row,0)) ;
 
                         // Ask for confirmation
                         int dialogResult = JOptionPane.showConfirmDialog(null,
@@ -134,7 +184,7 @@ public class PromoteUserView extends JFrame {
                         if (dialogResult == JOptionPane.YES_OPTION) {
                             // User confirmed, promote the selected user to Moderator
                             databaseOperationsUser.removeFromStaff(connection, emailId );
-                            staffTableModel.removeRow(staffTable.getSelectedRow());                           
+                            // staffTableModel.removeRow(orderTable.getSelectedRow());                           
                             JOptionPane.showMessageDialog(null, emailId + " has been Removed from Staff.");
                         } else {
                             // User canceled the action
@@ -150,12 +200,12 @@ public class PromoteUserView extends JFrame {
 
 
             // Add action listener to the button
-            promoteButton.addActionListener(new ActionListener() {
+            editProductButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                         // Get the selected user from the combo box
 
-                        String emailId = emailField.getText();
+                        String emailId = "";
                        
                         if (! databaseOperationsUser.IsAlreadyStaff(connection, emailId)) {
                             // Ask for confirmation
@@ -192,21 +242,22 @@ public class PromoteUserView extends JFrame {
      * @throws SQLException if a database access error occurs.
      */
 
-    private void populatestaffTable(Connection connection) throws SQLException {
+    private void populateOrderTable(Connection connection,  OrderStatus orderStatus) throws SQLException {
 
     
-        ResultSet resultSet = databaseOperationsUser.getAllUsersStaff(connection);
+        ResultSet resultSet = databaseOperationsUser.getOrderDetails(connection, orderStatus);
 
         // Populate the JTable with the query results
         while (resultSet.next()) {
 
+
             // String emailID = resultSet.getString("email");
             // staffComboBox.addItem(emailID);
 
-            staffTableModel.addRow(new Object[]{
-                resultSet.getString("email"),
-                resultSet.getString("forename"),
-                resultSet.getString("surname")
+            orderTableModel.addRow(new Object[]{
+                resultSet.getString("orderNumber"),
+                resultSet.getString("orderDate"),
+                resultSet.getString("userID")
                 
             });            
         }

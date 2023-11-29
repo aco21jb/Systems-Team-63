@@ -19,10 +19,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * The PromoteUserView class represents the GUI window for promoting users to Moderator.
+ * The ManagerUserView class represents the GUI window for promoting users to Moderator.
  */
-public class PromoteUserView extends JFrame {
-    private JComboBox<String> staffComboBox;
+public class ManagerUserView extends JFrame {
+
     private final DatabaseOperationsUser databaseOperationsUser;
 
     private JTable staffTable;
@@ -40,12 +40,12 @@ public class PromoteUserView extends JFrame {
 
 
     /**
-     * Constructor for the PromoteUserView.
+     * Constructor for the ManagerUserView.
      *
      * @param connection The database connection.
      * @throws SQLException if a database access error occurs.
      */
-    public PromoteUserView(Connection connection) throws SQLException {
+    public ManagerUserView(Connection connection) throws SQLException {
       
         databaseOperationsUser = new DatabaseOperationsUser();
 
