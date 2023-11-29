@@ -6,6 +6,7 @@ import com.sheffield.trainStore.model.DatabaseOperationsUser;
 import com.sheffield.trainStore.model.OrderStatus;
 import com.sheffield.trainStore.model.Role;
 
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
@@ -24,12 +25,17 @@ import java.util.List;
 public class StaffUserView extends JFrame {
 
     private final DatabaseOperationsUser databaseOperationsUser;
+    List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
+
 
     private JTable orderTable;
     DefaultTableModel orderTableModel = new DefaultTableModel();
 
     private JPanel mainPanel;
     private JTabbedPane tabbedPanel;
+
+    private JPanel nmanagerPanel;
+
 
     private JPanel newOrderPanel;
     private JPanel oldOrderPanel;
@@ -68,6 +74,8 @@ public class StaffUserView extends JFrame {
         // mainPanel.setLayout(new FlowLayout());
         mainPanel.setLayout(new GridLayout());
 
+        
+        JPanel managerPanel = new JPanel();
         JPanel newOrderPanel = new JPanel();
         JPanel productPanel = new JPanel();
         JPanel oldOrderPanel = new JPanel();
@@ -114,6 +122,8 @@ public class StaffUserView extends JFrame {
         oldOrderPanel.add(new JLabel()); 
         oldOrderPanel.add(new JLabel()); 
 
+        JButton managerButton = new JButton("Manager");
+
 
         // JButton fullfillOrderButton = new JButton("Fullfill Order");
         // JButton deleteOrderButton = new JButton("Delete Order");
@@ -148,10 +158,19 @@ public class StaffUserView extends JFrame {
         scrollPane.setViewportView(orderTable);        
         oldOrderPanel.add(scrollPane, BorderLayout.CENTER);
 
+
+
         tabbedPanel.addTab("New Orders", newOrderPanel);
         tabbedPanel.addTab("Products",  productPanel);
-        tabbedPanel.addTab("Old Orders",  oldOrderPanel);
+        tabbedPanel.addTab("Fullfilled Orders",  oldOrderPanel);
+        tabbedPanel.addTab("Manager",  managerPanel);        
         // tabbedPanel.
+
+        if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+             managerPanel.add (managerButton);
+        }
+  
+
         mainPanel.add(tabbedPanel,BorderLayout.CENTER);
 
 
@@ -159,6 +178,32 @@ public class StaffUserView extends JFrame {
 
 
         // mainPanel.visible
+
+
+        // Create an ActionListener for the Manager button
+        managerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
+                if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+                       // Open a new window (replace NewWindowClass with the actual class you want to open)
+                    //    PromoteUserView newWindow = null;
+                       ManagerUserView newWindow = null;
+
+                       try {
+                           newWindow = new ManagerUserView(connection);
+                       } catch (SQLException ex) {
+                           throw new RuntimeException(ex);
+                       }
+                       newWindow.setVisible(true);
+                   } else {
+                       JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+                   }
+                  
+              }
+        });
+
             
             // Add action listener to the button
         newProductButton.addActionListener(new ActionListener() {
@@ -267,7 +312,7 @@ public class StaffUserView extends JFrame {
 
 
     private boolean isUserAuthorised(Role role) {
-        List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
+        // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
         for (Role roleForCurrentUser : listOfRolesForCurrentUser) {
             if (roleForCurrentUser.equals(role)) {
                 return true;

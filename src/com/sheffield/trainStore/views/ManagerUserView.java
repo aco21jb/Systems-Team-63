@@ -149,8 +149,8 @@ public class ManagerUserView extends JFrame {
         });            
 
 
-            // Add action listener to the button
-            promoteButton.addActionListener(new ActionListener() {
+        // Add action listener to the button
+        promoteButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                         // Get the selected user from the combo box
@@ -182,48 +182,47 @@ public class ManagerUserView extends JFrame {
                         
                 }
             });
-    }
+        }
 
        
-    /**
-     * Populates the user combo box with user data from the database.
-     *
-     * @param connection The database connection.
-     * @throws SQLException if a database access error occurs.
-     */
+        /**
+         * Populates the user combo box with user data from the database.
+         *
+         * @param connection The database connection.
+         * @throws SQLException if a database access error occurs.
+         */
 
-    private void populatestaffTable(Connection connection) throws SQLException {
+        private void populatestaffTable(Connection connection) throws SQLException {
 
-    
-        ResultSet resultSet = databaseOperationsUser.getAllUsersStaff(connection);
-
-        // Populate the JTable with the query results
-        while (resultSet.next()) {
-
-            // String emailID = resultSet.getString("email");
-            // staffComboBox.addItem(emailID);
-
-            staffTableModel.addRow(new Object[]{
-                resultSet.getString("email"),
-                resultSet.getString("forename"),
-                resultSet.getString("surname")
-                
-            });            
-        }
-        resultSet.close();
         
-    }    
+            ResultSet resultSet = databaseOperationsUser.getAllUsersStaff(connection);
 
+            // Populate the JTable with the query results
+            while (resultSet.next()) {
 
-    private boolean isUserAuthorised(Role role) {
-        List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
-        for (Role roleForCurrentUser : listOfRolesForCurrentUser) {
-            if (roleForCurrentUser.equals(role)) {
-                return true;
+                // String emailID = resultSet.getString("email");
+                // staffComboBox.addItem(emailID);
+
+                staffTableModel.addRow(new Object[]{
+                    resultSet.getString("email"),
+                    resultSet.getString("forename"),
+                    resultSet.getString("surname")
+                    
+                });            
             }
-        }
-        return false;
-    }
+            resultSet.close();
+            
+        }    
 
+
+        private boolean isUserAuthorised(Role role) {
+            List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
+            for (Role roleForCurrentUser : listOfRolesForCurrentUser) {
+                if (roleForCurrentUser.equals(role)) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
 }

@@ -22,9 +22,9 @@ public class HomePage extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
 
-    static JMenuBar menuBar;
-    static JMenu userMenu;
-    static JMenuItem managerMenuItem, customerMenuItem, staffMenuItem;
+    // static JMenuBar menuBar;
+    // static JMenu userMenu;
+    // static JMenuItem managerMenuItem, customerMenuItem, staffMenuItem;
     static JFrame f;
 
 
@@ -48,19 +48,17 @@ public class HomePage extends JFrame {
         this.setLocationRelativeTo(null);
 
         // f = new JFrame ("Menu Frame");
-        menuBar = new JMenuBar();
-        userMenu = new JMenu ("Menu");
-        managerMenuItem = new JMenuItem("Manager");
-        customerMenuItem = new JMenuItem("Customer");
-        staffMenuItem= new JMenuItem("Staff");
-        userMenu.add(managerMenuItem);
-        userMenu.add(customerMenuItem);
-        userMenu.add(staffMenuItem);
-        menuBar.add(userMenu);
-        // f.setJMenuBar(mb);
-        // f.setSize(100,100);
-        // f.setVisible(true);
-        this.setJMenuBar(menuBar);
+        // menuBar = new JMenuBar();
+        // userMenu = new JMenu ("Menu");
+        // managerMenuItem = new JMenuItem("Manager");
+        // customerMenuItem = new JMenuItem("Customer");
+        // staffMenuItem= new JMenuItem("Staff");
+        // userMenu.add(managerMenuItem);
+        // userMenu.add(customerMenuItem);
+        // userMenu.add(staffMenuItem);
+        // menuBar.add(userMenu);
+   
+        // this.setJMenuBar(menuBar);
 
 
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
@@ -88,17 +86,23 @@ public class HomePage extends JFrame {
 
 
         // Create a JButton for the login action
-        JButton ManagerButton = new JButton("Manager");
+        // JButton ManagerButton = new JButton("Manager");
         JButton CustomerButton = new JButton("Customer");
         JButton StaffButton = new JButton("Staff");
 
+
+        JButton EditPersonalButton = new JButton("Edit Personal Details");
+
+
         panelTop.add(new JLabel());  // Empty label for spacing
 
-        if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
-          panelTop.add(ManagerButton);
-        }
+        // if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+        //   panelTop.add(ManagerButton);
+        // }
 
         panelTop.add(CustomerButton);
+        panelTop.add(EditPersonalButton);
+
 
         if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
             panelTop.add(StaffButton);
@@ -110,52 +114,48 @@ public class HomePage extends JFrame {
 
 
 
-        // Create an ActionListener for the Manager button
-        ManagerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        // // Create an ActionListener for the Manager button
+        // ManagerButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
 
-                // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
-                if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
-                       // Open a new window (replace NewWindowClass with the actual class you want to open)
-                    //    PromoteUserView newWindow = null;
-                       ManagerUserView newWindow = null;
+        //         if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+        //                // Open a new window (replace NewWindowClass with the actual class you want to open)
+        //                ManagerUserView newWindow = null;
 
-                       try {
-                           newWindow = new ManagerUserView(connection);
-                       } catch (SQLException ex) {
-                           throw new RuntimeException(ex);
-                       }
-                       newWindow.setVisible(true);
-                   } else {
-                       JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                   }
+        //                try {
+        //                    newWindow = new ManagerUserView(connection);
+        //                } catch (SQLException ex) {
+        //                    throw new RuntimeException(ex);
+        //                }
+        //                newWindow.setVisible(true);
+        //            } else {
+        //                JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+        //            }
                   
-              }
-        });
+        //       }
+        // });
 
-        managerMenuItem.addActionListener(new ActionListener() {
-            @Override
-                    public void actionPerformed(ActionEvent e) {
+        // managerMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //             public void actionPerformed(ActionEvent e) {
 
-                        // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
-                        if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
-                            // Open a new window (replace NewWindowClass with the actual class you want to open)
-                            //    PromoteUserView newWindow = null;
-                            ManagerUserView newWindow = null;
+        //                 if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+        //                     // Open a new window (replace NewWindowClass with the actual class you want to open)
+        //                     ManagerUserView newWindow = null;
 
-                            try {
-                                newWindow = new ManagerUserView(connection);
-                            } catch (SQLException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                            newWindow.setVisible(true);
-                        } else {
-                            JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
+        //                     try {
+        //                         newWindow = new ManagerUserView(connection);
+        //                     } catch (SQLException ex) {
+        //                         throw new RuntimeException(ex);
+        //                     }
+        //                     newWindow.setVisible(true);
+        //                 } else {
+        //                     JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+        //                 }
                         
-                    }
-        });
+        //             }
+        // });
 
           // Create an ActionListener for the Customer button
         CustomerButton.addActionListener(new ActionListener() {
@@ -174,6 +174,25 @@ public class HomePage extends JFrame {
 
             }
         });
+
+          // Create an ActionListener for the UserDetailsView button
+        EditPersonalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                //System.out.println("Yet to be implemented");
+
+                UserDetailsView newWindow = null;
+                try {
+                    newWindow = new UserDetailsView(connection);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                newWindow.setVisible(true);
+
+            }
+        });
+
 
           // Create an ActionListener for the Manager button
         StaffButton.addActionListener(new ActionListener() {
@@ -198,27 +217,26 @@ public class HomePage extends JFrame {
               }
         });
 
-        staffMenuItem.addActionListener(new ActionListener() {
-            @Override
-                public void actionPerformed(ActionEvent e) {
+        // staffMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //         public void actionPerformed(ActionEvent e) {
 
-                    if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
-                        // Open a new window (replace NewWindowClass with the actual class you want to open)
-                        //    PromoteUserView newWindow = null;
-                        StaffUserView newWindow = null;
+        //             if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
+        //                 // Open a new window (replace NewWindowClass with the actual class you want to open)
+        //                 StaffUserView newWindow = null;
 
-                        try {
-                            newWindow = new StaffUserView(connection);
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        newWindow.setVisible(true);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+        //                 try {
+        //                     newWindow = new StaffUserView(connection);
+        //                 } catch (SQLException ex) {
+        //                     throw new RuntimeException(ex);
+        //                 }
+        //                 newWindow.setVisible(true);
+        //             } else {
+        //                 JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+        //             }
                     
-                }
-        });
+        //         }
+        // });
 
 
     }
