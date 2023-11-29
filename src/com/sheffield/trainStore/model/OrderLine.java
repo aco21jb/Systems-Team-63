@@ -1,14 +1,16 @@
 package com.sheffield.trainStore.model;
 
+import java.math.BigDecimal;
+
 public class OrderLine {
 
     private int orderNumber;
     private int orderLineNumber;
     private int quantity;
-    private float lineCost;
+    private BigDecimal lineCost;
     private String productCode;
 
-    public OrderLine(int orderNumber, int orderLineNumber, int quantity, float lineCost, String productCode) {
+    public OrderLine(int orderNumber, int orderLineNumber, int quantity, BigDecimal lineCost, String productCode) {
         this.orderNumber = orderNumber;
         this.orderLineNumber = orderLineNumber;
         this.quantity = quantity;
@@ -28,7 +30,7 @@ public class OrderLine {
         return quantity;
     }
 
-    public float getLineCost() {
+    public BigDecimal getLineCost() {
         return lineCost;
     }
 

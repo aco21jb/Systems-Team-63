@@ -51,7 +51,7 @@ public class DatabaseOperations {
             preparedStatement.setInt(1, orderLine.getOrderNumber());
             preparedStatement.setInt(2, orderLine.getOrderLineNumber());
             preparedStatement.setInt(3, orderLine.getQuantity());
-            preparedStatement.setFloat(4, orderLine.getLineCost());
+            preparedStatement.setBigDecimal(4, orderLine.getLineCost());
             preparedStatement.setString(5, orderLine.getProductCode());
 
             preparedStatement.executeUpdate();
@@ -107,6 +107,19 @@ public class DatabaseOperations {
             e.printStackTrace();
         }
         return resultSet;
+    }
+
+    public ResultSet getProduct(Connection con, String productInput) throws SQLException {
+        ResultSet productResult = null;
+        PreparedStatement statement = null;
+        try {
+            String query = "SELECT productCode, retailPrice, stock FROM PRODUCTS WHERE productName = productInput";
+            statement = con.prepareStatement(query);
+            productResult = statement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return productResult;
     }
 
 }

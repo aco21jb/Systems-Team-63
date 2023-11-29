@@ -2,6 +2,8 @@ package com.sheffield.trainStore.views;
 
 import com.sheffield.trainStore.model.DatabaseOperations;
 import com.sheffield.trainStore.model.DatabaseOperationsUser;
+import com.sheffield.trainStore.model.Product;
+import com.sheffield.trainStore.model.OrderLine;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -13,10 +15,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import java.math.BigDecimal;
 public class ProductsView extends JFrame {
 
     private JComboBox<String> productComboBox;
     private final DatabaseOperations databaseOperations;
+    private List<OrderLine> order;
+    private int orderNumber = 1;
+    private int orderLineNumber = 1;
 
     /**
      * Constructor for the PromoteUserView.
@@ -60,15 +67,15 @@ public class ProductsView extends JFrame {
         panel.add(new JLabel());
 
         /*JLabel emailLabel = new JLabel("Enter Email ID:");
-        JTextField emailField= new JTextField(20);
+        JTextField emailField= new JTextField(20);*/
 
-        JButton promoteButton = new JButton("Promote to Staff");
+        JButton confirmOrderButton = new JButton("Confirm Order");
 
-        panel.add(emailLabel);
-        panel.add(emailField);
+        /*panel.add(emailLabel);
+        panel.add(emailField);*/
 
         panel.add(new JLabel());
-        panel.add(promoteButton);*/
+        panel.add(confirmOrderButton);
 
 
         // Add action listener to the button
@@ -101,6 +108,26 @@ public class ProductsView extends JFrame {
                         // User canceled the action
                         JOptionPane.showMessageDialog(null, "Canceled.", "Canceled", JOptionPane.WARNING_MESSAGE);
                     }*/
+
+                    try {
+                        ResultSet productResult = databaseOperations.getProduct(connection, selectedProduct);
+                        String selectedProductCode = productResult.getString("productCode");
+                        BigDecimal selectedProductPrice = productResult.getBigDecimal("retailPrice");
+                        int selectedProductStock = productResult.getInt("stock");
+                        try {
+                            String quantityString = JOptionPane.showInputDialog("Quantity: ");
+                            int quantity = Integer.parseInt(quantityString);
+                            if (quantity <= selectedProductStock) {
+                                OrderLine currentOrder = new OrderLine(orderNumber, orderLineNumber, quantity,
+                                        selectedProductPrice, selectedProductCode);
+                                order.add(currentOrder);
+                            }
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(null, "Invalid quantity.");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
 
 
                 } else {

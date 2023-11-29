@@ -29,10 +29,10 @@ public class Main {
                 databaseConnectionHandler.openConnection();
                 // dbop.addProduct(databaseConnectionHandler.getConnection(),(new Product("Rfdsf","Hornby","trains track",new BigDecimal(8.20),5,"gfd","50",null)));
 
-                //RegisterView = new RegisterView(databaseConnectionHandler.getConnection());
-                //RegisterView.setVisible(true);
-                productsPage = new ProductsPage(databaseConnectionHandler.getConnection());
-                productsPage.setVisible(true);
+                RegisterView = new RegisterView(databaseConnectionHandler.getConnection());
+                RegisterView.setVisible(true);
+                //productsPage = new ProductsPage(databaseConnectionHandler.getConnection());
+                //productsPage.setVisible(true);
 
             } catch (Throwable t) {
                 // Close connection if database crashes.
