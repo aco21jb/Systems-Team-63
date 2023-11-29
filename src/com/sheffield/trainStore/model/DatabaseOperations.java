@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class DatabaseOperations {
     public void addProduct(Connection con, Product product) throws SQLException {
         try {
-            String insertStatement = "INSERT INTO PRODUCTS (productCode, brandName, productName, retailPrice, stock," +
+            String insertStatement = "INSERT INTO PRODUCTS (productCode, brandName, productName, retailPrice, stock, " +
             "gauge, eraCode, dccCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(insertStatement);
             preparedStatement.setString(1, product.getProductCode());
@@ -94,6 +94,19 @@ public class DatabaseOperations {
             e.printStackTrace(); // Handle the exception according to your application's needs
         }
         return null;
+    }
+
+    public ResultSet getProducts(Connection con) throws SQLException {
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT productName, retailPrice, stock, gauge, eraCode, dccCode, productType" +
+                    " FROM PRODUCTS";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultSet;
     }
 
 }

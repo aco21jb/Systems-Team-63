@@ -162,7 +162,15 @@ public class HomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                System.out.println("Yet to be implemented");
+                //System.out.println("Yet to be implemented");
+
+                ProductsView newWindow = null;
+                try {
+                    newWindow = new ProductsView(connection);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                newWindow.setVisible(true);
 
             }
         });
