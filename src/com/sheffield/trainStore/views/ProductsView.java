@@ -111,19 +111,23 @@ public class ProductsView extends JFrame {
 
                     try {
                         ResultSet productResult = databaseOperations.getProduct(connection, selectedProduct);
-                        String selectedProductCode = productResult.getString("productCode");
-                        BigDecimal selectedProductPrice = productResult.getBigDecimal("retailPrice");
-                        int selectedProductStock = productResult.getInt("stock");
-                        try {
-                            String quantityString = JOptionPane.showInputDialog("Quantity: ");
-                            int quantity = Integer.parseInt(quantityString);
-                            if (quantity <= selectedProductStock) {
-                                OrderLine currentOrder = new OrderLine(orderNumber, orderLineNumber, quantity,
-                                        selectedProductPrice, selectedProductCode);
-                                order.add(currentOrder);
+                        if (productResult.next()) {
+                            String selectedProductCode = productResult.getString("productCode");
+                            BigDecimal selectedProductPrice = productResult.getBigDecimal("retailPrice");
+                            int selectedProductStock = productResult.getInt("stock");
+                            try {
+                                String quantityString = JOptionPane.showInputDialog("Quantity: ");
+                                int quantity = Integer.parseInt(quantityString);
+                                if (quantity <= selectedProductStock) {
+                                    OrderLine currentOrder = new OrderLine(orderNumber, orderLineNumber, quantity,
+                                            selectedProductPrice, selectedProductCode);
+                                    order.add(currentOrder);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Item out of stock.");
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(null, "Invalid quantity.");
                             }
-                        } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(null, "Invalid quantity.");
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -131,11 +135,18 @@ public class ProductsView extends JFrame {
 
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please select a user.");
+                    JOptionPane.showMessageDialog(null, "Please select a product.");
                 }
                 // } else {
                 //     JOptionPane.showMessageDialog(null, "You are not an ADMIN!", "Error", JOptionPane.ERROR_MESSAGE);
                 // }
+            }
+        });
+
+        confirmOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
 

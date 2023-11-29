@@ -113,8 +113,9 @@ public class DatabaseOperations {
         ResultSet productResult = null;
         PreparedStatement statement = null;
         try {
-            String query = "SELECT productCode, retailPrice, stock FROM PRODUCTS WHERE productName = productInput";
+            String query = "SELECT productCode, retailPrice, stock FROM PRODUCTS WHERE productName = ?";
             statement = con.prepareStatement(query);
+            statement.setString(1, productInput);
             productResult = statement.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
