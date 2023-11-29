@@ -258,7 +258,7 @@ public class DatabaseOperationsUser {
             //     String insertRoleSQL = "INSERT INTO ROLES (userId, "+
             // "role ) VALUES (?, ?)";
 
-            // Prepare the SQL statement to update the user's role to "Staff"
+            // Prepare the SQL statement to delete the user's role to "Staff"
             String deleteSQL = "DELETE FROM ROLES WHERE userId = ? AND role = " + "\'" + Role.STAFF + "\' ";
 
             preparedStatement = connection.prepareStatement(deleteSQL);
@@ -266,7 +266,7 @@ public class DatabaseOperationsUser {
             // Set the parameters for the prepared statement
             preparedStatement.setString(1, userId);
 
-            // Execute the update
+            // Execute the query
             preparedStatement.executeUpdate();
 
             // Additional actions may be performed here if needed after the user is promoted
@@ -297,14 +297,14 @@ public class DatabaseOperationsUser {
             // Get the userId based on the username
             String userId = getUserIdByEmailId(connection, selectedUser);
 
-            // Prepare the SQL statement to update the user's role to "Staff"
+            // Prepare the SQL statement to insert the user's role to "Staff"
             String sql = "INSERT INTO ROLES (userId, role) VALUES (?, 'Staff')";
             preparedStatement = connection.prepareStatement(sql);
 
             // Set the parameters for the prepared statement
             preparedStatement.setString(1, userId);
 
-            // Execute the update
+            // Execute the query
             preparedStatement.executeUpdate();
 
             // Additional actions may be performed here if needed after the user is promoted
@@ -369,6 +369,62 @@ public class DatabaseOperationsUser {
         }
     }
 
+   /**
+     * Retrieves a result set containing all usernames from the 'Users' table.
+     *
+     * @param connection The database connection.
+     * @return A result set containing all usernames.
+     */
+    public ResultSet getUserDetail(Connection connection, String userId ) {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+
+        try {
+            // Execute the query to select all usernames from the 'Users' table
+            String query = "SELECT u.userId, u.email, u.forename, u.surname, u.housenumber, u.postcode, ad.roadname, " 
+            + " ad.cityname FROM USERS u, ADDRESS ad WHERE u.housenumber = ad.housenumber AND u.postcode = ad.postcode AND userID = " + "\'" + userId + "\'";
+
+            // Create a statement
+            statement = connection.prepareStatement(query);
+
+            resultSet = statement.executeQuery(query);
+            return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+        }
+        return null;
+    }
+
+        // Update an existing book in the database
+     public void updateUser(Connection connection, String userID, String emailId, String forename,
+             String surname, Integer houseNumber, String postcode, String roadName, String cityName) throws SQLException {            
+
+            try {
+              
+                String updateSQL = "UPDATE USERS SET email=?, forename=?,"+
+                "surname=? WHERE userId=?";
+                PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+    
+                preparedStatement.setString(1,emailId);
+                preparedStatement.setString(2, forename);
+                // preparedStatement.setInt(3, surname);
+                preparedStatement.setString(3, surname);
+                preparedStatement.setString(4, userID);
+
+                
+                int rowsAffected = preparedStatement.executeUpdate();
+    
+                if (rowsAffected > 0) {
+                    System.out.println(rowsAffected + " row(s) updated successfully.");
+                } else {
+                    System.out.println("No rows were updated for UserID: " );
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;// Re-throw the exception to signal an error.
+            }
+        }
+    
 
     /**
      * Retrieves a result set containing all usernames from the 'Users' table.

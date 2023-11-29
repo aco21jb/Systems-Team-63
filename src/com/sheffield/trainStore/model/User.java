@@ -25,16 +25,13 @@ public class User {
       public User( String userId, String emailId, char[] password, String forename,
         String surname, Integer housenumber, String postcode) {
 
-        this.userId = userId;
-        this.emailId = emailId;
-        // this.roles = roles;
-
-        this.forename = forename;
-        this.surname = surname;
-        this.password = password;
-
-        this.housenumber = housenumber;
-        this.postcode = postcode;
+        this.setUserId(userId);
+        this.setEmailId(emailId);
+        this.setForename(forename);
+        this.setSurname(surname);
+        this.setPassword (password);
+        this.sethousenumber(housenumber);
+        this.setPostcode(postcode);
 
     }
 
