@@ -69,7 +69,7 @@ public class StaffUserView extends JFrame {
     private JTextField productTypeField ;
 
 
-                
+
     /**
      * Constructor for the StaffUserView.
      *
@@ -77,7 +77,7 @@ public class StaffUserView extends JFrame {
      * @throws SQLException if a database access error occurs.
      */
     public StaffUserView(Connection connection) throws SQLException {
-      
+
         databaseOperationsUser = new DatabaseOperationsUser();
 
         // Set properties for the new window
@@ -92,7 +92,7 @@ public class StaffUserView extends JFrame {
         // mainPanel.setLayout(new FlowLayout());
         mainPanel.setLayout(new GridLayout());
 
-        
+
         JPanel managerPanel = new JPanel();
         JPanel newOrderPanel = new JPanel();
         JPanel productPanel = new JPanel();
@@ -150,31 +150,31 @@ public class StaffUserView extends JFrame {
         productViewPanel.add(productCodeField);
 
         productViewPanel.add(productNameLabel);
-        productViewPanel.add(productNameField);   
+        productViewPanel.add(productNameField);
 
         productViewPanel.add(productRetailPriceLabel);
-        productViewPanel.add(productRetailPriceField);   
+        productViewPanel.add(productRetailPriceField);
 
         productViewPanel.add(productStockLabel);
-        productViewPanel.add(productStockField);   
-        
+        productViewPanel.add(productStockField);
+
         productViewPanel.setLayout(new GridLayout(4,4));
 
-  
-        getContentPane().add(mainPanel);  
-      
-        tabbedPane.addTab("New Orders", newOrderPanel);
-        tabbedPane.addTab("Products",  productPanel);
+
+        getContentPane().add(mainPanel);
+
+        tabbedPane.addTab("Confirmed Orders", newOrderPanel);
         tabbedPane.addTab("Fullfilled Orders",  oldOrderPanel);
+        tabbedPane.addTab("Products",  productPanel);
         tabbedPane.addTab("Update Stock",  updateStockPanel);
 
 
         if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
             // NOTE : If you change the Title, need to chage the name in Change Listener method
-             tabbedPane.addTab("Manager",  managerPanel);             
+             tabbedPane.addTab("Manager",  managerPanel);
             //  managerPanel.add (managerButton);
         }
-  
+
 
         mainPanel.add(tabbedPane,BorderLayout.CENTER);
 
@@ -184,24 +184,24 @@ public class StaffUserView extends JFrame {
             public void stateChanged(ChangeEvent changeEvent){
 
                 JTabbedPane localTabbedPane = (JTabbedPane) changeEvent.getSource();
-                int index = localTabbedPane.getSelectedIndex();   
+                int index = localTabbedPane.getSelectedIndex();
 
                 // System.out.println(changeEvent.getSource());
-                System.out.println("Tab changed to: " + localTabbedPane.getTitleAt(index));      
-                // System.out.println("Tab changed to: " + localTabbedPane.getTitleAt(index)).ge);    
-                
+                System.out.println("Tab changed to: " + localTabbedPane.getTitleAt(index));
+                // System.out.println("Tab changed to: " + localTabbedPane.getTitleAt(index)).ge);
+
                 if (localTabbedPane.getTitleAt(index) == "Manager") {
                     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                     if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
                         // Open a new window (replace NewWindowClass with the actual class you want to open)
                         //    PromoteUserView newWindow = null;
                         ManagerUserView newWindow = null;
-                       
+
                         try {
                             newWindow = new ManagerUserView(connection);
 
                             // managerPanel.removeAll();
-                            // managerPanel.add(new ManagerUserView (connection));                            
+                            // managerPanel.add(new ManagerUserView (connection));
 
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -210,30 +210,30 @@ public class StaffUserView extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-               
+
                 }
-                
+
 
                 if (localTabbedPane.getTitleAt(index) == "Products") {
                     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                     if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
-                        
+
                         // ProductsPage newWindow = null;
 
                         try {
                             // newWindow = new ProductsPage(connection);
                             productsTablePanel.removeAll();
-                            
+
                             productsTablePanel.add(new ProductsPanelPage (connection));
                             productPanel.add(productsTablePanel);
                             productPanel.add(productViewPanel);
-                       
+
                             productPanel.add(productsButtonPanel);
 
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
-                        // newWindow.setVisible(true);                        
+                        // newWindow.setVisible(true);
                     }
                 }
 
@@ -252,11 +252,11 @@ public class StaffUserView extends JFrame {
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
-                        // newWindow.setVisible(true);                        
+                        // newWindow.setVisible(true);
                     }
-                }      
-                
-                if (localTabbedPane.getTitleAt(index) == "New Orders") {
+                }
+
+                if (localTabbedPane.getTitleAt(index) == "Confirmed Orders") {
                     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                     if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
 
@@ -269,44 +269,44 @@ public class StaffUserView extends JFrame {
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
-                        // newWindow.setVisible(true);                        
+                        // newWindow.setVisible(true);
                     }
-                }    
-                
+                }
+
 
 
                 if (localTabbedPane.getTitleAt(index) == "Update Stock") {
                     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                     if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
-                        
+
                         // ProductsPage newWindow = null;
 
                         try {
                             // newWindow = new ProductsPage(connection);
                             updateStockPanel.removeAll();
-                            
+
                             updateStockPanel.add(new ProductsPanelPage (connection));
 
                             updateStockPanel.add(productStockLabel);
-                            updateStockPanel.add(productStockField);                             
+                            updateStockPanel.add(productStockField);
                             updateStockPanel.add(updateStockProductButton);
-                            
+
                             // productPanel.add(productsTablePanel);
                             // productPanel.add(productViewPanel);
-                       
+
                             // productPanel.add(productsButtonPanel);
 
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
-                        // newWindow.setVisible(true);                        
+                        // newWindow.setVisible(true);
                     }
                 }
 
-               
+
             }
         };
-    
+
 
         tabbedPane.addChangeListener(tabbedPaneChangeListener);
 
@@ -323,33 +323,33 @@ public class StaffUserView extends JFrame {
 
                     // Check if a user is selected
                     if (row >= 0) {
-                        
+
 
                     } else {
                         JOptionPane.showMessageDialog(null, "Please select a user.");
                     }
-             
+
             }
-        });            
+        });
 
 
-          
+
             // Add action listener to the button
             viewProductButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // if (isUserAuthorised(Role.ADMIN)) {
                         // Get the selected user from the combo box
-                        
+
                         int row = ProductsPanelPage.productsTable.getSelectedRow();
                         // String selectedUser = String.valueOf(staffComboBox.getSelectedItem());
                         // String emailId = String.valueOf(ProductsPage.products.getValueAt(row,0)) ;
 
-                      
-    
+
+
                         // Check if a user is selected
                         if (row >= 0) {
-                            
+
                             System.out.println(ProductsPanelPage.productsTable.getValueAt(row,0));
                             System.out.println(ProductsPanelPage.productsTable.getValueAt(row,1));
                             System.out.println(ProductsPanelPage.productsTable.getValueAt(row,2));
@@ -361,17 +361,17 @@ public class StaffUserView extends JFrame {
 
                             // productRetailPriceField = ProductsPanelPage.productsTable.getValueAt(row,0);
 
-                        
+
                         } else {
                             JOptionPane.showMessageDialog(null, "Please select a user.");
                         }
-             
-                 
+
+
                 }
-            });            
+            });
     }
 
-       
+
     /**
      * Populates the user combo box with user data from the database.
      *
@@ -381,7 +381,7 @@ public class StaffUserView extends JFrame {
 
     private void populateOrderTable(Connection connection,  OrderStatus orderStatus) throws SQLException {
 
-    
+
         ResultSet resultSet = databaseOperationsUser.getOrderDetails(connection, orderStatus);
 
         // Populate the JTable with the query results
@@ -395,12 +395,12 @@ public class StaffUserView extends JFrame {
                 resultSet.getString("orderNumber"),
                 resultSet.getString("orderDate"),
                 resultSet.getString("userID")
-                
-            });            
+
+            });
         }
         resultSet.close();
-        
-    }    
+
+    }
 
 
     private boolean isUserAuthorised(Role role) {
