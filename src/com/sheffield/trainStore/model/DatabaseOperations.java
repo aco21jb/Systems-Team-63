@@ -11,7 +11,7 @@ public class DatabaseOperations {
     public void addProduct(Connection con, Product product) throws SQLException {
         try {
             String insertStatement = "INSERT INTO PRODUCTS (productCode, brandName, productName, retailPrice, stock, " +
-            "gauge, eraCode, dccCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "gauge, eraCode, dccCode, productType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(insertStatement);
             preparedStatement.setString(1, product.getProductCode());
             preparedStatement.setString(2, product.getBrandName());
@@ -21,6 +21,7 @@ public class DatabaseOperations {
             preparedStatement.setString(6, product.getGauge());
             preparedStatement.setString(7, product.getEraCode());
             preparedStatement.setString(8, product.getDccCode());
+            preparedStatement.setString(9, String.valueOf(product.getProductType()));
 
             preparedStatement.executeUpdate();
 
@@ -117,8 +118,7 @@ public class DatabaseOperations {
     public ResultSet getProducts(Connection con) throws SQLException {
         ResultSet resultSet = null;
         try {
-            String query = "SELECT productCode, productName, retailPrice, stock, gauge, eraCode, dccCode, productType" +
-                    " FROM PRODUCTS";
+            String query = "SELECT * FROM PRODUCTS";
             PreparedStatement preparedStatement = con.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
         } catch (Exception e) {
@@ -127,6 +127,35 @@ public class DatabaseOperations {
         }
         return resultSet;
     }
+
+    public ResultSet getFilteredProducts(Connection con, char type) throws SQLException {
+        ResultSet filteredSet = null;
+        System.out.println(type);
+        try {
+            String query = "SELECT * FROM PRODUCTS WHERE productType = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setString(1,String.valueOf(type));
+            filteredSet = preparedStatement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filteredSet;
+    }
+
+    public ResultSet getSearchProducts(Connection con, String search) throws SQLException {
+        ResultSet filteredSet = null;
+        search = "%" + search + "%";
+        try {
+            String query = "SELECT * FROM PRODUCTS WHERE productName LIKE ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setString(1,search);
+            filteredSet = preparedStatement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filteredSet;
+    }
+
 
     public ResultSet getProduct(Connection con, String productInput) throws SQLException {
         ResultSet productResult = null;
