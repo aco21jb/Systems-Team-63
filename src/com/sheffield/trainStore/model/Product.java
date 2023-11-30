@@ -23,7 +23,7 @@ public class Product {
         this.setGauge(gauge);
         this.setEraCode(eraCode);
         this.setDccCode(dccCode);
-        this.setProductType(productCode.toUpperCase());
+        this.setProductType(productCode);
     }
 
     //get methods
@@ -133,13 +133,19 @@ public class Product {
     public void setProductType(String productCode) {
         if (isProductCodeValid(productCode)){
             char typeCode = this.productCode.charAt(0);
-            char[] codes = {'C', 'L', 'M', 'R', 'S', 'P'};
-            if (Arrays.binarySearch(codes, typeCode) >= 0){
+            System.out.println(typeCode);
+            if(isProductTypeValid(typeCode)){
                 this.productType = typeCode;
-            } else {
-                this.productType = '?';
-            }
-        } this.productType = '?';
+            } else {this.productType = '?';}
+        }
+    }
+
+    public boolean isProductTypeValid(char typeCode) {
+        // emtered in order so they can be searched quicker
+        char[] codes = {'c', 'l', 'm', 'r', 's', 'p'};
+        if (Arrays.binarySearch(codes, typeCode) >= 0) {
+            return true;
+        } return false;
     }
 
     // validator methods

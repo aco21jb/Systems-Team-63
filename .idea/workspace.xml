@@ -9,6 +9,8 @@
       <change beforePath="$PROJECT_DIR$/src/com/sheffield/trainStore/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/sheffield/trainStore/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/sheffield/trainStore/model/DatabaseOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/sheffield/trainStore/model/DatabaseOperations.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/sheffield/trainStore/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/sheffield/trainStore/model/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/sheffield/trainStore/views/ProductsPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/sheffield/trainStore/views/ProductsPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/sheffield/trainStore/views/ProductsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/sheffield/trainStore/views/ProductsView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
