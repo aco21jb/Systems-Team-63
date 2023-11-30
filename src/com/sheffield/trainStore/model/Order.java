@@ -19,4 +19,24 @@ public class Order {
         this.userId = userId;
         this.orderLines = orderLines;
     }
+
+    public int getOrderNumber() {
+        return orderNumber;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public List<OrderLine> getOrderLines() {
+        return orderLines;
+    }
 }

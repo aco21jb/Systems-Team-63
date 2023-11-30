@@ -77,6 +77,21 @@ public class DatabaseOperations {
         }
     }
 
+    public void addOrder(Connection con, Order order) throws SQLException {
+        try {
+            String addStatement = "INSERT INTO ORDERS VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(addStatement);
+            preparedStatement.setInt(1, order.getOrderNumber());
+            preparedStatement.setDate(2, new java.sql.Date(order.getOrderDate().getTime()));
+            preparedStatement.setString(3, order.getOrderStatus().name());
+            preparedStatement.setString(4, order.getUserId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public ResultSet getAllProducts(Connection con) {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
@@ -93,6 +108,7 @@ public class DatabaseOperations {
             return resultSet;
         } catch (SQLException e) {
             e.printStackTrace(); // Handle the exception according to your application's needs
+            throw e;
         }
         return null;
     }
@@ -106,6 +122,7 @@ public class DatabaseOperations {
             resultSet = preparedStatement.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
         return resultSet;
     }
@@ -120,6 +137,7 @@ public class DatabaseOperations {
             productResult = statement.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
         return productResult;
     }

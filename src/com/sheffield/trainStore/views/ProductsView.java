@@ -161,6 +161,11 @@ public class ProductsView extends JFrame {
                 String currentUserID = currentUser.getUserId();
 
                 Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
+                try {
+                    databaseOperations.addOrder(connection, currentOrder);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
