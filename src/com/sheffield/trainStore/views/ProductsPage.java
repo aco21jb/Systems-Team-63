@@ -26,7 +26,7 @@ public class ProductsPage extends JFrame {
     public ProductsPage(Connection con) throws SQLException {
         // Create the JFrame in the constructor
         this.setTitle("Trains of Sheffield");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(800, 500);
         this.setLocationRelativeTo(null);
 

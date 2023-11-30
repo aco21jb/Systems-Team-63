@@ -22,9 +22,9 @@ public class HomePage extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
 
-    static JMenuBar menuBar;
-    static JMenu userMenu;
-    static JMenuItem managerMenuItem, customerMenuItem, staffMenuItem;
+    // static JMenuBar menuBar;
+    // static JMenu userMenu;
+    // static JMenuItem managerMenuItem, customerMenuItem, staffMenuItem;
     static JFrame f;
 
 
@@ -36,44 +36,44 @@ public class HomePage extends JFrame {
      */
     public HomePage(Connection connection) throws SQLException {
 
+        List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
+
 
         // Create the JFrame in the constructor
         this.setTitle("Trains of Sheffield - Home Page");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(600, 600);
+        this.setSize(800, 800);
 
         // this.setSize(500, 300);
         this.setLocationRelativeTo(null);
 
         // f = new JFrame ("Menu Frame");
-        menuBar = new JMenuBar();
-        userMenu = new JMenu ("Menu");
-        managerMenuItem = new JMenuItem("Manager");
-        customerMenuItem = new JMenuItem("Customer");
-        staffMenuItem= new JMenuItem("Staff");
-        userMenu.add(managerMenuItem);
-        userMenu.add(customerMenuItem);
-        userMenu.add(staffMenuItem);
-        menuBar.add(userMenu);
-        // f.setJMenuBar(mb);
-        // f.setSize(100,100);
-        // f.setVisible(true);
-        this.setJMenuBar(menuBar);
+        // menuBar = new JMenuBar();
+        // userMenu = new JMenu ("Menu");
+        // managerMenuItem = new JMenuItem("Manager");
+        // customerMenuItem = new JMenuItem("Customer");
+        // staffMenuItem= new JMenuItem("Staff");
+        // userMenu.add(managerMenuItem);
+        // userMenu.add(customerMenuItem);
+        // userMenu.add(staffMenuItem);
+        // menuBar.add(userMenu);
+   
+        // this.setJMenuBar(menuBar);
 
 
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
 
         // Create a JPanel to hold the components
         JPanel panelTop = new JPanel();
-        panelTop.setSize(600,50);
+        panelTop.setSize(800,50);
         panelTop.setBorder(blackline);
 
         JPanel panelCenter= new JPanel();
-        panelCenter.setSize(600,500);
+        panelCenter.setSize(800,700);
         panelCenter.setBorder(blackline);
 
         JPanel panelBottom = new JPanel();
-        panelBottom.setSize(600,50);
+        panelBottom.setSize(800,50);
         panelBottom.setBorder(blackline);
 
         // JPanel panelBottom = new JPanel();
@@ -86,14 +86,27 @@ public class HomePage extends JFrame {
 
 
         // Create a JButton for the login action
-        JButton ManagerButton = new JButton("Manager");
+        // JButton ManagerButton = new JButton("Manager");
         JButton CustomerButton = new JButton("Customer");
         JButton StaffButton = new JButton("Staff");
 
+
+        JButton EditPersonalButton = new JButton("Edit Personal Details");
+
+
         panelTop.add(new JLabel());  // Empty label for spacing
-        panelTop.add(ManagerButton);
+
+        // if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+        //   panelTop.add(ManagerButton);
+        // }
+
         panelTop.add(CustomerButton);
-        panelTop.add(StaffButton);
+        panelTop.add(EditPersonalButton);
+
+
+        if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
+            panelTop.add(StaffButton);
+        }
 
         this.add(panelTop);
         this.add(panelCenter);
@@ -101,45 +114,48 @@ public class HomePage extends JFrame {
 
 
 
-        // Create an ActionListener for the Manager button
-        ManagerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        // // Create an ActionListener for the Manager button
+        // ManagerButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
 
-                System.out.println("Yet to be implemented");
+        //         if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+        //                // Open a new window (replace NewWindowClass with the actual class you want to open)
+        //                ManagerUserView newWindow = null;
 
-                List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
-                if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
-                       // Open a new window (replace NewWindowClass with the actual class you want to open)
-                       PromoteUserView newWindow = null;
-                       try {
-                           newWindow = new PromoteUserView(connection);
-                       } catch (SQLException ex) {
-                           throw new RuntimeException(ex);
-                       }
-                       newWindow.setVisible(true);
-                   } else {
-                       JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                   }
+        //                try {
+        //                    newWindow = new ManagerUserView(connection);
+        //                } catch (SQLException ex) {
+        //                    throw new RuntimeException(ex);
+        //                }
+        //                newWindow.setVisible(true);
+        //            } else {
+        //                JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+        //            }
+                  
+        //       }
+        // });
 
-              }
-        });
+        // managerMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //             public void actionPerformed(ActionEvent e) {
 
-        managerMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        //                 if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
+        //                     // Open a new window (replace NewWindowClass with the actual class you want to open)
+        //                     ManagerUserView newWindow = null;
 
-                System.out.println("Yet to be implemented");
-
-                List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
-                if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-
-            }
-        });
+        //                     try {
+        //                         newWindow = new ManagerUserView(connection);
+        //                     } catch (SQLException ex) {
+        //                         throw new RuntimeException(ex);
+        //                     }
+        //                     newWindow.setVisible(true);
+        //                 } else {
+        //                     JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+        //                 }
+                        
+        //             }
+        // });
 
           // Create an ActionListener for the Customer button
         CustomerButton.addActionListener(new ActionListener() {
@@ -159,38 +175,68 @@ public class HomePage extends JFrame {
             }
         });
 
+          // Create an ActionListener for the UserDetailsView button
+        EditPersonalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                //System.out.println("Yet to be implemented");
+
+                UserDetailsView newWindow = null;
+                try {
+                    newWindow = new UserDetailsView(connection);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                newWindow.setVisible(true);
+
+            }
+        });
+
+
           // Create an ActionListener for the Manager button
         StaffButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                System.out.println("Yet to be implemented");
-
-                List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                 if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                       // Open a new window (replace NewWindowClass with the actual class you want to open)
+                    //    PromoteUserView newWindow = null;
+                       StaffUserView newWindow = null;
 
-            }
+                       try {
+                           newWindow = new StaffUserView(connection);
+                       } catch (SQLException ex) {
+                           throw new RuntimeException(ex);
+                       }
+                       newWindow.setVisible(true);
+                   } else {
+                       JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+                   }
+                  
+              }
         });
 
-        staffMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        // staffMenuItem.addActionListener(new ActionListener() {
+        //     @Override
+        //         public void actionPerformed(ActionEvent e) {
 
-                System.out.println("Yet to be implemented");
+        //             if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
+        //                 // Open a new window (replace NewWindowClass with the actual class you want to open)
+        //                 StaffUserView newWindow = null;
 
-                List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
-                if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-
-            }
-        });
+        //                 try {
+        //                     newWindow = new StaffUserView(connection);
+        //                 } catch (SQLException ex) {
+        //                     throw new RuntimeException(ex);
+        //                 }
+        //                 newWindow.setVisible(true);
+        //             } else {
+        //                 JOptionPane.showMessageDialog(null, "You are not authorized to view this!", "Error", JOptionPane.ERROR_MESSAGE);
+        //             }
+                    
+        //         }
+        // });
 
 
     }

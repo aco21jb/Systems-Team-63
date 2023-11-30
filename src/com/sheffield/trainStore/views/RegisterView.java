@@ -17,6 +17,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 
@@ -115,17 +117,25 @@ public class RegisterView extends JFrame {
         panel.add(registerButton);
         panel.add(loginButton);
 
-
         // Create an ActionListener for the Register button
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                   
+                String emailId = emailField.getText();
+
+              
+                //Regular Expression   
+                String regex = "^(.+)@(.+)$";  
+                //Compile regular expression to get the pattern  
+                Pattern pattern = Pattern.compile(regex);           
+                //Create instance of matcher   
+                Matcher matcher = pattern.matcher(emailId); 
+                    
+                if (matcher.matches()) {
                 
-                      //  new today
                     String uniqueUserID = UniqueUserIDGenerator.generateUniqueUserID() ;
 
-                    String emailId = emailField.getText();
+                    // String emailId = emailField.getText();
                     char[] passwordChars = passwordField.getPassword();
 
                     String forename = forenameField.getText();
@@ -136,26 +146,17 @@ public class RegisterView extends JFrame {
                     String roadName = roadnameField.getText();
                     String cityName = citynameField.getText();
 
-
                     DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
-
-                    
                     try {
 
                         if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
 
-                            //  new today
-                            // databaseOperationsUser.registerUser(connection, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
-
                             databaseOperationsUser.registerUser(connection, uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
 
-                           // Secure disposal of the password
-                           Arrays.fill(passwordChars, '\u0000');
-
-
+                            // Secure disposal of the password
+                            Arrays.fill(passwordChars, '\u0000');
                             //  NEED TO CLEAR THE FILEDS VALUES
                             // Close the current window
-
                             dispose();
                             HomePage HomePage = null;
 
@@ -166,13 +167,17 @@ public class RegisterView extends JFrame {
                         else {
                             JOptionPane.showMessageDialog(null, "Already registered with this Email ID.. ");
                         }
-
                        
                     } catch (SQLException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
                 }
+                else {
+                        JOptionPane.showMessageDialog(null, "Invalid Email ID.. ");
+   
+                }
+            }  
         });
 
 
