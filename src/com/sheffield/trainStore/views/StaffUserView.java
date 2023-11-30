@@ -13,6 +13,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
@@ -30,6 +32,8 @@ public class StaffUserView extends JFrame {
 
 
     private final DatabaseOperationsUser databaseOperationsUser;
+    private final DatabaseOperations databaseOperations;
+
     List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
 
 
@@ -79,6 +83,8 @@ public class StaffUserView extends JFrame {
     public StaffUserView(Connection connection) throws SQLException {
 
         databaseOperationsUser = new DatabaseOperationsUser();
+        databaseOperations = new DatabaseOperations();
+
 
         // Set properties for the new window
         setTitle("Staff");
@@ -194,14 +200,10 @@ public class StaffUserView extends JFrame {
                     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                     if (listOfRolesForCurrentUser.contains(Role.MANAGER) ) {
                         // Open a new window (replace NewWindowClass with the actual class you want to open)
-                        //    PromoteUserView newWindow = null;
                         ManagerUserView newWindow = null;
 
                         try {
                             newWindow = new ManagerUserView(connection);
-
-                            // managerPanel.removeAll();
-                            // managerPanel.add(new ManagerUserView (connection));
 
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -274,27 +276,18 @@ public class StaffUserView extends JFrame {
                 }
 
 
-
                 if (localTabbedPane.getTitleAt(index) == "Update Stock") {
                     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
                     if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
-
                         // ProductsPage newWindow = null;
-
                         try {
                             // newWindow = new ProductsPage(connection);
                             updateStockPanel.removeAll();
-
                             updateStockPanel.add(new ProductsPanelPage (connection));
-
                             updateStockPanel.add(productStockLabel);
+                            productStockField.setText("0");
                             updateStockPanel.add(productStockField);
                             updateStockPanel.add(updateStockProductButton);
-
-                            // productPanel.add(productsTablePanel);
-                            // productPanel.add(productViewPanel);
-
-                            // productPanel.add(productsButtonPanel);
 
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -302,12 +295,10 @@ public class StaffUserView extends JFrame {
                         // newWindow.setVisible(true);
                     }
                 }
-
-
             }
         };
 
-
+        //  Adding change listener tp tabbed Pane control
         tabbedPane.addChangeListener(tabbedPaneChangeListener);
 
 
@@ -315,93 +306,101 @@ public class StaffUserView extends JFrame {
         updateStockProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // if (isUserAuthorised(Role.ADMIN)) {
-                    // Get the selected user from the combo box
-                    // productStockField.setEnabled(false);
+        
+                int row = ProductsPanelPage.productsTable.getSelectedRow();
+                  // Check if a user is selected
+                if (row >= 0) {
+                        int productNewStock = Integer.parseInt( productStockField.getText());    
+                        // Int productOldStock = Integer.parseInt( productStockField.getText());    
+                        // String  productOldStock =  String.valueOf( ProductsPanelPage.productsTable.getValueAt(row,3)) ;
+                        // String  productCode =  (String) ProductsPanelPage.productsTable.getValueAt(row,0);
 
-                    int row = ProductsPanelPage.productsTable.getSelectedRow();
+                        String productOldStock1 = String.valueOf(ProductsPanelPage.productsTable.getValueAt(row,3)) ;                        
 
-                    // Check if a user is selected
-                    if (row >= 0) {
+                        // int productOldStock1 = productOldStock.valueOf();
+                        Integer productOldStock = Integer.parseInt( productOldStock1)     ;     
+                        // Integer productOldStock = productOldStock1.valueOf(productOldStock1)    ;                   
 
 
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Please select a user.");
+                        if (productNewStock > 0) {
+                            if (productNewStock  > productOldStock)  {                                 
+                                    String productCode = String.valueOf(ProductsPanelPage.productsTable.getValueAt(row,0)) ;
+
+                                    // Ask for confirmation
+                                    int dialogResult = JOptionPane.showConfirmDialog(null,
+                                            "Are you sure you want to Update the Stock for    " + productCode  + " from Existing Stock ?"  + productOldStock , "Confirmation",
+                                            JOptionPane.YES_NO_OPTION);
+
+                                    // Check the user's choice
+                                    if (dialogResult == JOptionPane.YES_OPTION) {
+                                        // User confirmed, promote the selected user to Moderator
+                                        try {
+                                            databaseOperations.updateStock(connection, productCode, productNewStock );
+                                            updateStockPanel.removeAll();
+                                            updateStockPanel.add(new ProductsPanelPage (connection));
+                                            updateStockPanel.add(productStockLabel);
+                                            productStockField.setText("0");
+                                            updateStockPanel.add(productStockField);
+                                            updateStockPanel.add(updateStockProductButton);                                            
+                                        } catch (SQLException e1) {
+                                            // TODO Auto-generated catch block
+                                            e1.printStackTrace();
+                                        }                                     
+                                        JOptionPane.showMessageDialog(null, productCode + " Stock Updated Successfully.");
+                                    } else {
+                                        // User canceled the action
+                                        JOptionPane.showMessageDialog(null, "Canceled.", "Canceled", JOptionPane.WARNING_MESSAGE);
+                                    }
+                                } else {
+                                   JOptionPane.showMessageDialog(null, "New Stock should be more than the Current Stock ");
+                                }
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(null, "Please Enter a New Stock to update.");
+                        }
                     }
+                  else {
+                    JOptionPane.showMessageDialog(null, "Please select a user.");
+                  }                    
 
             }
         });
 
 
+        // Add action listener to the button
+        viewProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // if (isUserAuthorised(Role.ADMIN)) {
+                    // Get the selected user from the combo box
 
-            // Add action listener to the button
-            viewProductButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // if (isUserAuthorised(Role.ADMIN)) {
-                        // Get the selected user from the combo box
-
-                        int row = ProductsPanelPage.productsTable.getSelectedRow();
-                        // String selectedUser = String.valueOf(staffComboBox.getSelectedItem());
-                        // String emailId = String.valueOf(ProductsPage.products.getValueAt(row,0)) ;
-
+                    int row = ProductsPanelPage.productsTable.getSelectedRow();
+                    // String selectedUser = String.valueOf(staffComboBox.getSelectedItem());
+                    // String emailId = String.valueOf(ProductsPage.products.getValueAt(row,0)) ;
 
 
-                        // Check if a user is selected
-                        if (row >= 0) {
 
-                            System.out.println(ProductsPanelPage.productsTable.getValueAt(row,0));
-                            System.out.println(ProductsPanelPage.productsTable.getValueAt(row,1));
-                            System.out.println(ProductsPanelPage.productsTable.getValueAt(row,2));
+                    // Check if a user is selected
+                    if (row >= 0) {
 
-                            productCodeField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,0));
-                            productNameField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,1));
-                            // productStockField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,2));
-                            // productRetailPriceField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,3));
+                        System.out.println(ProductsPanelPage.productsTable.getValueAt(row,0));
+                        System.out.println(ProductsPanelPage.productsTable.getValueAt(row,1));
+                        System.out.println(ProductsPanelPage.productsTable.getValueAt(row,2));
 
-                            // productRetailPriceField = ProductsPanelPage.productsTable.getValueAt(row,0);
+                        productCodeField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,0));
+                        productNameField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,1));
+                        // productStockField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,2));
+                        // productRetailPriceField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,3));
 
-
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Please select a user.");
-                        }
+                        // productRetailPriceField = ProductsPanelPage.productsTable.getValueAt(row,0);
 
 
-                }
-            });
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please select a user.");
+                    }
+            }
+        });
     }
-
-
-    /**
-     * Populates the user combo box with user data from the database.
-     *
-     * @param connection The database connection.
-     * @throws SQLException if a database access error occurs.
-     */
-
-    private void populateOrderTable(Connection connection,  OrderStatus orderStatus) throws SQLException {
-
-
-        ResultSet resultSet = databaseOperationsUser.getOrderDetails(connection, orderStatus);
-
-        // Populate the JTable with the query results
-        while (resultSet.next()) {
-
-
-            // String emailID = resultSet.getString("email");
-            // staffComboBox.addItem(emailID);
-
-            orderTableModel.addRow(new Object[]{
-                resultSet.getString("orderNumber"),
-                resultSet.getString("orderDate"),
-                resultSet.getString("userID")
-
-            });
-        }
-        resultSet.close();
-
-    }
-
 
     private boolean isUserAuthorised(Role role) {
         // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();

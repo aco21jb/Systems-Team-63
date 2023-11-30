@@ -144,6 +144,32 @@ public class DatabaseOperations {
     }
 
 
+        // Update an existing book in the database
+    public void updateStock(Connection connection, String productInput, Integer newSTock) throws SQLException {            
+
+       try {
+         
+           String updateSQL = "UPDATE PRODUCTS SET stock=? "+
+           " WHERE productCode=?";
+           PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+
+           preparedStatement.setInt(1,newSTock);
+           preparedStatement.setString(2, productInput);
+                    
+           int rowsAffected = preparedStatement.executeUpdate();
+
+           if (rowsAffected > 0) {
+               System.out.println(rowsAffected + " row(s) updated successfully.");
+           } else {
+               System.out.println("No rows were updated for product code: " );
+           }
+       } catch (SQLException e) {
+           e.printStackTrace();
+           throw e;// Re-throw the exception to signal an error.
+       }
+    } 
+
+
     public ResultSet getOrdersForStatus(Connection con, OrderStatus orderStatus) throws SQLException {
         ResultSet resultSet = null;
         PreparedStatement statement = null;

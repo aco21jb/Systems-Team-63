@@ -214,7 +214,7 @@ public class ProductsView extends JFrame {
      */
     private void populateProductComboBox(Connection connection) throws SQLException {
 
-        ResultSet resultSet = databaseOperations.getAllProducts(connection);
+        ResultSet resultSet = databaseOperations.getProducts(connection);
 
 
         // Populate the JTable with the query results
