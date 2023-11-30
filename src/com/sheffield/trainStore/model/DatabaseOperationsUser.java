@@ -382,7 +382,8 @@ public class DatabaseOperationsUser {
         try {
             // Execute the query to select all usernames from the 'Users' table
             String query = "SELECT u.userId, u.email, u.forename, u.surname, u.housenumber, u.postcode, ad.roadname, " 
-            + " ad.cityname FROM USERS u, ADDRESS ad WHERE u.housenumber = ad.housenumber AND u.postcode = ad.postcode AND userID = " + "\'" + userId + "\'";
+            + " ad.cityname FROM USERS u, ADDRESS ad WHERE u.housenumber = ad.housenumber " +
+                    "AND u.postcode = ad.postcode AND userID = " + "\'" + userId + "\'";
 
             // Create a statement
             statement = connection.prepareStatement(query);
@@ -438,7 +439,8 @@ public class DatabaseOperationsUser {
 
         try {
             // Execute the query to select all usernames from the 'Users' table
-            String query = "SELECT u.userId, u.email, u.forename, u.surname, r.role FROM USERS u, ROLES r WHERE u.userId=r.userId";
+            String query = "SELECT u.userId, u.email, u.forename, u.surname, r.role FROM USERS u, ROLES r WHERE " +
+                    "u.userId=r.userId";
 
             // Create a statement
             statement = connection.prepareStatement(query);
@@ -484,7 +486,8 @@ public class DatabaseOperationsUser {
         try {
             // Execute the query to select all usernames from the 'Users' table
             String query = "SELECT o.orderNumber, o.orderDate, o.userId, od.orderNumber, od.quantity, od.lineCost " 
-               + "FROM ORDERS o, ORDER_LINES od WHERE o.orderNumber=od.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\'";
+               + "FROM ORDERS o, ORDER_LINES od WHERE o.orderNumber=od.orderNumber AND o.orderStatus = " + "\'" +
+                    orderStatus + "\'";
 
 
             // Create a statement
@@ -510,7 +513,8 @@ public class DatabaseOperationsUser {
 
         try {
             // Execute the query to select all usernames from the 'Users' table
-            String query = "SELECT u.userId, u.email, u.forename, u.surname, r.role FROM USERS u, ROLES r WHERE u.userId=r.userId AND r.role" + " = " + "\'" + Role.STAFF + "\'";
+            String query = "SELECT u.userId, u.email, u.forename, u.surname, r.role FROM USERS u, ROLES r WHERE " +
+                    "u.userId=r.userId AND r.role" + " = " + "\'" + Role.STAFF + "\'";
 
             // Create a statement
             statement = connection.prepareStatement(query);

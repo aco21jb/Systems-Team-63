@@ -3,7 +3,11 @@ package com.sheffield.trainStore.views;
 import com.sheffield.trainStore.model.DatabaseOperations;
 import com.sheffield.trainStore.model.DatabaseOperationsUser;
 import com.sheffield.trainStore.model.Product;
+import com.sheffield.trainStore.model.Order;
 import com.sheffield.trainStore.model.OrderLine;
+import com.sheffield.trainStore.model.OrderStatus;
+import com.sheffield.trainStore.model.CurrentUser;
+import com.sheffield.trainStore.model.CurrentUserManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import java.math.BigDecimal;
@@ -24,6 +30,7 @@ public class ProductsView extends JFrame {
     private List<OrderLine> order;
     private int orderNumber = 1;
     private int orderLineNumber = 1;
+    private OrderStatus orderStatus = null;
 
     /**
      * Constructor for the PromoteUserView.
@@ -83,10 +90,11 @@ public class ProductsView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // if (isUserAuthorised(Role.ADMIN)) {
-                // Get the selected user from the combo box
+                // Get the selected product from the combo box
 
 
                 String selectedProduct = String.valueOf(productComboBox.getSelectedItem());
+                orderStatus = OrderStatus.PENDING;
 
                 // Check if a user is selected
                 if (selectedProduct != null) {
@@ -119,9 +127,9 @@ public class ProductsView extends JFrame {
                                 String quantityString = JOptionPane.showInputDialog("Quantity: ");
                                 int quantity = Integer.parseInt(quantityString);
                                 if (quantity <= selectedProductStock) {
-                                    OrderLine currentOrder = new OrderLine(orderNumber, orderLineNumber, quantity,
+                                    OrderLine currentOrderLine = new OrderLine(orderNumber, orderLineNumber, quantity,
                                             selectedProductPrice, selectedProductCode);
-                                    order.add(currentOrder);
+                                    order.add(currentOrderLine);
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Item out of stock.");
                                 }
@@ -147,6 +155,12 @@ public class ProductsView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                orderStatus = OrderStatus.CONFIRMED;
+                Date currentDate = new Date();
+                CurrentUser currentUser = CurrentUserManager.getCurrentUser();
+                String currentUserID = currentUser.getUserId();
+
+                Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
             }
         });
 
