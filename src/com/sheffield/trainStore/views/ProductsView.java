@@ -85,6 +85,11 @@ public class ProductsView extends JFrame {
         panel.add(new JLabel());
         panel.add(confirmOrderButton);
 
+        JButton viewOrderButton = new JButton("View Order");
+
+        panel.add(new JLabel());
+        panel.add(viewOrderButton);
+
 
         // Add action listener to the button
         addProductButton.addActionListener(new ActionListener() {
@@ -165,6 +170,18 @@ public class ProductsView extends JFrame {
                 Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
                 try {
                     databaseOperations.addOrder(connection, currentOrder);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        viewOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    OrderView orderView = new OrderView(connection, orderNumber);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
