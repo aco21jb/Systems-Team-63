@@ -154,7 +154,7 @@ public class DatabaseOperations {
             String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, ol.orderLineNumber, ol.quantity, " +
                     "ol.lineCost, ol.productCode FROM ORDERS o, ORDER_LINES ol WHERE o.orderNumber = ol.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\' " ;
 
-     
+
             // Create a statement
             statement = con.prepareStatement(query);
 
@@ -165,6 +165,6 @@ public class DatabaseOperations {
             throw e;
         }
         // return null;
-    }    
+    }
 
 }
