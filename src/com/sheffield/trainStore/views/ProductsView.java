@@ -2,6 +2,12 @@ package com.sheffield.trainStore.views;
 
 import com.sheffield.trainStore.model.DatabaseOperations;
 import com.sheffield.trainStore.model.DatabaseOperationsUser;
+import com.sheffield.trainStore.model.Product;
+import com.sheffield.trainStore.model.Order;
+import com.sheffield.trainStore.model.OrderLine;
+import com.sheffield.trainStore.model.OrderStatus;
+import com.sheffield.trainStore.model.CurrentUser;
+import com.sheffield.trainStore.model.CurrentUserManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -12,11 +18,19 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
+
+import java.math.BigDecimal;
 public class ProductsView extends JFrame {
 
     private JComboBox<String> productComboBox;
     private final DatabaseOperations databaseOperations;
+    private List<OrderLine> order;
+    private int orderNumber = 1;
+    private int orderLineNumber = 1;
+    private OrderStatus orderStatus = null;
 
     /**
      * Constructor for the PromoteUserView.
@@ -60,15 +74,15 @@ public class ProductsView extends JFrame {
         panel.add(new JLabel());
 
         /*JLabel emailLabel = new JLabel("Enter Email ID:");
-        JTextField emailField= new JTextField(20);
+        JTextField emailField= new JTextField(20);*/
 
-        JButton promoteButton = new JButton("Promote to Staff");
+        JButton confirmOrderButton = new JButton("Confirm Order");
 
-        panel.add(emailLabel);
-        panel.add(emailField);
+        /*panel.add(emailLabel);
+        panel.add(emailField);*/
 
         panel.add(new JLabel());
-        panel.add(promoteButton);*/
+        panel.add(confirmOrderButton);
 
 
         // Add action listener to the button
@@ -76,10 +90,11 @@ public class ProductsView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // if (isUserAuthorised(Role.ADMIN)) {
-                // Get the selected user from the combo box
+                // Get the selected product from the combo box
 
 
                 String selectedProduct = String.valueOf(productComboBox.getSelectedItem());
+                orderStatus = OrderStatus.PENDING;
 
                 // Check if a user is selected
                 if (selectedProduct != null) {
@@ -102,13 +117,55 @@ public class ProductsView extends JFrame {
                         JOptionPane.showMessageDialog(null, "Canceled.", "Canceled", JOptionPane.WARNING_MESSAGE);
                     }*/
 
+                    try {
+                        ResultSet productResult = databaseOperations.getProduct(connection, selectedProduct);
+                        if (productResult.next()) {
+                            String selectedProductCode = productResult.getString("productCode");
+                            BigDecimal selectedProductPrice = productResult.getBigDecimal("retailPrice");
+                            int selectedProductStock = productResult.getInt("stock");
+                            try {
+                                String quantityString = JOptionPane.showInputDialog("Quantity: ");
+                                int quantity = Integer.parseInt(quantityString);
+                                if (quantity <= selectedProductStock) {
+                                    OrderLine currentOrderLine = new OrderLine(orderNumber, orderLineNumber, quantity,
+                                            selectedProductPrice, selectedProductCode);
+                                    order.add(currentOrderLine);
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Item out of stock.");
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(null, "Invalid quantity.");
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please select a user.");
+                    JOptionPane.showMessageDialog(null, "Please select a product.");
                 }
                 // } else {
                 //     JOptionPane.showMessageDialog(null, "You are not an ADMIN!", "Error", JOptionPane.ERROR_MESSAGE);
                 // }
+            }
+        });
+
+        confirmOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                orderStatus = OrderStatus.CONFIRMED;
+                Date currentDate = new Date();
+                CurrentUser currentUser = CurrentUserManager.getCurrentUser();
+                String currentUserID = currentUser.getUserId();
+
+                Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
+                try {
+                    databaseOperations.addOrder(connection, currentOrder);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 

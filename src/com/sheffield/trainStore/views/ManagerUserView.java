@@ -22,6 +22,7 @@ import java.util.List;
  * The ManagerUserView class represents the GUI window for promoting users to Moderator.
  */
 public class ManagerUserView extends JFrame {
+// public class ManagerUserView extends JPanel {    
 
     private final DatabaseOperationsUser databaseOperationsUser;
 
@@ -71,6 +72,8 @@ public class ManagerUserView extends JFrame {
 
 
         getContentPane().add(mainPanel);  
+        // this.add(mainPanel);  
+
         mainPanel.add(topPanel);
         mainPanel.add(btnPanel);
         mainPanel.add(bottomPanel);
@@ -202,13 +205,18 @@ public class ManagerUserView extends JFrame {
 
                 // String emailID = resultSet.getString("email");
                 // staffComboBox.addItem(emailID);
-
-                staffTableModel.addRow(new Object[]{
-                    resultSet.getString("email"),
-                    resultSet.getString("forename"),
-                    resultSet.getString("surname")
-                    
-                });            
+                // System.out.println(CurrentUserManager.getCurrentUser().getUserId());
+                // System.out.println(resultSet.getString("userId"));
+  
+                
+                if (! (CurrentUserManager.getCurrentUser().getUserId().equals(resultSet.getString("userId")))){
+                    staffTableModel.addRow(new Object[]{
+                        resultSet.getString("email"),
+                        resultSet.getString("forename"),
+                        resultSet.getString("surname")
+                        
+                });       
+              }     
             }
             resultSet.close();
             

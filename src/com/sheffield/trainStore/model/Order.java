@@ -1,6 +1,6 @@
 package com.sheffield.trainStore.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 public class Order {
@@ -18,5 +18,25 @@ public class Order {
         this.orderStatus = orderStatus;
         this.userId = userId;
         this.orderLines = orderLines;
+    }
+
+    public int getOrderNumber() {
+        return orderNumber;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public List<OrderLine> getOrderLines() {
+        return orderLines;
     }
 }

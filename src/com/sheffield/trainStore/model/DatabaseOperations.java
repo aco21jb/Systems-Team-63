@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import com.sheffield.trainStore.model.OrderStatus;
 
 public class DatabaseOperations {
     public void addProduct(Connection con, Product product) throws SQLException {
@@ -51,7 +52,7 @@ public class DatabaseOperations {
             preparedStatement.setInt(1, orderLine.getOrderNumber());
             preparedStatement.setInt(2, orderLine.getOrderLineNumber());
             preparedStatement.setInt(3, orderLine.getQuantity());
-            preparedStatement.setFloat(4, orderLine.getLineCost());
+            preparedStatement.setBigDecimal(4, orderLine.getLineCost());
             preparedStatement.setString(5, orderLine.getProductCode());
 
             preparedStatement.executeUpdate();
@@ -68,6 +69,7 @@ public class DatabaseOperations {
         try {
             String removeStatement = "DELETE FROM ORDER_LINES WHERE (orderNumber, orderLineNumber) IN (?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(removeStatement);
+            preparedStatement.setInt(1, orderLine.getOrderNumber());
             preparedStatement.setInt(2, orderLine.getOrderLineNumber());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -76,7 +78,22 @@ public class DatabaseOperations {
         }
     }
 
-    public ResultSet getAllProducts(Connection con) {
+    public void addOrder(Connection con, Order order) throws SQLException {
+        try {
+            String addStatement = "INSERT INTO ORDERS VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(addStatement);
+            preparedStatement.setInt(1, order.getOrderNumber());
+            preparedStatement.setDate(2, new java.sql.Date(order.getOrderDate().getTime()));
+            preparedStatement.setString(3, order.getOrderStatus().name());
+            preparedStatement.setString(4, order.getUserId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public ResultSet getAllProducts(Connection con) throws SQLException {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
 
@@ -92,21 +109,62 @@ public class DatabaseOperations {
             return resultSet;
         } catch (SQLException e) {
             e.printStackTrace(); // Handle the exception according to your application's needs
+            throw e;
         }
-        return null;
+        // return null;
     }
 
     public ResultSet getProducts(Connection con) throws SQLException {
         ResultSet resultSet = null;
         try {
-            String query = "SELECT productName, retailPrice, stock, gauge, eraCode, dccCode, productType" +
+            String query = "SELECT productCode, productName, retailPrice, stock, gauge, eraCode, dccCode, productType" +
                     " FROM PRODUCTS";
             PreparedStatement preparedStatement = con.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
         return resultSet;
     }
+
+    public ResultSet getProduct(Connection con, String productInput) throws SQLException {
+        ResultSet productResult = null;
+        PreparedStatement statement = null;
+        try {
+            String query = "SELECT productCode, retailPrice, stock FROM PRODUCTS WHERE productName = ?";
+            statement = con.prepareStatement(query);
+            statement.setString(1, productInput);
+            productResult = statement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return productResult;
+    }
+
+
+    public ResultSet getOrdersForStatus(Connection con, OrderStatus orderStatus) throws SQLException {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+
+        try {
+
+             // Execute the query to select all products from the "PRODUCTS" table
+            String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, ol.orderLineNumber, ol.quantity, " +
+                    "ol.lineCost, ol.productCode FROM ORDERS o, ORDER_LINES ol WHERE o.orderNumber = ol.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\' " ;
+
+     
+            // Create a statement
+            statement = con.prepareStatement(query);
+
+            resultSet = statement.executeQuery(query);
+            return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+            throw e;
+        }
+        // return null;
+    }    
 
 }

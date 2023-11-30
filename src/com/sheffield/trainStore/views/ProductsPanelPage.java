@@ -14,25 +14,27 @@ import java.util.Arrays;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 
-public class ProductsPage extends JFrame {
+public class ProductsPanelPage extends JPanel {
 
-    private JTable products;
-    public ProductsPage(Connection con) throws SQLException {
+    public static JTable productsTable;
+    public ProductsPanelPage(Connection con) throws SQLException {
         // Create the JFrame in the constructor
-        this.setTitle("Trains of Sheffield");
+        // this.setTitle("Trains of Sheffield");
         // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800, 500);
-        this.setLocationRelativeTo(null);
+
+        // this.setSize(800, 500);
+        // this.setLocationRelativeTo(null);
 
         // Create a JPanel to hold the components
-        JPanel panel = new JPanel(new GridLayout(12, 2));
+        JPanel panel = new JPanel(new GridLayout(2, 2));
         this.add(panel);
 
         panel.setLayout(new GridLayout(12, 2));
         Border blackLine = BorderFactory.createLineBorder(Color.BLACK);
         panel.setBorder(blackLine);
         DefaultTableModel tableModel = new DefaultTableModel();
-        products = new JTable(tableModel);
+        productsTable = new JTable(tableModel);
+        tableModel.addColumn("Product Code");        
         tableModel.addColumn("Product Name");
         tableModel.addColumn("Price");
         tableModel.addColumn("Stock");
@@ -46,6 +48,7 @@ public class ProductsPage extends JFrame {
 
         while (resultSet.next()) {
             tableModel.addRow(new Object[]{
+                    resultSet.getString("productCode"),
                     resultSet.getString("productName"),
                     resultSet.getBigDecimal("retailPrice"),
                     resultSet.getInt("stock"),
@@ -56,8 +59,8 @@ public class ProductsPage extends JFrame {
             });
         }
         resultSet.close();
-        con.close();
-        JScrollPane scrollPane = new JScrollPane(products);
+        // con.close();
+        JScrollPane scrollPane = new JScrollPane(productsTable);
         this.add(scrollPane, BorderLayout.CENTER);
     }
 
