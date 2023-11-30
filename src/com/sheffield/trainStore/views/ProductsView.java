@@ -21,13 +21,14 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.ArrayList;
 
 import java.math.BigDecimal;
 public class ProductsView extends JFrame {
 
     private JComboBox<String> productComboBox;
     private final DatabaseOperations databaseOperations;
-    private List<OrderLine> order;
+    private List<OrderLine> order = new ArrayList<>();
     private int orderNumber = 1;
     private int orderLineNumber = 1;
     private OrderStatus orderStatus = null;
@@ -130,6 +131,7 @@ public class ProductsView extends JFrame {
                                     OrderLine currentOrderLine = new OrderLine(orderNumber, orderLineNumber, quantity,
                                             selectedProductPrice, selectedProductCode);
                                     order.add(currentOrderLine);
+                                    databaseOperations.addOrderLine(connection, currentOrderLine);
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Item out of stock.");
                                 }
