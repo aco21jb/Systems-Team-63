@@ -94,6 +94,18 @@ public class DatabaseOperations {
         }
     }
 
+    public void removeOrder(Connection con, Order order) throws SQLException {
+        try {
+            String removeStatement = "DELETE FROM ORDERS WHERE orderNumber = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(removeStatement);
+            preparedStatement.setInt(1, order.getOrderNumber());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public ResultSet getAllProducts(Connection con) throws SQLException {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
