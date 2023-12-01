@@ -31,8 +31,8 @@ public class Main {
 
                 RegisterView = new RegisterView(databaseConnectionHandler.getConnection());
                 RegisterView.setVisible(true);
-                //productsPage = new ProductsPage(databaseConnectionHandler.getConnection());
-                //productsPage.setVisible(true);
+                // productsPage = new ProductsPage(databaseConnectionHandler.getConnection());
+                // productsPage.setVisible(true);
 
             } catch (Throwable t) {
                 // Close connection if database crashes.
