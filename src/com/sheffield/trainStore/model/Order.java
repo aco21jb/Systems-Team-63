@@ -11,6 +11,13 @@ public class Order {
     private String userId;
     private List<OrderLine> orderLines;
 
+    public Order(int orderNumber, Date orderDate, OrderStatus orderStatus, String userId) {
+        this.orderNumber = orderNumber;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+        this.userId = userId;
+    }
+
     public Order(int orderNumber, Date orderDate, OrderStatus orderStatus, String userId,
                  List<OrderLine> orderLines) {
         this.orderNumber = orderNumber;

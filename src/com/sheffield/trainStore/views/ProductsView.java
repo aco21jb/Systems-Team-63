@@ -29,8 +29,8 @@ public class ProductsView extends JFrame {
     private JComboBox<String> productComboBox;
     private final DatabaseOperations databaseOperations;
     private List<OrderLine> order = new ArrayList<>();
-    private int orderNumber = 1;
-    private int orderLineNumber = 1;
+    private int orderNumber;
+    private int orderLineNumber;
     private OrderStatus orderStatus = null;
 
     /**
@@ -41,7 +41,7 @@ public class ProductsView extends JFrame {
      */
     public ProductsView(Connection connection) throws SQLException {
         // Initialize DatabaseOperations
-        // DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
+
         databaseOperations = new DatabaseOperations();
 
         // Set properties for the new window
@@ -74,13 +74,7 @@ public class ProductsView extends JFrame {
         panel.add(new JLabel());
         panel.add(new JLabel());
 
-        /*JLabel emailLabel = new JLabel("Enter Email ID:");
-        JTextField emailField= new JTextField(20);*/
-
         JButton confirmOrderButton = new JButton("Confirm Order");
-
-        /*panel.add(emailLabel);
-        panel.add(emailField);*/
 
         panel.add(new JLabel());
         panel.add(confirmOrderButton);
@@ -95,7 +89,7 @@ public class ProductsView extends JFrame {
         addProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // if (isUserAuthorised(Role.ADMIN)) {
+
                 // Get the selected product from the combo box
 
 
@@ -104,24 +98,6 @@ public class ProductsView extends JFrame {
 
                 // Check if a user is selected
                 if (selectedProduct != null) {
-
-                    // Ask for confirmation
-                    /*int dialogResult = JOptionPane.showConfirmDialog(null,
-                            "Are you sure you want to Remove   " + selectedUser + " from Staff Role?", "Confirmation",
-                            JOptionPane.YES_NO_OPTION);
-
-                    // Check the user's choice
-                    if (dialogResult == JOptionPane.YES_OPTION) {
-                        // User confirmed, promote the selected user to Moderator
-                        // databaseOperationsUser.promoteToStaff(connection, selectedUser);
-                        databaseOperationsUser.removeFromStaff(connection, selectedUser);
-                        staffComboBox.removeItem(selectedUser);
-
-                        JOptionPane.showMessageDialog(null, selectedUser + " has been Removed from Staff.");
-                    } else {
-                        // User canceled the action
-                        JOptionPane.showMessageDialog(null, "Canceled.", "Canceled", JOptionPane.WARNING_MESSAGE);
-                    }*/
 
                     try {
                         ResultSet productResult = databaseOperations.getProduct(connection, selectedProduct);
@@ -133,10 +109,20 @@ public class ProductsView extends JFrame {
                                 String quantityString = JOptionPane.showInputDialog("Quantity: ");
                                 int quantity = Integer.parseInt(quantityString);
                                 if (quantity <= selectedProductStock) {
+
+                                    orderStatus = OrderStatus.PENDING;
+                                    Date tempDate = new Date();
+                                    CurrentUser tempCurrentUser = CurrentUserManager.getCurrentUser();
+                                    String tempCurrentUserID = tempCurrentUser.getUserId();
+
+                                    Order tempOrder = new Order(orderNumber, tempDate, orderStatus, tempCurrentUserID);
+                                    databaseOperations.addOrder(connection, tempOrder);
+
                                     OrderLine currentOrderLine = new OrderLine(orderNumber, orderLineNumber, quantity,
                                             selectedProductPrice, selectedProductCode);
                                     order.add(currentOrderLine);
                                     databaseOperations.addOrderLine(connection, currentOrderLine);
+
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Item out of stock.");
                                 }
@@ -152,9 +138,6 @@ public class ProductsView extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select a product.");
                 }
-                // } else {
-                //     JOptionPane.showMessageDialog(null, "You are not an ADMIN!", "Error", JOptionPane.ERROR_MESSAGE);
-                // }
             }
         });
 
@@ -188,41 +171,6 @@ public class ProductsView extends JFrame {
             }
         });
 
-
-        // Add action listener to the button
-        /*promoteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // if (isUserAuthorised(Role.ADMIN)) {
-                // Get the selected user from the combo box
-
-                String emailId = emailField.getText();
-
-
-                if (! databaseOperationsUser.IsAlreadyStaff(connection, emailId)) {
-                    // Ask for confirmation
-                    int dialogResult = JOptionPane.showConfirmDialog(null,
-                            "Are you sure you want to promote " + emailId + " to Staff?", "Confirmation",
-                            JOptionPane.YES_NO_OPTION);
-
-                    // Check the user's choice
-                    if (dialogResult == JOptionPane.YES_OPTION) {
-                        // User confirmed, promote the selected user to Moderator
-                        databaseOperationsUser.promoteToStaff(connection, emailId);
-                        staffComboBox.removeItem(emailId);
-
-                        JOptionPane.showMessageDialog(null, emailId + " has been promoted to Staff.");
-                    } else {
-                        // User canceled the action
-                        JOptionPane.showMessageDialog(null, "canceled.", "Canceled", JOptionPane.WARNING_MESSAGE);
-                    }
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "User doesn't exists or already a Staff");
-                }
-
-            }
-        });*/
     }
 
     /**
