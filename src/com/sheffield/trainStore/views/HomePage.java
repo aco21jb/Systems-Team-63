@@ -165,12 +165,15 @@ public class HomePage extends JFrame {
                 //System.out.println("Yet to be implemented");
 
                 ProductsView newWindow = null;
+                ProductsPage productsWindow = null;
                 try {
                     newWindow = new ProductsView(connection);
+                    productsWindow = new ProductsPage(connection);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
                 newWindow.setVisible(true);
+                productsWindow.setVisible(true);
 
             }
         });

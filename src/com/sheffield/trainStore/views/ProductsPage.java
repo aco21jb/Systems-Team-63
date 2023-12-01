@@ -110,11 +110,11 @@ public class ProductsPage extends JFrame {
         resultSet.close();
         JScrollPane scrollPane = new JScrollPane(products);
         this.add(scrollPane, BorderLayout.CENTER);
-        /*if (CurrentUserManager.getCurrentUser().getRoles().contains(Role.STAFF)){
+        if (CurrentUserManager.getCurrentUser().getRoles().contains(Role.STAFF)){
             JButton addProductButton = new JButton("Add Product");
             this.add(addProductButton, BorderLayout.PAGE_END);
         }
-        */
+
     }
 
     private void filterProducts(Connection con) throws SQLException {
