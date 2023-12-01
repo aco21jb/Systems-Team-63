@@ -1,7 +1,7 @@
 package com.sheffield.trainStore.views;
 
-import com.sheffield.trainStore.model.DatabaseConnectionHandler;
-import com.sheffield.trainStore.model.DatabaseOperations;
+import com.sheffield.trainStore.model.*;
+import com.sheffield.trainStore.model.CurrentUserManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -59,6 +59,7 @@ public class ProductsPage extends JFrame {
         // Add the search panel to the top of the frame
         this.add(searchPanel, BorderLayout.NORTH);
 
+
         DefaultTableModel tableModel = new DefaultTableModel();
         products = new JTable(tableModel);
         tableModel.addColumn("Product Name");
@@ -68,6 +69,7 @@ public class ProductsPage extends JFrame {
         tableModel.addColumn("Era code");
         tableModel.addColumn("DCC code");
         tableModel.addColumn("Product Type");
+
 
         DatabaseOperations dbOperations = new DatabaseOperations();
         resultSet = dbOperations.getProducts(con);
@@ -108,7 +110,11 @@ public class ProductsPage extends JFrame {
         resultSet.close();
         JScrollPane scrollPane = new JScrollPane(products);
         this.add(scrollPane, BorderLayout.CENTER);
-
+        /*if (CurrentUserManager.getCurrentUser().getRoles().contains(Role.STAFF)){
+            JButton addProductButton = new JButton("Add Product");
+            this.add(addProductButton, BorderLayout.PAGE_END);
+        }
+        */
     }
 
     private void filterProducts(Connection con) throws SQLException {
