@@ -21,13 +21,14 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.ArrayList;
 
 import java.math.BigDecimal;
 public class ProductsView extends JFrame {
 
     private JComboBox<String> productComboBox;
     private final DatabaseOperations databaseOperations;
-    private List<OrderLine> order;
+    private List<OrderLine> order = new ArrayList<>();
     private int orderNumber = 1;
     private int orderLineNumber = 1;
     private OrderStatus orderStatus = null;
@@ -84,6 +85,11 @@ public class ProductsView extends JFrame {
         panel.add(new JLabel());
         panel.add(confirmOrderButton);
 
+        JButton viewOrderButton = new JButton("View Order");
+
+        panel.add(new JLabel());
+        panel.add(viewOrderButton);
+
 
         // Add action listener to the button
         addProductButton.addActionListener(new ActionListener() {
@@ -130,6 +136,7 @@ public class ProductsView extends JFrame {
                                     OrderLine currentOrderLine = new OrderLine(orderNumber, orderLineNumber, quantity,
                                             selectedProductPrice, selectedProductCode);
                                     order.add(currentOrderLine);
+                                    databaseOperations.addOrderLine(connection, currentOrderLine);
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Item out of stock.");
                                 }
@@ -163,6 +170,18 @@ public class ProductsView extends JFrame {
                 Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
                 try {
                     databaseOperations.addOrder(connection, currentOrder);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        viewOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    OrderView orderView = new OrderView(connection, orderNumber);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
