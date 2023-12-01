@@ -23,7 +23,7 @@ public class Product {
         this.setGauge(gauge);
         this.setEraCode(eraCode);
         this.setDccCode(dccCode);
-        this.setProductType(productCode);
+        this.setProductType(productCode.toLowerCase());
     }
 
     //get methods

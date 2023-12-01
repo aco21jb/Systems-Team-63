@@ -107,13 +107,28 @@ public class ProductsPage extends JFrame {
             }
         });
 
+
         resultSet.close();
         JScrollPane scrollPane = new JScrollPane(products);
         this.add(scrollPane, BorderLayout.CENTER);
         if (CurrentUserManager.getCurrentUser().getRoles().contains(Role.STAFF)){
             JButton addProductButton = new JButton("Add Product");
             this.add(addProductButton, BorderLayout.PAGE_END);
+
+            addProductButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        AddProductPanel addProductWindow = new AddProductPanel(con);
+                        addProductWindow.setVisible(true);
+                    } catch (SQLException ex){
+                        ex.printStackTrace();
+                    }
+                }
+            });
         }
+
+
 
     }
 
