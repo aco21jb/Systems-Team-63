@@ -351,4 +351,33 @@ public class DatabaseOperations {
         return resultSet;
     }
 
+    public ResultSet getOrderLine(Connection con, int orderNumber, int orderLineNumber) throws SQLException {
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT * FROM ORDER_LINES WHERE (orderNumber, orderLineNumber) = (?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, orderNumber);
+            preparedStatement.setInt(2, orderLineNumber);
+            resultSet = preparedStatement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return resultSet;
+    }
+
+    public ResultSet getOrderLines(Connection con, int orderNumber) throws SQLException {
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT * FROM ORDER_LINES WHERE orderNumber = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, orderNumber);
+            resultSet = preparedStatement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return resultSet;
+    }
+
 }
