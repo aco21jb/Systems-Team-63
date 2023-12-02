@@ -59,16 +59,6 @@ public class OrderPanelPage extends JPanel {
         tableModel.addColumn("Order Cost");
 
  
-        // String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.userID, u.email, u.forename, u.surname" +
-        // " u.houseNumber, u.postcode,  ad.houseNumber, ad.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
-        // " o.orderStatus = " + "\'" + orderStatus + "\'" + " AND o.userId = u.userID AND u.houseNumber = ad.houseNumber AND " +
-        // "u.postcode = ad.postcode";
-
-        // String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.email, u.forename, u.surname" +
-        // " u.houseNumber, u.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
-        // " o.orderStatus = " + "\'" + orderStatus + "\'" + " AND o.userId = u.userID AND u.houseNumber = ad.houseNumber AND " +
-        // "u.postcode = ad.postcode";
-  
         DatabaseOperations dbOperations = new DatabaseOperations();
         ResultSet resultSet = dbOperations.getOrdersForStatus(con, orderStatus);
 

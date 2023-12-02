@@ -77,6 +77,8 @@ public class HomePage extends JFrame {
 
 
         JButton EditPersonalButton = new JButton("Edit Personal Details");
+        JButton ViewOrdersButton = new JButton("View Customer Orders");
+
 
 
         panelTop.add(new JLabel());  // Empty label for spacing
@@ -87,6 +89,8 @@ public class HomePage extends JFrame {
 
         panelTop.add(CustomerButton);
         panelTop.add(EditPersonalButton);
+        panelTop.add(ViewOrdersButton);
+
 
 
         if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
@@ -129,6 +133,23 @@ public class HomePage extends JFrame {
                 UserDetailsView newWindow = null;
                 try {
                     newWindow = new UserDetailsView(connection);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                newWindow.setVisible(true);
+
+            }
+        });
+
+
+          // Create an ActionListener for the UserDetailsView button
+        ViewOrdersButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                CustomerOrdersView newWindow = null;
+                try {
+                    newWindow = new CustomerOrdersView(connection);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }

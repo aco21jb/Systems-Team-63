@@ -124,7 +124,9 @@ public class RegisterView extends JFrame {
         // housenumberField.addKeyListener(new KeyAdapter() {
         //     @Override
         //     public void keyPressed(KeyEvent e) {
-        //         int key = e.getKeyCode();
+        //         // int key = e.getKeyCode();
+        //         int key = e.getKeyChar();
+
         //         /* Restrict input to only integers */
         //         if (key < 96 && key > 105) e.setKeyChar(' ');
         //     };
@@ -146,37 +148,45 @@ public class RegisterView extends JFrame {
                 Matcher matcher = pattern.matcher(emailId); 
                     
                 if (matcher.matches()) {
-                    String uniqueUserID = UniqueUserIDGenerator.generateUniqueUserID() ;
-                    char[] passwordChars = passwordField.getPassword();
-                    String forename = forenameField.getText();
-                    String surname = surnameField.getText();
-                    Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
-                    String postcode = postcodeField.getText();
-                    String roadName = roadnameField.getText();
-                    String cityName = citynameField.getText();
+                                String uniqueUserID = UniqueUserIDGenerator.generateUniqueUserID() ;
+                                char[] passwordChars = passwordField.getPassword();
+                                String forename = forenameField.getText();
+                                String surname = surnameField.getText();
 
-                    DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
-                    try {
-                        if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
-                            User user = new User(uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
-                            // databaseOperationsUser.registerUser(connection, uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, 
-                            // postcode, roadName, cityName);
-                            databaseOperationsUser.registerUser(connection, user);
+                                // try {
+                                //     Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
+  
+                                // } catch (NumberFormatException n) {
+                                //     System.out.println("HouseNumber should contain Number");
+                                // }
 
-                            // Secure disposal of the password
-                            Arrays.fill(passwordChars, '\u0000');
-                        
-                            dispose();
-                            HomePage HomePage = null;
-                            HomePage = new HomePage(connection);
-                            HomePage.setVisible(true);
-                        }
-                        else {
-                            JOptionPane.showMessageDialog(null, "Already registered with this Email ID.. ");
-                        }
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
+                                Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
+                                String postcode = postcodeField.getText();
+                                String roadName = roadnameField.getText();
+                                String cityName = citynameField.getText();
+
+                                DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
+                                try {
+                                    if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
+                                        User user = new User(uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
+                                        // databaseOperationsUser.registerUser(connection, uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, 
+                                        // postcode, roadName, cityName);
+                                        databaseOperationsUser.registerUser(connection, user);
+
+                                        // Secure disposal of the password
+                                        Arrays.fill(passwordChars, '\u0000');
+                                    
+                                        dispose();
+                                        HomePage HomePage = null;
+                                        HomePage = new HomePage(connection);
+                                        HomePage.setVisible(true);
+                                    }
+                                    else {
+                                        JOptionPane.showMessageDialog(null, "Already registered with this Email ID.. ");
+                                    }
+                                } catch (SQLException e1) {
+                                    e1.printStackTrace();
+                                }
                 }
                 else {
                         JOptionPane.showMessageDialog(null, "Invalid Email ID.. ");

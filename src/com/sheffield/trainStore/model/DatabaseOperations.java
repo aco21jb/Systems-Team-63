@@ -239,29 +239,29 @@ public class DatabaseOperations {
 
         public void deleteOrderStatus(Connection connection, String orderNumber) throws SQLException {
 
-        try {
+            try {
 
-            String removeStatementOrderLine = "DELETE FROM ORDER_LINES WHERE orderNumber = ? ";
-            PreparedStatement preparedStatementOl = connection.prepareStatement(removeStatementOrderLine);
-            preparedStatementOl.setString(1, orderNumber);
+                String removeStatementOrderLine = "DELETE FROM ORDER_LINES WHERE orderNumber = ? ";
+                PreparedStatement preparedStatementOl = connection.prepareStatement(removeStatementOrderLine);
+                preparedStatementOl.setString(1, orderNumber);
 
-            int rowsAffected = preparedStatementOl.executeUpdate();
+                int rowsAffected = preparedStatementOl.executeUpdate();
 
-            if (rowsAffected > 0) {
-                    String removeStatementOrder = "DELETE FROM ORDERS WHERE orderNumber = ? ";
+                if (rowsAffected > 0) {
+                        String removeStatementOrder = "DELETE FROM ORDERS WHERE orderNumber = ? ";
 
-                    PreparedStatement preparedStatementO = connection.prepareStatement(removeStatementOrder);
-                    preparedStatementO.setString(1, orderNumber);
-                    rowsAffected = preparedStatementO.executeUpdate();
+                        PreparedStatement preparedStatementO = connection.prepareStatement(removeStatementOrder);
+                        preparedStatementO.setString(1, orderNumber);
+                        rowsAffected = preparedStatementO.executeUpdate();
 
-                    System.out.println(rowsAffected + " row(s) deleted successfully.");
-            } else {
-                System.out.println("No rows were deleted for Order: " );
+                        System.out.println(rowsAffected + " row(s) deleted successfully.");
+                } else {
+                    System.out.println("No rows were deleted for Order: " );
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;// Re-throw the exception to signal an error.
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;// Re-throw the exception to signal an error.
-        }
         }
 
 
@@ -270,26 +270,54 @@ public class DatabaseOperations {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
 
-        try {
+            try {
 
-            String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.userID, u.email, u.forename, u.surname, " +
-                    " u.houseNumber, u.postcode,  ad.houseNumber, ad.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
-                    " o.orderStatus = " + "\'" + orderStatus + "\'" + " AND o.userId = u.userID AND u.houseNumber = ad.houseNumber AND " +
-                    "u.postcode = ad.postcode";
+                String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.userID, u.email, u.forename, u.surname, " +
+                        " u.houseNumber, u.postcode,  ad.houseNumber, ad.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
+                        " o.orderStatus = " + "\'" + orderStatus + "\'" + " AND o.userId = u.userID AND u.houseNumber = ad.houseNumber AND " +
+                        "u.postcode = ad.postcode";
 
-            // Create a statement
-            statement = con.prepareStatement(query);
+                // Create a statement
+                statement = con.prepareStatement(query);
 
-            resultSet = statement.executeQuery(query);
-            return resultSet;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception according to your application's needs
-            throw e;
+                resultSet = statement.executeQuery(query);
+                return resultSet;
+            } catch (SQLException e) {
+                e.printStackTrace(); // Handle the exception according to your application's needs
+                throw e;
+            }
+            // return null;
         }
-        // return null;
-    }
 
-    public ResultSet getOrderLineForOrderNumber(Connection con, String orderNumber) throws SQLException {
+
+
+        public ResultSet getOrdersForStatus(Connection con, String userId) throws SQLException {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+
+            try {
+
+                String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.userID, u.email, u.forename, u.surname, " +
+                        " u.houseNumber, u.postcode,  ad.houseNumber, ad.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
+                        " u.userID = " + "\'" + userId + "\'" + " AND o.userId = u.userID AND u.houseNumber = ad.houseNumber AND " +
+                        "u.postcode = ad.postcode";                
+
+         
+
+                // Create a statement
+                statement = con.prepareStatement(query);
+
+                resultSet = statement.executeQuery(query);
+                return resultSet;
+            } catch (SQLException e) {
+                e.printStackTrace(); // Handle the exception according to your application's needs
+                throw e;
+            }
+            // return null;
+        }
+        
+        
+        public ResultSet getOrderLineForOrderNumber(Connection con, String orderNumber) throws SQLException {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
 
@@ -300,8 +328,8 @@ public class DatabaseOperations {
             //         "ol.lineCost, ol.productCode FROM ORDERS o, ORDER_LINES ol WHERE o.orderNumber = ol.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\' " ;
 
 
-            String query = "SELECT ol.orderNumber, ol.orderLineNumber, ol.quantity, ol.lineCost, ol.productCode " +
-                    " FROM ORDER_LINES ol WHERE  ol.orderNumber = " + "\'" + orderNumber + "\' " ;
+            String query = "SELECT ol.orderNumber, ol.orderLineNumber, ol.quantity, ol.lineCost, ol.productCode, p.productName, p.brandName " +
+                    " FROM ORDER_LINES ol , PRODUCTS p WHERE  ol.productCode = p.productCode AND ol.orderNumber = " + "\'" + orderNumber + "\' " ;
 
             // Create a statement
             statement = con.prepareStatement(query);

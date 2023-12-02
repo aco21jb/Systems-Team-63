@@ -11,8 +11,7 @@ public class DatabaseConnectionHandler {
          private static final String DB_PASSWORD = "Uavee7nae";
 
 
-
-    // Define the connection as a class member to share it across the application.
+         // Define the connection as a class member to share it across the application.
     private Connection connection = null;
 
     public void openConnection() throws SQLException {

@@ -140,9 +140,13 @@ public class StaffUserView extends JFrame {
 
         tableOrderLineModel.addColumn("Order Number");        
         tableOrderLineModel.addColumn("Line Number");
+        tableOrderLineModel.addColumn("Product Code");        
+
+        tableOrderLineModel.addColumn("Product Name");
+        tableOrderLineModel.addColumn("Brand Name");
+             
         tableOrderLineModel.addColumn("Qty");
         tableOrderLineModel.addColumn("Line Cost");
-        tableOrderLineModel.addColumn("Product Code");        
 
         // ??
 
@@ -484,9 +488,13 @@ public class StaffUserView extends JFrame {
                                             // resultSet.getString("orderDate"),
                                             // resultSet.getBigDecimal("orderStatus"),
                                             resultSet.getInt("orderLineNumber"),
-                                            resultSet.getString("quantity"),
-                                            resultSet.getString("lineCost"),
                                             resultSet.getString("productCode"),
+
+                                            resultSet.getString("productName"),
+                                            resultSet.getString("brandName"),
+
+                                            resultSet.getString("quantity"),
+                                            resultSet.getString("lineCost")
                                     });
                                 }
 
@@ -518,9 +526,13 @@ public class StaffUserView extends JFrame {
                                             // resultSet.getString("orderDate"),
                                             // resultSet.getBigDecimal("orderStatus"),
                                             resultSet.getInt("orderLineNumber"),
-                                            resultSet.getString("quantity"),
-                                            resultSet.getString("lineCost"),
                                             resultSet.getString("productCode"),
+
+                                            resultSet.getString("productName"),
+
+                                            resultSet.getString("brandName"),                                            
+                                            resultSet.getString("quantity"),
+                                            resultSet.getString("lineCost")
                                     });
                                 }                                 
 
@@ -627,7 +639,6 @@ public class StaffUserView extends JFrame {
 
             }
         });
-
 
     }
 
