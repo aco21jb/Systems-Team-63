@@ -14,12 +14,12 @@ CREATE TABLE `ADDRESS` (
 CREATE TABLE `USERS` (
   `userID` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `passwordHash` varchar(64) NOT NULL,
+  `passwordHash` varchar(100) NOT NULL,
+  `lastLogin` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `failedLoginAttempts` int DEFAULT '0',
+  `accountLocked` tinyint DEFAULT '0',
   `forename` varchar(50) DEFAULT NULL,
   `surname` varchar(50) DEFAULT NULL,
-  'last_login TIMESTAMP' DEFAULT CURRENT_TIMESTAMP,  -- Timestamp of the last login (default to the current timestamp)
-  `failedLoginAttempts` int DEFAULT '0',
-  'account_locked' BOOLEAN DEFAULT FALSE      -- Flag to indicate if the account is locked (default to false)
   `houseNumber` int NOT NULL,
   `postcode` varchar(30) NOT NULL,
   PRIMARY KEY (`userID`),
@@ -35,6 +35,8 @@ CREATE TABLE `ROLES` (
   PRIMARY KEY (`userID`, `role`),
   CONSTRAINT `Roles_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
 
 
 CREATE TABLE `BANK_DETAILS` (
@@ -57,7 +59,8 @@ CREATE TABLE `ORDERS` (
   PRIMARY KEY (`orderNumber`),
   KEY `userID_idx` (`userID`),
   CONSTRAINT `fk_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 
 CREATE TABLE `PRODUCTS` (
   `productCode` varchar(10) NOT NULL,
@@ -78,14 +81,13 @@ CREATE TABLE `ORDER_LINES` (
   `orderNumber` int NOT NULL,
   `orderLineNumber` int NOT NULL,
   `quantity` int DEFAULT NULL,
-  `lineCost` float DEFAULT NULL,
+  `lineCost` decimal(8,2) NOT NULL,
   `productCode` varchar(10) NOT NULL,
   PRIMARY KEY (`orderNumber`,`orderLineNumber`),
   KEY `fk_productCode_idx` (`productCode`),
   CONSTRAINT `fk_orderNumber` FOREIGN KEY (`orderNumber`) REFERENCES `ORDERS` (`orderNumber`),
   CONSTRAINT `fk_productCode` FOREIGN KEY (`productCode`) REFERENCES `PRODUCTS` (`productCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
 
 CREATE TABLE `SETS` (
   `setCode` varchar(10) NOT NULL,
@@ -96,6 +98,7 @@ CREATE TABLE `SETS` (
   CONSTRAINT `setCode` FOREIGN KEY (`setCode`) REFERENCES `PRODUCTS` (`productCode`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+
 CREATE TABLE `TRACK_PACK` (
   `trackPackCode` varchar(10) NOT NULL,
   `productCode` varchar(10) NOT NULL,
@@ -103,7 +106,6 @@ CREATE TABLE `TRACK_PACK` (
   KEY `productCode_idx` (`productCode`),
   CONSTRAINT `trackPackCode` FOREIGN KEY (`trackPackCode`) REFERENCES `PRODUCTS` (`productCode`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
 
 
 

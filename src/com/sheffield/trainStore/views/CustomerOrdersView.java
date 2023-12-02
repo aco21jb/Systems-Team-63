@@ -3,20 +3,9 @@ package com.sheffield.trainStore.views;
 import com.sheffield.trainStore.model.CurrentUserManager;
 import com.sheffield.trainStore.model.DatabaseOperations;
 import com.sheffield.trainStore.model.DatabaseOperationsUser;
-import com.sheffield.trainStore.model.OrderStatus;
 import com.sheffield.trainStore.model.Role;
 
-import com.sheffield.trainStore.views.ProductsPage;
-import com.sheffield.trainStore.views.OrderPanelPage;
-import com.sheffield.trainStore.views.OrderLinePanelPage;
-
-
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
@@ -56,16 +45,19 @@ public class CustomerOrdersView extends JFrame {
 
         // Set properties for the new window
         setTitle("Customer Order");
-        setSize(900, 800);
+        setSize(1000, 600);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Create a JPanel for the new window
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout());
-        mainPanel.setSize(1000, 900);
+        // mainPanel.setSize(500, 600);
 
         JPanel customerOrderPanel = new JPanel();
+
+        // new
+        JPanel customerOrderLinePanel = new JPanel();
 
 
         JButton viewOrderLineButton = new JButton("View Order Line");
@@ -106,8 +98,7 @@ public class CustomerOrdersView extends JFrame {
         tableOrderLineModel.addColumn("Qty");
         tableOrderLineModel.addColumn("Line Cost");
 
-        // ??
-
+       
         orderTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);     
         JScrollPane scrollPaneOrder = new JScrollPane(orderTable);
         scrollPaneOrder.setViewportView(orderTable);    
@@ -122,15 +113,17 @@ public class CustomerOrdersView extends JFrame {
         customerOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
         customerOrderPanel.add(viewOrderLineButton);
                   
-        customerOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);     
+        // customerOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);   
+        
+        customerOrderLinePanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
 
         mainPanel.add (customerOrderPanel);
-        
+        mainPanel.add (customerOrderLinePanel);
+
         try {
 
                 DatabaseOperations dbOperations = new DatabaseOperations();
-                ResultSet resultSet = dbOperations.getOrdersForStatus(connection, CurrentUserManager.getCurrentUser().getUserId());
-
+                ResultSet resultSet = dbOperations.getOrdersForUser(connection, CurrentUserManager.getCurrentUser().getUserId());
 
 
                 while (resultSet.next()) {

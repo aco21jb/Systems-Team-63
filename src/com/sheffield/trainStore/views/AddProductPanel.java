@@ -25,7 +25,8 @@ public class AddProductPanel extends JFrame{
 
     public AddProductPanel(Connection con) throws SQLException {
         this.setTitle("Add Product");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(800, 500);
 
         // this.setSize(500, 300);
