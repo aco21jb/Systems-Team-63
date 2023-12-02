@@ -38,43 +38,17 @@ public class StaffUserView extends JFrame {
 
     List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
 
-
-    private JTable orderTable;
     DefaultTableModel orderTableModel = new DefaultTableModel();
 
-    private JPanel mainPanel;
     private JTabbedPane tabbedPane;
-
-    private JPanel nmanagerPanel;
-
-
-    private JPanel newOrderPanel;
-    private JPanel fullfilledOrderPanel;
-
-    private JPanel productPanel;
-    private JPanel bottomPanel;
-
-    // private JPanel productsTablePanel;
-    private JPanel productsButtonPanel;
 
     private JScrollPane scrollPane;
 
-
-    private JTextField orderNumberField ;
-    private JTextField orderDateField ;
-    private JTextField orderUserField ;
-
-    private JTextField productCodeField ;
-    private JTextField productNameField ;
-    private JTextField productRetailPriceField ;
     private JTextField productStockField ;
 
-    private JTextField gaugeField ;
-    private JTextField eraCodeField ;
-    private JTextField dccCodeField ;
-    private JTextField productTypeField ;
-
-
+    // new
+    public static JTable orderLineTable;
+    public static JTable orderTable;
 
     /**
      * Constructor for the StaffUserView.
@@ -87,99 +61,49 @@ public class StaffUserView extends JFrame {
         databaseOperationsUser = new DatabaseOperationsUser();
         databaseOperations = new DatabaseOperations();
 
-
         // Set properties for the new window
         setTitle("Staff");
-        setSize(1000, 800);
+        setSize(900, 800);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
 
         // Create a JPanel for the new window
         JPanel mainPanel = new JPanel();
         // mainPanel.setLayout(new FlowLayout());
         mainPanel.setLayout(new GridLayout());
-
+        mainPanel.setSize(1000, 900);
 
         JPanel managerPanel = new JPanel();
-        JPanel newOrderPanel = new JPanel();
+
+        JPanel confirmedOrderPanel = new JPanel();
         JPanel productPanel = new JPanel();
         JPanel fullfilledOrderPanel = new JPanel();
         JPanel updateStockPanel = new JPanel();
 
-        // fullfilledOrderPanel.setLayout(new GridLayout(2, 3));
+        // ???
+        // fullfilledOrderPanel.setLayout(new GridLayout(2, 2));
         // fullfilledOrderPanel.setLayout(new GridLayout(2, 3));
 
 
         // JPanel productsTablePanel = new JPanel();
-        JPanel productViewPanel = new JPanel();
-        JPanel productsButtonPanel = new JPanel();
+        // JPanel productViewPanel = new JPanel();
+        // JPanel productsButtonPanel = new JPanel();
         // JPanel productViewPanel = new JPanel();
 
         JButton viewOrderLineButton = new JButton("View Order Line");
         JButton fulfillOrderLineButton = new JButton("Fulfill Order");
         JButton deleteOrderLineButton = new JButton("Delete Order");
 
-
         tabbedPane = new JTabbedPane();
-        tabbedPane.setSize(200,800);
-
-        // JButton viewProductButton = new JButton("View Product");
-        // JButton newProductButton = new JButton("Add Product");
-        // JButton editProductButton = new JButton("Edit Product");
-        // JButton deleteProductButton = new JButton("Delete Product");
-
-
-        // productsButtonPanel.add(viewProductButton);
-        // productsButtonPanel.add(newProductButton);
-        // productsButtonPanel.add(editProductButton);
-        // productsButtonPanel.add(deleteProductButton);
-
+        tabbedPane.setSize(800,800);
 
         JButton updateStockProductButton = new JButton("Update Product Stock");
-
-        // productsButtonPanel.add(updateStockProductButton);
-
-        // JLabel productCodeLabel = new JLabel("Product Code:");
-        // JLabel productNameLabel = new JLabel("Product Name:");
-        // JLabel productRetailPriceLabel = new JLabel(" RetailPrice:");
-
         JLabel productStockLabel = new JLabel("Stock:");
-
-        // JLabel productPriceLabel = new JLabel("Price:");
-        // JLabel productStockabel = new JLabel("Stock:");
-        // JLabel productGuageabel = new JLabel("Gauge:");
-        // JLabel productEraCodeLabel = new JLabel("Era code:");
-        // JLabel productProductTypeLabel = new JLabel("Product Type:");
-
-        // productCodeField = new JTextField(20);
-        // productCodeField.setEditable(false);
-        // // productCodeField.setBackground(BLACK);
-
-        // productNameField = new JTextField(20);
-        // productRetailPriceField = new JTextField(20);
-
         productStockField = new JTextField(20);
-        // productStockField.setEnabled(false);
-
-        // productViewPanel.add(productCodeLabel);
-        // productViewPanel.add(productCodeField);
-
-        // productViewPanel.add(productNameLabel);
-        // productViewPanel.add(productNameField);
-
-        // productViewPanel.add(productRetailPriceLabel);
-        // productViewPanel.add(productRetailPriceField);
-
-        // productViewPanel.add(productStockLabel);
-        // productViewPanel.add(productStockField);
-
-        // productViewPanel.setLayout(new GridLayout(4,4));
-
 
         getContentPane().add(mainPanel);
 
-        tabbedPane.addTab("Confirmed Orders", newOrderPanel);
+        tabbedPane.addTab("Confirmed Orders", confirmedOrderPanel);
         tabbedPane.addTab("Fullfilled Orders",  fullfilledOrderPanel);
         tabbedPane.addTab("Products",  productPanel);
         tabbedPane.addTab("Update Stock",  updateStockPanel);
@@ -191,11 +115,91 @@ public class StaffUserView extends JFrame {
             //  managerPanel.add (managerButton);
         }
 
+        // new
+
+        DefaultTableModel tableOrderModel = new DefaultTableModel();
+        orderTable = new JTable(tableOrderModel);
+        tableOrderModel.setRowCount(0);
+
+        tableOrderModel.addColumn("Order Number");        
+        tableOrderModel.addColumn("Order Date");
+        tableOrderModel.addColumn("Order Status");
+        tableOrderModel.addColumn("Email");
+        tableOrderModel.addColumn("Forename");
+        tableOrderModel.addColumn("Surname");
+        tableOrderModel.addColumn("House Number");
+        tableOrderModel.addColumn("Post Code");
+        tableOrderModel.addColumn("Road Name");
+        tableOrderModel.addColumn("City Name");     
+                                    
+
+        DefaultTableModel tableOrderLineModel = new DefaultTableModel();
+        orderLineTable = new JTable(tableOrderLineModel);        
+        tableOrderLineModel.setRowCount(0);
+                
+
+        tableOrderLineModel.addColumn("Order Number");        
+        tableOrderLineModel.addColumn("Line Number");
+        tableOrderLineModel.addColumn("Qty");
+        tableOrderLineModel.addColumn("Line Cost");
+        tableOrderLineModel.addColumn("Product Code");        
+
+        // ??
+
+        // JScrollPane scrollPaneOrder = new JScrollPane(orderTable);
+        orderTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);     
+        JScrollPane scrollPaneOrder = new JScrollPane(orderTable);
+        scrollPaneOrder.setViewportView(orderTable);    
+        // confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
+
+        orderLineTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);     
+        JScrollPane scrollPaneOrderLine = new JScrollPane(orderLineTable);
+        scrollPaneOrderLine.setViewportView(orderLineTable);           
+
+        tabbedPane.setSelectedIndex(0);
+        if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
+                try {
+                    // newWindow = new ProductsPage(connection);
+                  
+                    confirmedOrderPanel.removeAll();
+                    tabbedPane.setSelectedIndex(0);
+                    tableOrderModel.setRowCount(0);
+                    tableOrderLineModel.setRowCount(0);
+
+                    confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
+                    confirmedOrderPanel.add(viewOrderLineButton);
+                    confirmedOrderPanel.add(fulfillOrderLineButton);
+                    confirmedOrderPanel.add(deleteOrderLineButton);        
+                    confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
+                                        
+                    DatabaseOperations dbOperations = new DatabaseOperations();
+                    ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
+            
+                    while (resultSet.next()) {
+                        tableOrderModel.addRow(new Object[]{
+                                resultSet.getString("orderNumber"),
+                                resultSet.getString("orderDate"),
+                                resultSet.getString("orderStatus"),
+                                resultSet.getString("email"),
+                                resultSet.getString("forename"),
+                                resultSet.getString("surname"),
+                                resultSet.getString("houseNumber"),
+                                resultSet.getString("postcode"),
+                                resultSet.getString("roadName"),
+                                resultSet.getString("cityName")
+       
+                        });        
+                    }
+                    resultSet.close();      
+                    confirmedOrderPanel.revalidate();
+                    confirmedOrderPanel.repaint();                                                        
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }                
+        }    
 
         mainPanel.add(tabbedPane,BorderLayout.CENTER);
-
-        // populateOrderTable(connection,  OrderStatus.FULFILLED);
-
+   
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
             public void stateChanged(ChangeEvent changeEvent){
 
@@ -251,20 +255,45 @@ public class StaffUserView extends JFrame {
 
                 if (localTabbedPane.getTitleAt(index) == "Fullfilled Orders") {
                     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
+
                     if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
 
-                        // fullfilledOrderPanel.remove(OrderPanelPage);
                         try {
                             // newWindow = new ProductsPage(connection);
-                            // fullfilledOrderPanel.remove(OrderPanelPage);
+                                
                             fullfilledOrderPanel.removeAll();
+                            tabbedPane.setSelectedIndex(1);
+                            tableOrderModel.setRowCount(0);
+                            tableOrderLineModel.setRowCount(0);
 
-                            fullfilledOrderPanel.add(new OrderPanelPage (connection, OrderStatus.FULFILLED));
-                            // fullfilledOrderPanel.add(new OrderLinePanelPage (connection, OrderStatus.FULFILLED));
+                            fullfilledOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
                             fullfilledOrderPanel.add(viewOrderLineButton);
-                            // orderNumber                            
-                            
-                            
+           
+                            fullfilledOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
+                                                
+                            DatabaseOperations dbOperations = new DatabaseOperations();
+                            ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.FULFILLED);
+                    
+                            while (resultSet.next()) {
+                                tableOrderModel.addRow(new Object[]{
+                                        resultSet.getString("orderNumber"),
+                                        resultSet.getString("orderDate"),
+                                        resultSet.getString("orderStatus"),
+                                        resultSet.getString("email"),
+                                        resultSet.getString("forename"),
+                                        resultSet.getString("surname"),
+                                        resultSet.getString("houseNumber"),
+                                        resultSet.getString("postcode"),
+                                        resultSet.getString("roadName"),
+                                        resultSet.getString("cityName")
+                    
+                                });
+                    
+                            }
+                            resultSet.close();      
+                            fullfilledOrderPanel.revalidate();
+                            fullfilledOrderPanel.repaint();                                                        
+  
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -278,11 +307,41 @@ public class StaffUserView extends JFrame {
 
                         try {
                             // newWindow = new ProductsPage(connection);
-                            newOrderPanel.removeAll();
-                            newOrderPanel.add(new OrderPanelPage (connection, OrderStatus.PENDING));
-                            newOrderPanel.add(viewOrderLineButton);
-                            newOrderPanel.add(fulfillOrderLineButton);
-                            newOrderPanel.add(deleteOrderLineButton);
+
+                          
+                            confirmedOrderPanel.removeAll();
+                            tabbedPane.setSelectedIndex(0);
+                            tableOrderModel.setRowCount(0);
+                            tableOrderLineModel.setRowCount(0);
+
+                            confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
+                            confirmedOrderPanel.add(viewOrderLineButton);
+                            confirmedOrderPanel.add(fulfillOrderLineButton);
+                            confirmedOrderPanel.add(deleteOrderLineButton);        
+                            confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
+                                                
+                            DatabaseOperations dbOperations = new DatabaseOperations();
+                            ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
+                    
+                            while (resultSet.next()) {
+                                tableOrderModel.addRow(new Object[]{
+                                        resultSet.getString("orderNumber"),
+                                        resultSet.getString("orderDate"),
+                                        resultSet.getString("orderStatus"),
+                                        resultSet.getString("email"),
+                                        resultSet.getString("forename"),
+                                        resultSet.getString("surname"),
+                                        resultSet.getString("houseNumber"),
+                                        resultSet.getString("postcode"),
+                                        resultSet.getString("roadName"),
+                                        resultSet.getString("cityName")
+                    
+                                });
+                    
+                            }
+                            resultSet.close();      
+                            confirmedOrderPanel.revalidate();
+                            confirmedOrderPanel.repaint();                                                        
 
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -327,10 +386,7 @@ public class StaffUserView extends JFrame {
                   // Check if a user is selected
                 if (row >= 0) {
                         int productNewStock = Integer.parseInt( productStockField.getText());    
-                        // Int productOldStock = Integer.parseInt( productStockField.getText());    
-                        // String  productOldStock =  String.valueOf( ProductsPanelPage.productsTable.getValueAt(row,3)) ;
-                        // String  productCode =  (String) ProductsPanelPage.productsTable.getValueAt(row,0);
-
+                     
                         String productOldStock1 = String.valueOf(ProductsPanelPage.productsTable.getValueAt(row,3)) ;                        
 
                         // int productOldStock1 = productOldStock.valueOf();
@@ -383,74 +439,104 @@ public class StaffUserView extends JFrame {
         });
 
 
-        // Add action listener to the button
-        // viewProductButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         // if (isUserAuthorised(Role.ADMIN)) {
-        //             // Get the selected user from the combo box
-
-        //             int row = ProductsPanelPage.productsTable.getSelectedRow();
-        //             // String selectedUser = String.valueOf(staffComboBox.getSelectedItem());
-        //             // String emailId = String.valueOf(ProductsPage.products.getValueAt(row,0)) ;
-
-
-
-        //             // Check if a user is selected
-        //             if (row >= 0) {
-
-        //                 // System.out.println(ProductsPanelPage.productsTable.getValueAt(row,0));
-        //                 // System.out.println(ProductsPanelPage.productsTable.getValueAt(row,1));
-        //                 // System.out.println(ProductsPanelPage.productsTable.getValueAt(row,2));
-
-        //                 productCodeField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,0));
-        //                 productNameField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,1));
-        //                 // productStockField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,2));
-        //                 // productRetailPriceField.setText((String) ProductsPanelPage.productsTable.getValueAt(row,3));
-
-        //                 // productRetailPriceField = ProductsPanelPage.productsTable.getValueAt(row,0);
-
-
-        //             } else {
-        //                 JOptionPane.showMessageDialog(null, "Please select a Product.");
-        //             }
-        //     }
-        // });
-
        // Add action listener to the button
         viewOrderLineButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // if (isUserAuthorised(Role.ADMIN)) {
                     // Get the selected user from the combo box
-
-                    int row = OrderPanelPage.orderTable.getSelectedRow();
-                    // String selectedUser = String.valueOf(staffComboBox.getSelectedItem());
-                    // String emailId = String.valueOf(ProductsPage.products.getValueAt(row,0)) ;
+                    // int row = OrderPanelPage.orderTable.getSelectedRow();
+                    int row = orderTable.getSelectedRow();
 
                     // Check if a user is selected
                     if (row >= 0) {
 
-                        System.out.println(OrderPanelPage.orderTable.getValueAt(row,0));
-                        System.out.println(OrderPanelPage.orderTable.getValueAt(row,1));
-                        System.out.println(OrderPanelPage.orderTable.getValueAt(row,2));
+                        System.out.println(orderTable.getValueAt(row,0));
+                        System.out.println(orderTable.getValueAt(row,1));
+                        System.out.println(orderTable.getValueAt(row,2));
 
-                        String orderNumber = String.valueOf(OrderPanelPage.orderTable.getValueAt(row,0)) ;
+                        // String orderNumber = String.valueOf(OrderPanelPage.orderTable.getValueAt(row,0)) ;
+                        String orderNumber = String.valueOf(orderTable.getValueAt(row,0)) ;
 
 
                         try {
                             // newOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
-                            fullfilledOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
-                            // need to change below code
-                            newOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
+                            int index = tabbedPane.getSelectedIndex();
 
-                            // fullfilledOrderPanel.setVisible(true);;
+                            if (tabbedPane.getTitleAt(index) == "Fullfilled Orders") {
+
+                                                      
+
+                                // fullfilledOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
+                                // //  fullfilledOrderPanel.remove( OrderLinePanelPage OrderLinePanelPage)  ;                              
+                                // fullfilledOrderPanel.revalidate();
+                                // fullfilledOrderPanel.repaint();                                 
+                                // //  fullfilledOrderPanel.requestFocus();          
+                                
+                                // new
+                                tableOrderLineModel.setRowCount(0);
+           
+                                DatabaseOperations dbOperations = new DatabaseOperations();
+                                ResultSet resultSet = dbOperations.getOrderLineForOrderNumber(connection, orderNumber);
+                        
+                                while (resultSet.next()) {
+                                    tableOrderLineModel.addRow(new Object[]{
+                                            resultSet.getString("orderNumber"),
+                                            // resultSet.getString("orderDate"),
+                                            // resultSet.getBigDecimal("orderStatus"),
+                                            resultSet.getInt("orderLineNumber"),
+                                            resultSet.getString("quantity"),
+                                            resultSet.getString("lineCost"),
+                                            resultSet.getString("productCode"),
+                                    });
+                                }
+
+                                // fullfilledOrderPanel.add(orderLineTable);
+                                // fullfilledOrderPanel.revalidate();
+                                // fullfilledOrderPanel.repaint();                                    
+                                resultSet.close();                                
+                                // new
+                            }
+
+                            if (tabbedPane.getTitleAt(index) == "Confirmed Orders") {
+                                //  confirmedOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
+                                //  confirmedOrderPanel.setVisible(true);
+                                //  confirmedOrderPanel.revalidate();
+                                //  confirmedOrderPanel.repaint();           
+                                 
+                                // new
+                                tableOrderLineModel.setRowCount(0);
+
+                                // confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
+
+                                                   
+                                DatabaseOperations dbOperations = new DatabaseOperations();
+                                ResultSet resultSet = dbOperations.getOrderLineForOrderNumber(connection, orderNumber);
+                        
+                                while (resultSet.next()) {
+                                    tableOrderLineModel.addRow(new Object[]{
+                                            resultSet.getString("orderNumber"),
+                                            // resultSet.getString("orderDate"),
+                                            // resultSet.getBigDecimal("orderStatus"),
+                                            resultSet.getInt("orderLineNumber"),
+                                            resultSet.getString("quantity"),
+                                            resultSet.getString("lineCost"),
+                                            resultSet.getString("productCode"),
+                                    });
+                                }                                 
+
+
+                            }
+
+                            // confirmedOrderPanel.setVisible(true);
+                            // // confirmedOrderPanel.setVisible(true);
+                            //      confirmedOrderPanel.revalidate();
+                            //      confirmedOrderPanel.repaint();                              
+
                         } catch (SQLException e1) {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
                         }                        
     
-
                     } else {
                         JOptionPane.showMessageDialog(null, "Please select a Order.");
                     }
@@ -465,11 +551,11 @@ public class StaffUserView extends JFrame {
                 // if (isUserAuthorised(Role.ADMIN)) {
                     // Get the selected user from the combo box
 
-                    int row = OrderPanelPage.orderTable.getSelectedRow();
+                    int row = orderTable.getSelectedRow();
                     // Check if a user is selected
                     if (row >= 0) {
 
-                        String orderNumber = String.valueOf(OrderPanelPage.orderTable.getValueAt(row,0)) ;
+                        String orderNumber = String.valueOf(orderTable.getValueAt(row,0)) ;
 
                         
                         // Ask for confirmation
@@ -507,11 +593,11 @@ public class StaffUserView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // if (isUserAuthorised(Role.ADMIN)) {
 
-                    int row = OrderPanelPage.orderTable.getSelectedRow();
+                    int row = orderTable.getSelectedRow();
                     // Check if a user is selected
                     if (row >= 0) {
 
-                        String orderNumber = String.valueOf(OrderPanelPage.orderTable.getValueAt(row,0)) ;
+                        String orderNumber = String.valueOf(orderTable.getValueAt(row,0)) ;
                        
                         // Ask for confirmation
                         int dialogResult = JOptionPane.showConfirmDialog(null,

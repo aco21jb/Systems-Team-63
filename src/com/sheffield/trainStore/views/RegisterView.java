@@ -2,6 +2,7 @@ package com.sheffield.trainStore.views;
 
 import com.sheffield.trainStore.model.CurrentUserManager;
 import com.sheffield.trainStore.model.DatabaseOperationsUser;
+import com.sheffield.trainStore.model.OrderLine;
 import com.sheffield.trainStore.model.Role;
 import com.sheffield.trainStore.model.User;
 
@@ -13,6 +14,9 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -117,13 +121,23 @@ public class RegisterView extends JFrame {
         panel.add(registerButton);
         panel.add(loginButton);
 
+        // housenumberField.addKeyListener(new KeyAdapter() {
+        //     @Override
+        //     public void keyPressed(KeyEvent e) {
+        //         int key = e.getKeyCode();
+        //         /* Restrict input to only integers */
+        //         if (key < 96 && key > 105) e.setKeyChar(' ');
+        //     };
+        // });        
+
         // Create an ActionListener for the Register button
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String emailId = emailField.getText();
 
-              
+
                 //Regular Expression   
                 String regex = "^(.+)@(.+)$";  
                 //Compile regular expression to get the pattern  
@@ -132,15 +146,10 @@ public class RegisterView extends JFrame {
                 Matcher matcher = pattern.matcher(emailId); 
                     
                 if (matcher.matches()) {
-                
                     String uniqueUserID = UniqueUserIDGenerator.generateUniqueUserID() ;
-
-                    // String emailId = emailField.getText();
                     char[] passwordChars = passwordField.getPassword();
-
                     String forename = forenameField.getText();
                     String surname = surnameField.getText();
-                    // String houseNumber = housenumberField.getText();
                     Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
                     String postcode = postcodeField.getText();
                     String roadName = roadnameField.getText();
@@ -148,36 +157,31 @@ public class RegisterView extends JFrame {
 
                     DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
                     try {
-
                         if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
-
-                            databaseOperationsUser.registerUser(connection, uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
+                            User user = new User(uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
+                            // databaseOperationsUser.registerUser(connection, uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, 
+                            // postcode, roadName, cityName);
+                            databaseOperationsUser.registerUser(connection, user);
 
                             // Secure disposal of the password
                             Arrays.fill(passwordChars, '\u0000');
-                            //  NEED TO CLEAR THE FILEDS VALUES
-                            // Close the current window
+                        
                             dispose();
                             HomePage HomePage = null;
-
                             HomePage = new HomePage(connection);
                             HomePage.setVisible(true);
-
                         }
                         else {
                             JOptionPane.showMessageDialog(null, "Already registered with this Email ID.. ");
                         }
-                       
                     } catch (SQLException e1) {
-                        // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
                 }
                 else {
                         JOptionPane.showMessageDialog(null, "Invalid Email ID.. ");
-   
                 }
-            }  
+            } 
         });
 
 
@@ -206,4 +210,16 @@ public class RegisterView extends JFrame {
         });
 
     }
+
+    // private boolean isDataValid (Role role) {
+    //     // List<Role> listOfRolesForCurrentUser = CurrentUserManager.getCurrentUser().getRoles();
+    // //     for (Role roleForCurrentUser : listOfRolesForCurrentUser) {
+    // //         if (roleForCurrentUser.equals(role)) {
+    // //             return true;
+    // //         }
+    // //     }
+    //     return false;
+    // }    
+      
+    
 }
