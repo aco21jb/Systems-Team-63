@@ -6,11 +6,6 @@ import com.sheffield.trainStore.model.DatabaseOperationsUser;
 import com.sheffield.trainStore.model.OrderStatus;
 import com.sheffield.trainStore.model.Role;
 
-import com.sheffield.trainStore.views.ProductsPage;
-import com.sheffield.trainStore.views.OrderPanelPage;
-import com.sheffield.trainStore.views.OrderLinePanelPage;
-
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -42,7 +37,7 @@ public class StaffUserView extends JFrame {
 
     private JTabbedPane tabbedPane;
 
-    private JScrollPane scrollPane;
+    // private JScrollPane scrollPane;
 
     private JTextField productStockField ;
 
@@ -63,15 +58,15 @@ public class StaffUserView extends JFrame {
 
         // Set properties for the new window
         setTitle("Staff");
-        setSize(900, 800);
+        setSize(1100, 600);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Create a JPanel for the new window
         JPanel mainPanel = new JPanel();
         // mainPanel.setLayout(new FlowLayout());
-        mainPanel.setLayout(new GridLayout());
-        mainPanel.setSize(1000, 900);
+        // mainPanel.setLayout(new GridLayout());
+        // mainPanel.setSize(1000, 900);
 
         JPanel managerPanel = new JPanel();
 
@@ -80,19 +75,20 @@ public class StaffUserView extends JFrame {
         JPanel fullfilledOrderPanel = new JPanel();
         JPanel updateStockPanel = new JPanel();
 
-        // ???
-        // fullfilledOrderPanel.setLayout(new GridLayout(2, 2));
-        // fullfilledOrderPanel.setLayout(new GridLayout(2, 3));
+        JPanel btnConfirmedOrderPanel = new JPanel(new GridLayout(3, 1));
 
-
-        // JPanel productsTablePanel = new JPanel();
-        // JPanel productViewPanel = new JPanel();
-        // JPanel productsButtonPanel = new JPanel();
-        // JPanel productViewPanel = new JPanel();
 
         JButton viewOrderLineButton = new JButton("View Order Line");
         JButton fulfillOrderLineButton = new JButton("Fulfill Order");
         JButton deleteOrderLineButton = new JButton("Delete Order");
+        JButton viewConfirmOrderLineButton = new JButton("View Order Line");
+
+
+        btnConfirmedOrderPanel.add (viewConfirmOrderLineButton);
+        btnConfirmedOrderPanel.add (fulfillOrderLineButton);
+        btnConfirmedOrderPanel.add (deleteOrderLineButton);
+        
+
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setSize(800,800);
@@ -169,13 +165,10 @@ public class StaffUserView extends JFrame {
                     tabbedPane.setSelectedIndex(0);
                     tableOrderModel.setRowCount(0);
                     tableOrderLineModel.setRowCount(0);
-
                     confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
-                    confirmedOrderPanel.add(viewOrderLineButton);
-                    confirmedOrderPanel.add(fulfillOrderLineButton);
-                    confirmedOrderPanel.add(deleteOrderLineButton);        
+                    confirmedOrderPanel.add(btnConfirmedOrderPanel);
                     confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
-                                        
+            
                     DatabaseOperations dbOperations = new DatabaseOperations();
                     ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
             
@@ -312,6 +305,7 @@ public class StaffUserView extends JFrame {
                         try {
                             // newWindow = new ProductsPage(connection);
 
+                         
                           
                             confirmedOrderPanel.removeAll();
                             tabbedPane.setSelectedIndex(0);
@@ -319,10 +313,10 @@ public class StaffUserView extends JFrame {
                             tableOrderLineModel.setRowCount(0);
 
                             confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
-                            confirmedOrderPanel.add(viewOrderLineButton);
-                            confirmedOrderPanel.add(fulfillOrderLineButton);
-                            confirmedOrderPanel.add(deleteOrderLineButton);        
+                 
+                            confirmedOrderPanel.add(btnConfirmedOrderPanel);
                             confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
+
                                                 
                             DatabaseOperations dbOperations = new DatabaseOperations();
                             ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
@@ -463,20 +457,10 @@ public class StaffUserView extends JFrame {
 
 
                         try {
-                            // newOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
                             int index = tabbedPane.getSelectedIndex();
 
                             if (tabbedPane.getTitleAt(index) == "Fullfilled Orders") {
 
-                                                      
-
-                                // fullfilledOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
-                                // //  fullfilledOrderPanel.remove( OrderLinePanelPage OrderLinePanelPage)  ;                              
-                                // fullfilledOrderPanel.revalidate();
-                                // fullfilledOrderPanel.repaint();                                 
-                                // //  fullfilledOrderPanel.requestFocus();          
-                                
-                                // new
                                 tableOrderLineModel.setRowCount(0);
            
                                 DatabaseOperations dbOperations = new DatabaseOperations();
@@ -497,25 +481,44 @@ public class StaffUserView extends JFrame {
                                             resultSet.getString("lineCost")
                                     });
                                 }
-
-                                // fullfilledOrderPanel.add(orderLineTable);
-                                // fullfilledOrderPanel.revalidate();
-                                // fullfilledOrderPanel.repaint();                                    
+                              
                                 resultSet.close();                                
-                                // new
+                         
                             }
 
+                        } catch (SQLException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }                        
+    
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please select a Order.");
+                    }
+            }
+        });
+
+
+        // Add action listener to the button
+        viewConfirmOrderLineButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    // Get the selected user from the combo box
+                    int row = orderTable.getSelectedRow();
+
+                    // Check if a user is selected
+                    if (row >= 0) {
+
+                        System.out.println(orderTable.getValueAt(row,0));
+                        System.out.println(orderTable.getValueAt(row,1));
+                        System.out.println(orderTable.getValueAt(row,2));
+
+                        String orderNumber = String.valueOf(orderTable.getValueAt(row,0)) ;
+                        try {
+                            int index = tabbedPane.getSelectedIndex();
+
                             if (tabbedPane.getTitleAt(index) == "Confirmed Orders") {
-                                //  confirmedOrderPanel.add(new OrderLinePanelPage (connection, orderNumber));
-                                //  confirmedOrderPanel.setVisible(true);
-                                //  confirmedOrderPanel.revalidate();
-                                //  confirmedOrderPanel.repaint();           
-                                 
-                                // new
+                  
                                 tableOrderLineModel.setRowCount(0);
-
-                                // confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
-
                                                    
                                 DatabaseOperations dbOperations = new DatabaseOperations();
                                 ResultSet resultSet = dbOperations.getOrderLineForOrderNumber(connection, orderNumber);
@@ -535,8 +538,6 @@ public class StaffUserView extends JFrame {
                                             resultSet.getString("lineCost")
                                     });
                                 }                                 
-
-
                             }
 
                             // confirmedOrderPanel.setVisible(true);
@@ -553,8 +554,7 @@ public class StaffUserView extends JFrame {
                         JOptionPane.showMessageDialog(null, "Please select a Order.");
                     }
             }
-        });
-
+        });        
 
         // Add action listener to the button
         fulfillOrderLineButton.addActionListener(new ActionListener() {

@@ -48,7 +48,7 @@ public class LoginView extends JFrame {
         panel.setBorder(blackline);
 
         // Create JLabels for username and password
-        JLabel emailLabel = new JLabel("Username:");
+        JLabel emailLabel = new JLabel("Email Id:");
         JLabel passwordLabel = new JLabel("Password:");
 
         // Create JTextFields for entering username and password

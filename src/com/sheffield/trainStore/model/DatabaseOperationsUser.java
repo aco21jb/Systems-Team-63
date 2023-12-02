@@ -15,15 +15,15 @@ import java.util.List;
 
 public class DatabaseOperationsUser {
 
-    
-    // new today
-    // public void registerUser(Connection connection, String userID, String emailId, char[] passwordChars, String forename,
-    //          String surname, Integer houseNumber, String postcode, String roadName, String cityName) throws SQLException {
+     /**
+     * Registers the new User.
+     *
+     * @param connection       The database connection.
+     * @param user object        .
+     */    
 
-   public void registerUser(Connection connection, User newUser) throws SQLException {                
+     public void registerUser(Connection connection, User newUser) throws SQLException {                
     try {
-
-        // User newUser = new User (userID, emailId, passwordChars, forename, surname, houseNumber, postcode);
 
         // if adress already exists .. no creating new record as address can  be shared by more than one user
         //  Address should be inserted first (before the Users) because User table has foreign keys of Address table
@@ -126,7 +126,7 @@ public class DatabaseOperationsUser {
      * Verifies the login credentials of a user.
      *
      * @param connection       The database connection.
-     * @param username         The entered username.
+     * @param emailId         The entered username.
      * @param enteredPassword  The entered password.
      * @return True if login is successful, false otherwise.
      */
@@ -164,9 +164,7 @@ public class DatabaseOperationsUser {
                 } else {
                     System.out.println("Incorrect password. Failed login attempts: " );
                     return false;
-
                 }
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,6 +173,15 @@ public class DatabaseOperationsUser {
         return false;
     }
 
+
+
+    /**
+     * Verifies the password.
+     *
+     * @param password         The stored password.
+     * @param enteredPassword  The entered password.
+     * @return True if login is successful, false otherwise.
+     */    
     private static boolean verifyPassword(char[] enteredPassword, String storedPasswordHash) {
         try {
      
@@ -194,6 +201,12 @@ public class DatabaseOperationsUser {
         }
     }
 
+    /**
+     * Verifies the emailID.
+     *
+     * @param emailID         The Email ID.
+     * @return True if successful, false otherwise.
+     */        
     public Boolean verifyEmailID(Connection connection, String emailID) {
         try {
             // Query the database to fetch user information
@@ -243,8 +256,8 @@ public class DatabaseOperationsUser {
 
 
 
- /**
-     * Promotes the selected user to the role of Moderator.
+    /**
+     * Remove the selected user to the role of Staff.
      *
      * @param connection    The database connection.
      * @param selectedUser  The username of the user to be promoted.
@@ -255,9 +268,6 @@ public class DatabaseOperationsUser {
         try {
             // Get the userId based on the username
             String userId = getUserIdByEmailId(connection, selectedUser);
-
-            //     String insertRoleSQL = "INSERT INTO ROLES (userId, "+
-            // "role ) VALUES (?, ?)";
 
             // Prepare the SQL statement to delete the user's role to "Staff"
             String deleteSQL = "DELETE FROM ROLES WHERE userId = ? AND role = " + "\'" + Role.STAFF + "\' ";
@@ -285,8 +295,8 @@ public class DatabaseOperationsUser {
         }
     }
 
- /**
-     * Promotes the selected user to the role of Moderator.
+   /**
+     * Promotes the selected user to the role of Staff.
      *
      * @param connection    The database connection.
      * @param selectedUser  The username of the user to be promoted.
@@ -323,19 +333,18 @@ public class DatabaseOperationsUser {
         }
     }
 
-/**
-     * Gets the userId based on the username from the 'Users' table.
+    /**
+     * Gets the userId based on the email from the 'Users' table.
      *
      * @param connection The database connection.
-     * @param username   The username for which to retrieve the userId.
-     * @return The userId corresponding to the given username.
+     * @param emailId   The emailId for which to retrieve the userId.
+     * @return The userId corresponding to the given user.
      */
     public String getUserIdByEmailId(Connection connection, String emailId) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
-            // Prepare the SQL statement to select the userId based on the username
             String sql = "SELECT userId FROM USERS WHERE email = ?";
             preparedStatement = connection.prepareStatement(sql);
 
@@ -370,10 +379,11 @@ public class DatabaseOperationsUser {
         }
     }
 
-   /**
-     * Retrieves a result set containing all usernames from the 'Users' table.
+    /**
+     * Retrieves a result set containing user information from the 'Users' table.
      *
      * @param connection The database connection.
+     * @param userId The database connection. 
      * @return A result set containing all usernames.
      */
     public ResultSet getUserDetail(Connection connection, String userId ) {
@@ -381,7 +391,6 @@ public class DatabaseOperationsUser {
         PreparedStatement statement = null;
 
         try {
-            // Execute the query to select all usernames from the 'Users' table
             String query = "SELECT u.userId, u.email, u.forename, u.surname, u.housenumber, u.postcode, ad.roadname, " 
             + " ad.cityname FROM USERS u, ADDRESS ad WHERE u.housenumber = ad.housenumber " +
                     "AND u.postcode = ad.postcode AND userID = " + "\'" + userId + "\'";
@@ -397,16 +406,17 @@ public class DatabaseOperationsUser {
         return null;
     }
 
-    //     // Update an existing book in the database
-    //  public void updateUser(Connection connection, String userID, String emailId, String forename,
-    //          String surname, Integer houseNumber, String postcode, String roadName, String cityName) throws SQLException {            
+    /**
+     * Update User with changed personal information.
+     *
+     * @param connection The database connection.
+     * @param user object The database connection. 
+     */    
 
      public void updateUser(Connection connection, User user) throws SQLException {                     
             try {
                 ResultSet resultSet = null;
    
-///
-
                 // String sqlAddress = "SELECT houseNumber, postcode FROM ADDRESS WHERE houseNumber = ? AND postcode = ?";
 
                 // PreparedStatement preparedStatementSql = connection.prepareStatement(sqlAddress);
@@ -452,17 +462,16 @@ public class DatabaseOperationsUser {
     
 
     /**
-     * Retrieves a result set containing all usernames from the 'Users' table.
+     * Retrieves a result set all users from the 'Users' table.
      *
      * @param connection The database connection.
-     * @return A result set containing all usernames.
+     * @return A result set containing all user information.
      */
     public ResultSet getAllUsers(Connection connection) {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
 
         try {
-            // Execute the query to select all usernames from the 'Users' table
             String query = "SELECT u.userId, u.email, u.forename, u.surname, r.role FROM USERS u, ROLES r WHERE " +
                     "u.userId=r.userId";
 
@@ -480,9 +489,11 @@ public class DatabaseOperationsUser {
 
 
     /**
-     * Retrieves a result set containing  order table.
+     * Retrieves a result set containing  order table for particular order status.
      *
      * @param connection The database connection.
+     * @param OrderStatus The database connection.
+     * 
      * @return A result set containing all usernames.
      */
     public ResultSet getOrderDetails(Connection connection ,  OrderStatus orderStatus ){
@@ -491,7 +502,6 @@ public class DatabaseOperationsUser {
 
 
         try {
-            // Execute the query to select all usernames from the 'Users' table
             String query = "SELECT o.orderNumber, o.orderDate, o.userId, od.orderNumber, od.quantity, od.lineCost " 
                + "FROM ORDERS o, ORDER_LINES od WHERE o.orderNumber=od.orderNumber AND o.orderStatus = " + "\'" +
                     orderStatus + "\'";
@@ -509,17 +519,16 @@ public class DatabaseOperationsUser {
     }
 
     /**
-     * Retrieves a result set containing all usernames from the 'Users' table.
+     * Retrieves a result set containing all Staff Users from the 'Users' table.
      *
      * @param connection The database connection.
-     * @return A result set containing all usernames.
+     * @return A result set containing all Staff.
      */
     public ResultSet getAllUsersStaff(Connection connection) {
         ResultSet resultSet = null;
         PreparedStatement statement = null;
 
         try {
-            // Execute the query to select all usernames from the 'Users' table
             String query = "SELECT u.userId, u.email, u.forename, u.surname, r.role FROM USERS u, ROLES r WHERE " +
                     "u.userId=r.userId AND r.role" + " = " + "\'" + Role.STAFF + "\'";
 
@@ -536,9 +545,11 @@ public class DatabaseOperationsUser {
 
     
     /**
-     * Retrieves a result set containing all usernames from the 'Users' table.
+     * to check whether user is alrady staff.
      *
      * @param connection The database connection.
+     * @param emailId  Email Id.
+
      * @return A result set containing all usernames.
      */
     public Boolean IsAlreadyStaff(Connection connection, String emailId) {
@@ -547,10 +558,8 @@ public class DatabaseOperationsUser {
 
         try {
 
-
             String userId = getUserIdByEmailId(connection, emailId);
 
-            // Prepare the SQL statement to select the userId based on the username
             String sql = "SELECT userId, role FROM ROLES WHERE userId = ? AND role" + " = " + "\'" + Role.STAFF + "\'";
             preparedStatement = connection.prepareStatement(sql);
             // Set the parameter for the prepared statement
@@ -558,8 +567,6 @@ public class DatabaseOperationsUser {
 
             // Execute the query
             resultSet = preparedStatement.executeQuery();
-
-            // resultSet.getString("userId");
 
             // Check if a result is found
             if (resultSet.next()) {
@@ -575,9 +582,6 @@ public class DatabaseOperationsUser {
         }
         return null;
     }    
-
-
-
 
 }
 
