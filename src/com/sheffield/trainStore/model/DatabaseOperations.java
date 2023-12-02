@@ -186,58 +186,58 @@ public class DatabaseOperations {
 
 
 
-        // Update an existing book in the database
-        public void updateStock(Connection connection, String productInput, Integer newSTock) throws SQLException {
+    // Update an existing book in the database
+    public void updateStock(Connection connection, String productInput, Integer newSTock) throws SQLException {
 
-            try {
+        try {
 
-                String updateSQL = "UPDATE PRODUCTS SET stock=? "+
-                " WHERE productCode=?";
-                PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+            String updateSQL = "UPDATE PRODUCTS SET stock=? "+
+            " WHERE productCode=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
 
-                preparedStatement.setInt(1,newSTock);
-                preparedStatement.setString(2, productInput);
+            preparedStatement.setInt(1,newSTock);
+            preparedStatement.setString(2, productInput);
 
-                int rowsAffected = preparedStatement.executeUpdate();
+            int rowsAffected = preparedStatement.executeUpdate();
 
-                if (rowsAffected > 0) {
-                    System.out.println(rowsAffected + " row(s) updated successfully.");
-                } else {
-                    System.out.println("No rows were updated for product code: " );
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw e;// Re-throw the exception to signal an error.
+            if (rowsAffected > 0) {
+                System.out.println(rowsAffected + " row(s) updated successfully.");
+            } else {
+                System.out.println("No rows were updated for product code: " );
             }
-         }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;// Re-throw the exception to signal an error.
+        }
+        }
 
-         public void updateOrderStatus(Connection connection, String orderNumber) throws SQLException {
+        public void updateOrderStatus(Connection connection, String orderNumber) throws SQLException {
 
-            try {
-                 //    String updateSQL = "UPDATE ORDERS SET orderStatus = ? " + "\'" + OrderStatus.FULFILLED + "\'" +
-                 //        " WHERE orderNumber= " + "\'" + orderNumber + "\'" ;
+        try {
+                //    String updateSQL = "UPDATE ORDERS SET orderStatus = ? " + "\'" + OrderStatus.FULFILLED + "\'" +
+                //        " WHERE orderNumber= " + "\'" + orderNumber + "\'" ;
 
-                String updateSQL = "UPDATE ORDERS SET orderStatus = "  + "\'" + OrderStatus.FULFILLED + "\'" +  "WHERE orderNumber= ?" ;
+            String updateSQL = "UPDATE ORDERS SET orderStatus = "  + "\'" + OrderStatus.FULFILLED + "\'" +  "WHERE orderNumber= ?" ;
 
-                PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
 
-                preparedStatement.setString(1, orderNumber);
+            preparedStatement.setString(1, orderNumber);
 
-                int rowsAffected = preparedStatement.executeUpdate();
+            int rowsAffected = preparedStatement.executeUpdate();
 
-                if (rowsAffected > 0) {
-                    System.out.println(rowsAffected + " row(s) updated successfully.");
-                } else {
-                    System.out.println("No rows were updated for Order: " );
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw e;// Re-throw the exception to signal an error.
+            if (rowsAffected > 0) {
+                System.out.println(rowsAffected + " row(s) updated successfully.");
+            } else {
+                System.out.println("No rows were updated for Order: " );
             }
-         }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;// Re-throw the exception to signal an error.
+        }
+        }
 
 
-         public void deleteOrderStatus(Connection connection, String orderNumber) throws SQLException {
+        public void deleteOrderStatus(Connection connection, String orderNumber) throws SQLException {
 
             try {
 
@@ -248,13 +248,13 @@ public class DatabaseOperations {
                 int rowsAffected = preparedStatementOl.executeUpdate();
 
                 if (rowsAffected > 0) {
-                     String removeStatementOrder = "DELETE FROM ORDERS WHERE orderNumber = ? ";
+                        String removeStatementOrder = "DELETE FROM ORDERS WHERE orderNumber = ? ";
 
-                     PreparedStatement preparedStatementO = connection.prepareStatement(removeStatementOrder);
-                     preparedStatementO.setString(1, orderNumber);
-                     rowsAffected = preparedStatementO.executeUpdate();
+                        PreparedStatement preparedStatementO = connection.prepareStatement(removeStatementOrder);
+                        preparedStatementO.setString(1, orderNumber);
+                        rowsAffected = preparedStatementO.executeUpdate();
 
-                      System.out.println(rowsAffected + " row(s) deleted successfully.");
+                        System.out.println(rowsAffected + " row(s) deleted successfully.");
                 } else {
                     System.out.println("No rows were deleted for Order: " );
                 }
@@ -262,20 +262,15 @@ public class DatabaseOperations {
                 e.printStackTrace();
                 throw e;// Re-throw the exception to signal an error.
             }
-         }
+        }
 
 
 
-         public ResultSet getOrdersForStatus(Connection con, OrderStatus orderStatus) throws SQLException {
-            ResultSet resultSet = null;
-            PreparedStatement statement = null;
+        public ResultSet getOrdersForStatus(Connection con, OrderStatus orderStatus) throws SQLException {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
 
             try {
-
-                //  // Execute the query to select all products from the "PRODUCTS" table
-                // String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, ol.orderLineNumber, ol.quantity, " +
-                //         "ol.lineCost, ol.productCode FROM ORDERS o, ORDER_LINES ol WHERE o.orderNumber = ol.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\' " ;
-
 
                 String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.userID, u.email, u.forename, u.surname, " +
                         " u.houseNumber, u.postcode,  ad.houseNumber, ad.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
@@ -294,19 +289,20 @@ public class DatabaseOperations {
             // return null;
         }
 
-        public ResultSet getOrderLineForOrderNumber(Connection con, String orderNumber) throws SQLException {
-            ResultSet resultSet = null;
-            PreparedStatement statement = null;
+
+
+        public ResultSet getOrdersForStatus(Connection con, String userId) throws SQLException {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
 
             try {
 
-                //  // Execute the query to select all products from the "PRODUCTS" table
-                // String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, ol.orderLineNumber, ol.quantity, " +
-                //         "ol.lineCost, ol.productCode FROM ORDERS o, ORDER_LINES ol WHERE o.orderNumber = ol.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\' " ;
+                String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.userID, u.email, u.forename, u.surname, " +
+                        " u.houseNumber, u.postcode,  ad.houseNumber, ad.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
+                        " u.userID = " + "\'" + userId + "\'" + " AND o.userId = u.userID AND u.houseNumber = ad.houseNumber AND " +
+                        "u.postcode = ad.postcode";                
 
-
-                String query = "SELECT ol.orderNumber, ol.orderLineNumber, ol.quantity, ol.lineCost, ol.productCode " +
-                        " FROM ORDER_LINES ol WHERE  ol.orderNumber = " + "\'" + orderNumber + "\' " ;
+         
 
                 // Create a statement
                 statement = con.prepareStatement(query);
@@ -319,6 +315,33 @@ public class DatabaseOperations {
             }
             // return null;
         }
+        
+        
+        public ResultSet getOrderLineForOrderNumber(Connection con, String orderNumber) throws SQLException {
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            //  // Execute the query to select all products from the "PRODUCTS" table
+            // String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, ol.orderLineNumber, ol.quantity, " +
+            //         "ol.lineCost, ol.productCode FROM ORDERS o, ORDER_LINES ol WHERE o.orderNumber = ol.orderNumber AND o.orderStatus = " + "\'" + orderStatus + "\' " ;
+
+
+            String query = "SELECT ol.orderNumber, ol.orderLineNumber, ol.quantity, ol.lineCost, ol.productCode, p.productName, p.brandName " +
+                    " FROM ORDER_LINES ol , PRODUCTS p WHERE  ol.productCode = p.productCode AND ol.orderNumber = " + "\'" + orderNumber + "\' " ;
+
+            // Create a statement
+            statement = con.prepareStatement(query);
+
+            resultSet = statement.executeQuery(query);
+            return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+            throw e;
+        }
+        // return null;
+    }
 
 
     public ResultSet getOrderLine(Connection con, int orderNumber, int orderLineNumber) throws SQLException {

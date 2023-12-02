@@ -23,7 +23,7 @@ public class Main {
         // Execute the Swing GUI application on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
             RegisterView RegisterView = null;
-            ProductsPage productsPage = null;
+            // ProductsPage productsPage = null;
             try {
                 // Open a database connection
                 databaseConnectionHandler.openConnection();

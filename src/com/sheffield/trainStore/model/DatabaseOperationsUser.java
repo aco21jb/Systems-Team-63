@@ -11,19 +11,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class DatabaseOperationsUser {
 
     
     // new today
-    public void registerUser(Connection connection, String userID, String emailId, char[] passwordChars, String forename,
-             String surname, Integer houseNumber, String postcode, String roadName, String cityName) throws SQLException {
+    // public void registerUser(Connection connection, String userID, String emailId, char[] passwordChars, String forename,
+    //          String surname, Integer houseNumber, String postcode, String roadName, String cityName) throws SQLException {
 
+   public void registerUser(Connection connection, User newUser) throws SQLException {                
     try {
 
-        //  create user object --- validation should happen
-
-
-        User newUser = new User (userID, emailId, passwordChars, forename, surname, houseNumber, postcode);
+        // User newUser = new User (userID, emailId, passwordChars, forename, surname, houseNumber, postcode);
 
         // if adress already exists .. no creating new record as address can  be shared by more than one user
         //  Address should be inserted first (before the Users) because User table has foreign keys of Address table
@@ -34,8 +34,12 @@ public class DatabaseOperationsUser {
         ResultSet resultSet = null;
 
         // Set the parameter for the prepared statement
-        preparedStatementSql.setInt(1, houseNumber);
-        preparedStatementSql.setString(2, postcode);
+        // preparedStatementSql.setInt(1, houseNumber);
+        // preparedStatementSql.setString(2, postcode);
+
+        // Set the parameter for the prepared statement
+        preparedStatementSql.setInt(1, newUser.getHouseNumber());
+        preparedStatementSql.setString(2, newUser.getPostcode());        
 
         // Execute the query
         resultSet = preparedStatementSql.executeQuery();
@@ -50,18 +54,14 @@ public class DatabaseOperationsUser {
             PreparedStatement preparedStatement1 = connection.prepareStatement(insertAddressSQL);
             preparedStatement1.setInt(1, newUser.getHouseNumber());
             preparedStatement1.setString(2, newUser.getPostcode());
-            preparedStatement1.setString(3, roadName);
-            preparedStatement1.setString(4, cityName);
+            preparedStatement1.setString(3, newUser.getRoadname());
+            preparedStatement1.setString(4, newUser.getCityname());
             int rowsAffected1 = preparedStatement1.executeUpdate();
             System.out.println(rowsAffected1 + " row(s) inserted successfully.");
 
         } else {
             System.out.println("Address already exists");
         }        
-
-        // Create an SQL INSERT statement
-        // String insertSQL = "INSERT INTO Users (email , "+
-        // "password_hash) VALUES (?, ?)";
 
         String insertUserSQL = "INSERT INTO USERS (userID, email, forename,"+
         "surname, passwordHash, houseNumber, postcode) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -72,7 +72,11 @@ public class DatabaseOperationsUser {
         preparedStatement.setString(2, newUser.getEmailId());
         preparedStatement.setString(3, newUser.getForename());
         preparedStatement.setString(4, newUser.getSurname());
-        String passwordString = new String(newUser.getPassword());
+
+        String passworHash = HashedPasswordGenerator.hashPassword(newUser.getPassword());        
+        // String passwordString = new String(newUser.getPassword());
+        String passwordString = passworHash;
+
         preparedStatement.setString(5, passwordString);
 
         preparedStatement.setInt(6, newUser.getHouseNumber());
@@ -82,14 +86,12 @@ public class DatabaseOperationsUser {
         int rowsAffected = preparedStatement.executeUpdate();
         System.out.println(rowsAffected + " row(s) inserted successfully.");
 
-
-
         // by default create a role for customer with userid
 
         String sql1= "SELECT userId, email" +
                     " FROM USERS WHERE email = ?";
         PreparedStatement statementUser = connection.prepareStatement(sql1);
-        statementUser.setString(1, emailId);
+        statementUser.setString(1, newUser.getEmailId());
         ResultSet resultSetRole = statementUser.executeQuery();
 
         // Check if a result is found
@@ -108,7 +110,7 @@ public class DatabaseOperationsUser {
             System.out.println(rowsAffected1 + " row(s) inserted successfully.");
 
 
-            CurrentUser user = new CurrentUser(userId, emailId, getRolesForUserId(connection, userId));
+            CurrentUser user = new CurrentUser(userId, newUser.getEmailId(), getRolesForUserId(connection, userId));
             CurrentUserManager.setCurrentUser(user);
 
         }
@@ -146,6 +148,7 @@ public class DatabaseOperationsUser {
                 String email = resultSet.getString("email");
 
                 String storedPasswordHash = resultSet.getString("passwordHash");
+          
                 // int failedLoginAttempts = resultSet.getInt("failed_login_attempts");
                 // boolean accountLocked = resultSet.getBoolean("account_locked");
 
@@ -174,17 +177,15 @@ public class DatabaseOperationsUser {
 
     private static boolean verifyPassword(char[] enteredPassword, String storedPasswordHash) {
         try {
-            //  NEED TO CHANGE for hashpassword
-            // String hashedEnteredPassword = HashedPasswordGenerator.hashPassword(enteredPassword);
-            // return hashedEnteredPassword.equals(storedPasswordHash);
-            String enteredpasswordString = new String(enteredPassword);
-
-            if (enteredpasswordString.equals(storedPasswordHash)){
+     
+            String enteredpasswordHashed = HashedPasswordGenerator.hashPassword(enteredPassword);        
+    
+            if (enteredpasswordHashed.equals(storedPasswordHash)){
                 // return hashedEnteredPassword.equals(storedPasswordHash);
                 return true;
             }
             else {
-                return false;
+                return false; 
             }
 
         } catch (Exception e) {
@@ -396,21 +397,44 @@ public class DatabaseOperationsUser {
         return null;
     }
 
-        // Update an existing book in the database
-     public void updateUser(Connection connection, String userID, String emailId, String forename,
-             String surname, Integer houseNumber, String postcode, String roadName, String cityName) throws SQLException {            
+    //     // Update an existing book in the database
+    //  public void updateUser(Connection connection, String userID, String emailId, String forename,
+    //          String surname, Integer houseNumber, String postcode, String roadName, String cityName) throws SQLException {            
 
+     public void updateUser(Connection connection, User user) throws SQLException {                     
             try {
-              
+                ResultSet resultSet = null;
+   
+///
+
+                // String sqlAddress = "SELECT houseNumber, postcode FROM ADDRESS WHERE houseNumber = ? AND postcode = ?";
+
+                // PreparedStatement preparedStatementSql = connection.prepareStatement(sqlAddress);
+
+                // // Set the parameter for the prepared statement
+                // preparedStatementSql.setInt(1, user.getHousenumber());
+                // preparedStatementSql.setString(2, user.getPostcode());
+ 
+                // // // Execute the query
+
+                // resultSet = preparedStatementSql.executeQuery();
+                // resultSet.last() ;
+                // int rows = resultSet.getRow() ;
+
+                // if (rows > 1. {
+
+
+                // ///
+
                 String updateSQL = "UPDATE USERS SET email=?, forename=?,"+
                 "surname=? WHERE userId=?";
                 PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
     
-                preparedStatement.setString(1,emailId);
-                preparedStatement.setString(2, forename);
+                preparedStatement.setString(1, user.getEmailId());
+                preparedStatement.setString(2, user.getForename());
                 // preparedStatement.setInt(3, surname);
-                preparedStatement.setString(3, surname);
-                preparedStatement.setString(4, userID);
+                preparedStatement.setString(3, user.getSurname());
+                preparedStatement.setString(4, user.getUserId());
 
                 
                 int rowsAffected = preparedStatement.executeUpdate();

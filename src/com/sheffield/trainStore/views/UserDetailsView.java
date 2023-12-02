@@ -49,7 +49,7 @@ public class UserDetailsView extends JFrame {
     public UserDetailsView(Connection connection) throws SQLException {
         // Create the JFrame in the constructor
         this.setTitle("Trains of Sheffield");
-        // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE );
         this.setSize(500, 300);
         this.setLocationRelativeTo(null);
 
@@ -180,20 +180,15 @@ public class UserDetailsView extends JFrame {
 
                     DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
                     try {
-                        String useID = CurrentUserManager.getCurrentUser().getUserId();
+                        String userID = CurrentUserManager.getCurrentUser().getUserId();
+
+                        User user = new User(userID, emailId, forename, surname, houseNumberInt, postcode, roadName, cityName);
 
                         if (! previousEmail.equals(emailId)) {
                             if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
 
-                                databaseOperationsUser.updateUser(connection, useID, emailId, forename, surname, houseNumberInt, postcode,roadName, cityName);
-
-                                //  NEED TO CLEAR THE FILEDS VALUES
-                                // Close the current window
-                                // dispose();
-                                // HomePage HomePage = null;
-
-                                // HomePage = new HomePage(connection);
-                                // HomePage.setVisible(true);
+                                // databaseOperationsUser.updateUser(connection, userID, emailId, forename, surname, houseNumberInt, postcode,roadName, cityName);
+                                databaseOperationsUser.updateUser(connection, user);
 
                             }
                             else {
@@ -201,7 +196,9 @@ public class UserDetailsView extends JFrame {
                             }
                         }
                         else {
-                            databaseOperationsUser.updateUser(connection, useID, emailId, forename, surname, houseNumberInt, postcode,roadName, cityName);
+                            // databaseOperationsUser.updateUser(connection, userID, emailId, forename, surname, houseNumberInt, postcode,roadName, cityName);
+                                databaseOperationsUser.updateUser(connection, user);
+
                         }
                        
                     } catch (SQLException e1) {

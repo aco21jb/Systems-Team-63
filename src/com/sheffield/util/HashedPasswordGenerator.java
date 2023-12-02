@@ -5,14 +5,17 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class HashedPasswordGenerator {
-    //private static final String SALT = "MyStaticSalt"; // Replace with your own static salt
+    private static final String SALT = "team063"; 
 
     public static String hashPassword(char[] password) {
         try {
 
             SecureRandom random = new SecureRandom();
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
+            // byte[] salt = new byte[16];
+
+            byte[] salt = SALT.getBytes();
+            
+            // random.nextBytes(salt);
 
             // Create a MessageDigest instance for SHA-256
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -47,7 +50,7 @@ public class HashedPasswordGenerator {
     }
 
     public static void main(String[] args) {
-        char[] password = "asd@456".toCharArray();
+        char[] password = "mgr".toCharArray();
         String hashedPassword = hashPassword(password);
 
         System.out.println("Original Password: " + String.valueOf(password));
