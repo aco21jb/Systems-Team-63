@@ -94,7 +94,7 @@ public class AddPackView extends JFrame{
                 DatabaseOperations dbOp = new DatabaseOperations();
                 BigDecimal price = BigDecimal.valueOf(Double.valueOf(priceField.getText()));
                 Integer stock = Integer.valueOf(stockField.getText());
-                String[] codes = codesField.getText().split("\\\\s*,\\\\s*");
+                String[] codes = codesField.getText().split("\\s*,\\s*");
                 try {
                     Product product = new Product(productCodeField.getText(), brandNameField.getText(), productNameField.getText(),
                             price, stock, gaugeField.getText(), eraCodeField.getText(), dccCodeField.getText());

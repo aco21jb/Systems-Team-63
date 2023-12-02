@@ -59,7 +59,8 @@ public class AddProductPanel extends JFrame{
         eraCodeField = new JTextField(20);
         dccCodeField = new JTextField(20);
 
-        JButton addButton = new JButton("Add");
+        JButton addButton = new JButton("Confirm");
+        JButton addSetButton = new JButton("Add Train set or Track pack");
 
         panel.add(productCodeLabel);
         panel.add(productCodeField);
@@ -79,6 +80,7 @@ public class AddProductPanel extends JFrame{
         panel.add(dccCodeField);
 
         panel.add(addButton);
+        panel.add(addSetButton);
 
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -94,6 +96,19 @@ public class AddProductPanel extends JFrame{
                 }
             }
 
+        });
+
+        addSetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    AddPackView packWindow = new AddPackView(con);
+                    packWindow.setVisible(true);
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                }
+
+            }
         });
 
     }
