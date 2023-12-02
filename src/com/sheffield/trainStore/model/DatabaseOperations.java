@@ -409,4 +409,37 @@ public class DatabaseOperations {
         return resultSet;
     }
 
+    public void addTrainSet(Connection con, String[] codes, String setCode) throws SQLException {
+        String query = "INSERT INTO SETS (setCode,productCode) VALUES (?,?)";
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        System.out.println(codes);
+        for (String c: codes) {
+            try {
+                System.out.println(c);
+                preparedStatement.setString(1,setCode);
+                preparedStatement.setString(2,c);
+                preparedStatement.addBatch();
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        preparedStatement.executeBatch();
+    }
+
+    public void addTrackPack(Connection con, String[] codes, String packCode) throws SQLException {
+        String query = "INSERT INTO TRACK_PACK (trackPackCode,productCode) VALUES (?,?)";
+        PreparedStatement preparedStatement = con.prepareStatement(query);
+        System.out.println(codes);
+        for (String c: codes) {
+            try {
+                preparedStatement.setString(1,packCode);
+                preparedStatement.setString(2,c);
+                preparedStatement.addBatch();
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        preparedStatement.executeBatch();
+    }
+
 }
