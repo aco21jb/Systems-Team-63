@@ -189,10 +189,10 @@ public class DatabaseOperations {
      * Updates  Stock for a Product
      *
      * @param connection       The database connection.
-     * @param productInput       
-     * @param newSTock  
+     * @param productInput
+     * @param newSTock
      * @return Resultset
-     */      
+     */
 
     // Update an existing book in the database
     public void updateStock(Connection connection, String productInput, Integer newSTock) throws SQLException {
@@ -223,9 +223,9 @@ public class DatabaseOperations {
      * Updates  Order Status
      *
      * @param connection       The database connection.
-     * @param orderNumber       
+     * @param orderNumber
      * @return Resultset
-     */            
+     */
     public void updateOrderStatus(Connection connection, String orderNumber) throws SQLException {
 
     try {
@@ -255,9 +255,9 @@ public class DatabaseOperations {
      * Deletes Orders .
      *
      * @param connection       The database connection.
-     * @param orderNumber       
+     * @param orderNumber
      * @return Resultset
-     */            
+     */
 
     public void deleteOrderStatus(Connection connection, String orderNumber) throws SQLException {
 
@@ -290,9 +290,9 @@ public class DatabaseOperations {
      * Gets Orders  for a Status.
      *
      * @param connection       The database connection.
-     * @param orderStatus         
+     * @param orderStatus
      * @return Resultset
-     */               
+     */
 
     public ResultSet getOrdersForStatus(Connection con, OrderStatus orderStatus) throws SQLException {
     ResultSet resultSet = null;
@@ -322,9 +322,9 @@ public class DatabaseOperations {
      * Gets Orders  for a particular user.
      *
      * @param connection       The database connection.
-     * @param userId         
+     * @param userId
      * @return Resultset
-     */               
+     */
 
     public ResultSet getOrdersForUser(Connection con, String userId) throws SQLException {
     ResultSet resultSet = null;
@@ -335,8 +335,8 @@ public class DatabaseOperations {
             String query = "SELECT o.orderNumber, o.orderDate, o.orderStatus, o.userId, u.userID, u.email, u.forename, u.surname, " +
                     " u.houseNumber, u.postcode,  ad.houseNumber, ad.postcode, ad.roadName, ad.cityName FROM ORDERS o, USERS u, ADDRESS ad WHERE  "+
                     " u.userID = " + "\'" + userId + "\'" + " AND o.userId = u.userID AND u.houseNumber = ad.houseNumber AND " +
-                    "u.postcode = ad.postcode ORDER BY o.orderDate ";                
-        
+                    "u.postcode = ad.postcode ORDER BY o.orderDate ";
+
             // Create a statement
             statement = con.prepareStatement(query);
 
@@ -348,16 +348,16 @@ public class DatabaseOperations {
         }
         // return null;
     }
-      
+
 
     /**
      * Gets Order line for a particular order.
      *
      * @param connection       The database connection.
-     * @param orderNumber         
+     * @param orderNumber
      * @return Resultset
-     */        
-        
+     */
+
     public ResultSet getOrderLineForOrderNumber(Connection con, String orderNumber) throws SQLException {
     ResultSet resultSet = null;
     PreparedStatement statement = null;
@@ -458,7 +458,7 @@ public class DatabaseOperations {
 
             // String userId = getUserIdByEmailId(connection, orderNumber);
 
-            String sql = "SELECT o.orderNumber, o.userId, b.userID FROM ORDERS o, bank_details b WHERE o.userId = b.userID  AND o.orderNumber = ? ";
+            String sql = "SELECT o.orderNumber, o.userId, b.userID FROM ORDERS o, BANK_DETAILS b WHERE o.userId = b.userID  AND o.orderNumber = ? ";
 
             preparedStatement = connection.prepareStatement(sql);
             // Set the parameter for the prepared statement
@@ -480,5 +480,5 @@ public class DatabaseOperations {
             e.printStackTrace(); // Handle the exception according to your application's needs
         }
         return null;
-    }        
+    }
 }

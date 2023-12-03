@@ -87,14 +87,14 @@ public class StaffUserView extends JFrame {
 
         searchOrderDateField = new JTextField(20);
         searchOrderNumberField = new JTextField(20);
-        JButton searchButton = new JButton("Search");        
+        JButton searchButton = new JButton("Search");
         searchPanel.add(new JLabel("Order Date:"));
         searchPanel.add(searchOrderDateField);
         searchPanel.add(new JLabel("Order Number:"));
         searchPanel.add(searchOrderNumberField);
-        searchPanel.add(searchButton);      
-        // fullfilledOrderPanel.add(searchPanel, BorderLayout.NORTH) ;    
-        // confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;              
+        searchPanel.add(searchButton);
+        // fullfilledOrderPanel.add(searchPanel, BorderLayout.NORTH) ;
+        // confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;
 
 
         JPanel btnConfirmedOrderPanel = new JPanel(new GridLayout(4, 1));
@@ -110,7 +110,7 @@ public class StaffUserView extends JFrame {
         btnConfirmedOrderPanel.add (viewConfirmOrderLineButton);
         btnConfirmedOrderPanel.add (fulfillOrderLineButton);
         btnConfirmedOrderPanel.add (deleteOrderLineButton);
-        
+
 
 
         tabbedPane = new JTabbedPane();
@@ -140,7 +140,7 @@ public class StaffUserView extends JFrame {
         orderTable = new JTable(tableOrderModel);
         tableOrderModel.setRowCount(0);
 
-        tableOrderModel.addColumn("Order Number");        
+        tableOrderModel.addColumn("Order Number");
         tableOrderModel.addColumn("Order Date");
         tableOrderModel.addColumn("Order Status");
         tableOrderModel.addColumn("Email");
@@ -149,35 +149,35 @@ public class StaffUserView extends JFrame {
         tableOrderModel.addColumn("House Number");
         tableOrderModel.addColumn("Post Code");
         tableOrderModel.addColumn("Road Name");
-        tableOrderModel.addColumn("City Name");     
-                                    
+        tableOrderModel.addColumn("City Name");
+
 
         DefaultTableModel tableOrderLineModel = new DefaultTableModel();
-        orderLineTable = new JTable(tableOrderLineModel);        
+        orderLineTable = new JTable(tableOrderLineModel);
         tableOrderLineModel.setRowCount(0);
-                
 
-        tableOrderLineModel.addColumn("Order Number");        
+
+        tableOrderLineModel.addColumn("Order Number");
         tableOrderLineModel.addColumn("Line Number");
-        tableOrderLineModel.addColumn("Product Code");        
+        tableOrderLineModel.addColumn("Product Code");
 
         tableOrderLineModel.addColumn("Product Name");
         tableOrderLineModel.addColumn("Brand Name");
-             
+
         tableOrderLineModel.addColumn("Qty");
         tableOrderLineModel.addColumn("Line Cost");
 
         // ??
 
         // JScrollPane scrollPaneOrder = new JScrollPane(orderTable);
-        orderTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);     
+        orderTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         JScrollPane scrollPaneOrder = new JScrollPane(orderTable);
-        scrollPaneOrder.setViewportView(orderTable);    
+        scrollPaneOrder.setViewportView(orderTable);
         // confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
 
-        orderLineTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);     
+        orderLineTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         JScrollPane scrollPaneOrderLine = new JScrollPane(orderLineTable);
-        scrollPaneOrderLine.setViewportView(orderLineTable);           
+        scrollPaneOrderLine.setViewportView(orderLineTable);
 
         tabbedPane.setSelectedIndex(0);
         if (listOfRolesForCurrentUser.contains(Role.STAFF) ) {
@@ -190,14 +190,14 @@ public class StaffUserView extends JFrame {
                     tableOrderModel.setRowCount(0);
                     tableOrderLineModel.setRowCount(0);
 
-                    confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;              
+                    confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;
                     confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
                     confirmedOrderPanel.add(btnConfirmedOrderPanel);
                     confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
-            
+
                     DatabaseOperations dbOperations = new DatabaseOperations();
                     ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
-            
+
                     while (resultSet.next()) {
                         tableOrderModel.addRow(new Object[]{
                                 resultSet.getString("orderNumber"),
@@ -210,19 +210,19 @@ public class StaffUserView extends JFrame {
                                 resultSet.getString("postcode"),
                                 resultSet.getString("roadName"),
                                 resultSet.getString("cityName")
-       
-                        });        
+
+                        });
                     }
-                    resultSet.close();      
+                    resultSet.close();
                     confirmedOrderPanel.revalidate();
-                    confirmedOrderPanel.repaint();                                                        
+                    confirmedOrderPanel.repaint();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
-                }                
-        }    
+                }
+        }
 
         mainPanel.add(tabbedPane,BorderLayout.CENTER);
-   
+
         ChangeListener tabbedPaneChangeListener = new ChangeListener() {
             public void stateChanged(ChangeEvent changeEvent){
 
@@ -265,7 +265,7 @@ public class StaffUserView extends JFrame {
 
                         try {
                             newWindow = new ProductsPage(connection);
-        
+
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -282,23 +282,23 @@ public class StaffUserView extends JFrame {
 
                         try {
                             // newWindow = new ProductsPage(connection);
-                             
+
                             searchOrderNumberField.setText("");
                             fullfilledOrderPanel.removeAll();
                             tabbedPane.setSelectedIndex(1);
                             tableOrderModel.setRowCount(0);
                             tableOrderLineModel.setRowCount(0);
 
-                            fullfilledOrderPanel.add(searchPanel, BorderLayout.NORTH) ;              
+                            fullfilledOrderPanel.add(searchPanel, BorderLayout.NORTH) ;
 
                             fullfilledOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
                             fullfilledOrderPanel.add(viewOrderLineButton);
-           
+
                             fullfilledOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
-                                                
+
                             DatabaseOperations dbOperations = new DatabaseOperations();
                             ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.FULFILLED);
-                    
+
                             while (resultSet.next()) {
                                 tableOrderModel.addRow(new Object[]{
                                         resultSet.getString("orderNumber"),
@@ -311,14 +311,14 @@ public class StaffUserView extends JFrame {
                                         resultSet.getString("postcode"),
                                         resultSet.getString("roadName"),
                                         resultSet.getString("cityName")
-                    
+
                                 });
-                    
+
                             }
-                            resultSet.close();      
+                            resultSet.close();
                             fullfilledOrderPanel.revalidate();
-                            fullfilledOrderPanel.repaint();                                                        
-  
+                            fullfilledOrderPanel.repaint();
+
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -340,15 +340,15 @@ public class StaffUserView extends JFrame {
                             tabbedPane.setSelectedIndex(0);
                             tableOrderModel.setRowCount(0);
                             tableOrderLineModel.setRowCount(0);
-                            confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;              
+                            confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;
                             confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
- 
+
                             confirmedOrderPanel.add(btnConfirmedOrderPanel);
                             confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
-                                                
+
                             DatabaseOperations dbOperations = new DatabaseOperations();
                             ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
-                    
+
                             while (resultSet.next()) {
                                 tableOrderModel.addRow(new Object[]{
                                         resultSet.getString("orderNumber"),
@@ -361,12 +361,12 @@ public class StaffUserView extends JFrame {
                                         resultSet.getString("postcode"),
                                         resultSet.getString("roadName"),
                                         resultSet.getString("cityName")
-              
+
                                 });
                             }
-                            resultSet.close();      
+                            resultSet.close();
                             confirmedOrderPanel.revalidate();
-                            confirmedOrderPanel.repaint();                                                        
+                            confirmedOrderPanel.repaint();
 
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -408,18 +408,18 @@ public class StaffUserView extends JFrame {
         updateStockProductButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-        
+
                 int row = ProductsPanelPage.productsTable.getSelectedRow();
                   // Check if a product is selected
                 if (row >= 0) {
                     try {
-                        int productNewStock = Integer.parseInt( productStockField.getText());    
-               
-                        String productOldStock1 = String.valueOf(ProductsPanelPage.productsTable.getValueAt(row,3)) ;                        
-                        Integer productOldStock = Integer.parseInt( productOldStock1)     ;     
+                        int productNewStock = Integer.parseInt( productStockField.getText());
+
+                        String productOldStock1 = String.valueOf(ProductsPanelPage.productsTable.getValueAt(row,3)) ;
+                        Integer productOldStock = Integer.parseInt( productOldStock1)     ;
 
                         if (productNewStock > 0) {
-                            if (productNewStock  > productOldStock)  {                                 
+                            if (productNewStock  > productOldStock)  {
                                     String productCode = String.valueOf(ProductsPanelPage.productsTable.getValueAt(row,0)) ;
 
                                     // Ask for confirmation
@@ -437,10 +437,10 @@ public class StaffUserView extends JFrame {
                                             updateStockPanel.add(productStockLabel);
                                             productStockField.setText("0");
                                             updateStockPanel.add(productStockField);
-                                            updateStockPanel.add(updateStockProductButton);                                            
+                                            updateStockPanel.add(updateStockProductButton);
                                         } catch (SQLException e1) {
                                             e1.printStackTrace();
-                                        }                                     
+                                        }
                                         JOptionPane.showMessageDialog(null, productCode + " Stock Updated Successfully.");
                                     } else {
                                         // User canceled the action
@@ -456,13 +456,13 @@ public class StaffUserView extends JFrame {
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(null, "Invalid quantity.");
                     }
-                    
+
                 }
 
 
                   else {
                     JOptionPane.showMessageDialog(null, "Please select a Product.");
-                  }                    
+                  }
 
             }
         });
@@ -493,10 +493,10 @@ public class StaffUserView extends JFrame {
                             if (tabbedPane.getTitleAt(index) == "Fullfilled Orders") {
 
                                 tableOrderLineModel.setRowCount(0);
-           
+
                                 DatabaseOperations dbOperations = new DatabaseOperations();
                                 ResultSet resultSet = dbOperations.getOrderLineForOrderNumber(connection, orderNumber);
-                        
+
                                 while (resultSet.next()) {
                                     tableOrderLineModel.addRow(new Object[]{
                                             resultSet.getString("orderNumber"),
@@ -512,16 +512,16 @@ public class StaffUserView extends JFrame {
                                             resultSet.getString("lineCost")
                                     });
                                 }
-                              
-                                resultSet.close();                                
-                         
+
+                                resultSet.close();
+
                             }
 
                         } catch (SQLException e1) {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
-                        }                        
-    
+                        }
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Please select a Order.");
                     }
@@ -548,12 +548,12 @@ public class StaffUserView extends JFrame {
                             int index = tabbedPane.getSelectedIndex();
 
                             if (tabbedPane.getTitleAt(index) == "Confirmed Orders") {
-                  
+
                                 tableOrderLineModel.setRowCount(0);
-                                                   
+
                                 DatabaseOperations dbOperations = new DatabaseOperations();
                                 ResultSet resultSet = dbOperations.getOrderLineForOrderNumber(connection, orderNumber);
-                        
+
                                 while (resultSet.next()) {
                                     tableOrderLineModel.addRow(new Object[]{
                                             resultSet.getString("orderNumber"),
@@ -564,28 +564,28 @@ public class StaffUserView extends JFrame {
 
                                             resultSet.getString("productName"),
 
-                                            resultSet.getString("brandName"),                                            
+                                            resultSet.getString("brandName"),
                                             resultSet.getString("quantity"),
                                             resultSet.getString("lineCost")
                                     });
-                                }                                 
+                                }
                             }
 
                             // confirmedOrderPanel.setVisible(true);
                             // // confirmedOrderPanel.setVisible(true);
                             //      confirmedOrderPanel.revalidate();
-                            //      confirmedOrderPanel.repaint();                              
+                            //      confirmedOrderPanel.repaint();
 
                         } catch (SQLException e1) {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
-                        }                        
-    
+                        }
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Please select a Order.");
                     }
             }
-        });        
+        });
 
         // Add action listener to the button
         fulfillOrderLineButton.addActionListener(new ActionListener() {
@@ -596,14 +596,14 @@ public class StaffUserView extends JFrame {
                     int row = orderTable.getSelectedRow();
                     // Check if a user is selected
                     if (row >= 0) {
-                                  
+
                         String orderNumber = String.valueOf(orderTable.getValueAt(row,0)) ;
-                        
+
                         // bankDetailExists or not
                         if(databaseOperations.IsUserBankDetailsExists(connection, orderNumber)){
                             // Ask for confirmation
                             int dialogResult = JOptionPane.showConfirmDialog(null,
-                                    "Are you sure you want to order has Fullfilled -   " + orderNumber  + "  ?"  , "Confirmation",
+                                    "Are you sure you want Fulfill the order -   " + orderNumber  + "  ?"  , "Confirmation",
                                     JOptionPane.YES_NO_OPTION);
 
                             // Check the user's choice
@@ -620,15 +620,15 @@ public class StaffUserView extends JFrame {
                                     tabbedPane.setSelectedIndex(0);
                                     tableOrderModel.setRowCount(0);
                                     tableOrderLineModel.setRowCount(0);
-                                    confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;              
+                                    confirmedOrderPanel.add(searchPanel, BorderLayout.NORTH) ;
                                     confirmedOrderPanel.add(scrollPaneOrder, BorderLayout.CENTER);
-        
+
                                     confirmedOrderPanel.add(btnConfirmedOrderPanel);
                                     confirmedOrderPanel.add(scrollPaneOrderLine, BorderLayout.CENTER);
-                                                        
+
                                     DatabaseOperations dbOperations = new DatabaseOperations();
                                     ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
-                            
+
                                     while (resultSet.next()) {
                                         tableOrderModel.addRow(new Object[]{
                                                 resultSet.getString("orderNumber"),
@@ -641,29 +641,29 @@ public class StaffUserView extends JFrame {
                                                 resultSet.getString("postcode"),
                                                 resultSet.getString("roadName"),
                                                 resultSet.getString("cityName")
-                    
+
                                         });
                                     }
-                                    resultSet.close();      
+                                    resultSet.close();
                                     confirmedOrderPanel.revalidate();
-                                    confirmedOrderPanel.repaint();                                                       
+                                    confirmedOrderPanel.repaint();
 
                                         // fullfilledOrderPanel.revalidate();
-                                    // fullfilledOrderPanel.repaint();   
+                                    // fullfilledOrderPanel.repaint();
                                 } catch (SQLException e1) {
                                     e1.printStackTrace();
-                                }                                     
+                                }
                                 JOptionPane.showMessageDialog(null, orderNumber + " Order marked Fulfilled Successfully.");
                             } else {
                                 // User canceled the action
                                 JOptionPane.showMessageDialog(null, "Canceled.", "Canceled", JOptionPane.WARNING_MESSAGE);
-                            }  
-                            }       
+                            }
+                            }
                         else {
-                            JOptionPane.showMessageDialog(null, "Cannot Fulfill the Order Bank Details doesnt Exists.");
-                        }                      
+                            JOptionPane.showMessageDialog(null, "Cannot Fulfill the Order Bank Details doesnt Exist.");
+                        }
                         } else {
-                        JOptionPane.showMessageDialog(null, "Please select a Order.");
+                        JOptionPane.showMessageDialog(null, "Please select an Order.");
                     }
             }
         });
@@ -678,18 +678,18 @@ public class StaffUserView extends JFrame {
                     int row = orderTable.getSelectedRow();
                     // Check if a user is selected
                     if (row >= 0) {
-                                 
+
                                     String orderNumber = String.valueOf(orderTable.getValueAt(row,0)) ;
-                                  
+
                                     // bankDetailExists or not
                                     if(databaseOperations.IsUserBankDetailsExists(connection, orderNumber)){
-                                        JOptionPane.showMessageDialog(null, "Bank Details Exists ");
-                                     }       
+                                        JOptionPane.showMessageDialog(null, "Bank Details Exist ");
+                                     }
                                     else {
-                                        JOptionPane.showMessageDialog(null, "Bank Details doesnt EXISTS. Cannot proceed to fullfill the order");
-                                    }                      
+                                        JOptionPane.showMessageDialog(null, "Bank Details doesnt EXIST. Cannot proceed to fullfill the order");
+                                    }
                         } else {
-                        JOptionPane.showMessageDialog(null, "Please select a Order.");
+                        JOptionPane.showMessageDialog(null, "Please select an Order.");
                     }
             }
         });
@@ -704,10 +704,10 @@ public class StaffUserView extends JFrame {
                     if (row >= 0) {
 
                         String orderNumber = String.valueOf(orderTable.getValueAt(row,0)) ;
-                       
+
                         // Ask for confirmation
                         int dialogResult = JOptionPane.showConfirmDialog(null,
-                                "Are you sure you want to delet the order -   " + orderNumber  + "  ?"  , "Confirmation",
+                                "Are you sure you want to delete the order -   " + orderNumber  + "  ?"  , "Confirmation",
                                 JOptionPane.YES_NO_OPTION);
 
                         // Check the user's choice
@@ -716,19 +716,19 @@ public class StaffUserView extends JFrame {
                             try {
                                 //  Update the Order to Fulfilled
                                 databaseOperations.deleteOrderStatus(connection, orderNumber);
-                                    
+
                             } catch (SQLException e1) {
                                 e1.printStackTrace();
-                            }                                     
+                            }
                             JOptionPane.showMessageDialog(null, orderNumber + " Order Deleted Successfully.");
                         } else {
                             // User canceled the action
                             JOptionPane.showMessageDialog(null, "Canceled.", "Canceled", JOptionPane.WARNING_MESSAGE);
-                        }                        
+                        }
 
                     } else {
                         JOptionPane.showMessageDialog(null, "Please select a Order.");
-                    }                 
+                    }
 
             }
         });
@@ -752,49 +752,49 @@ public class StaffUserView extends JFrame {
 
                     //    ResultSet resultSet = dbOperations.getOrdersForStatus(connection, OrderStatus.CONFIRMED);
                        ResultSet resultSet = dbOperations.getOrdersForStatus(connection, localOrderStatus);
-                                
+
                        tableOrderModel.setRowCount(0);
                        tableOrderLineModel.setRowCount(0);
 
                        if ((! orderNumber.isEmpty()) || (! orderDate.isEmpty())) {
                             if (! orderDate.isEmpty() && ! orderNumber.isEmpty()) {
                                 while (resultSet.next()) {
-                                        if ((orderNumber.equals(resultSet.getString("orderNumber"))) && 
-                                                    (orderDate.equals(resultSet.getString("orderDate")))){ 
+                                        if ((orderNumber.equals(resultSet.getString("orderNumber"))) &&
+                                                    (orderDate.equals(resultSet.getString("orderDate")))){
                                                 tableOrderModel.addRow(new Object[]{
                                                     resultSet.getString("orderNumber"), resultSet.getString("orderDate"),
                                                     resultSet.getString("orderStatus"), resultSet.getString("email"),
                                                     resultSet.getString("forename"), resultSet.getString("surname"),
                                                     resultSet.getString("houseNumber"), resultSet.getString("postcode"),
                                                     resultSet.getString("roadName"),resultSet.getString("cityName")
-                                                });    
-                                            }                                          
+                                                });
+                                            }
                                 }
                             }
                             else if (! orderDate.isEmpty()){
                                 while (resultSet.next()) {
-                                        if ((orderDate.equals(resultSet.getString("orderDate")))){ 
+                                        if ((orderDate.equals(resultSet.getString("orderDate")))){
                                                 tableOrderModel.addRow(new Object[]{
                                                     resultSet.getString("orderNumber"), resultSet.getString("orderDate"),
                                                     resultSet.getString("orderStatus"), resultSet.getString("email"),
                                                     resultSet.getString("forename"), resultSet.getString("surname"),
                                                     resultSet.getString("houseNumber"), resultSet.getString("postcode"),
                                                     resultSet.getString("roadName"),resultSet.getString("cityName")
-                                                });    
-                                            }                                          
+                                                });
+                                            }
                                 }
                             }
                             else if (! orderNumber.isEmpty()) {
                                while (resultSet.next()) {
-                                        if ((orderNumber.equals(resultSet.getString("orderNumber")))){ 
+                                        if ((orderNumber.equals(resultSet.getString("orderNumber")))){
                                                 tableOrderModel.addRow(new Object[]{
                                                     resultSet.getString("orderNumber"), resultSet.getString("orderDate"),
                                                     resultSet.getString("orderStatus"), resultSet.getString("email"),
                                                     resultSet.getString("forename"), resultSet.getString("surname"),
                                                     resultSet.getString("houseNumber"), resultSet.getString("postcode"),
                                                     resultSet.getString("roadName"),resultSet.getString("cityName")
-                                                });    
-                                            }                                          
+                                                });
+                                            }
                                 }
                             }
                         }
@@ -806,16 +806,16 @@ public class StaffUserView extends JFrame {
                                                 resultSet.getString("forename"), resultSet.getString("surname"),
                                                 resultSet.getString("houseNumber"), resultSet.getString("postcode"),
                                                 resultSet.getString("roadName"),resultSet.getString("cityName")
-                                            });                                         
-                                    }               
+                                            });
+                                    }
                         }
-                        resultSet.close();      
+                        resultSet.close();
                         // confirmedOrderPanel.revalidate();
-                        // confirmedOrderPanel.repaint();   
+                        // confirmedOrderPanel.repaint();
 
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
-                    }                                
+                    }
                 }
         });
 
