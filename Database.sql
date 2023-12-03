@@ -132,7 +132,12 @@ CREATE TABLE `TRACK_PACK` (
   CONSTRAINT `trackPackCode` FOREIGN KEY (`trackPackCode`) REFERENCES `PRODUCTS` (`productCode`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+CREATE TABLE ORDERSEQUENCE (
+   CODE varchar(10) NOT NULL,
+   SR_NO int DEFAULT '0',
+   PRIMARY KEY (CODE));
 
+INSERT INTO ORDERSEQUENCE (CODE, SR_NO) VALUES ('ORDERSEQ', '105');
 
 -- Insert Manager data into the 'User' table
 INSERT INTO USERS (email, forename, surname , password_hash)
@@ -156,3 +161,4 @@ VALUES
 
 -- Select all rows from the 'User' table
 SELECT * FROM USERS;
+
