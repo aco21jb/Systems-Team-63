@@ -148,17 +148,12 @@ public class RegisterView extends JFrame {
                 Matcher matcher = pattern.matcher(emailId); 
                     
                 if (matcher.matches()) {
+
+                    try {                
                                 String uniqueUserID = UniqueUserIDGenerator.generateUniqueUserID() ;
                                 char[] passwordChars = passwordField.getPassword();
                                 String forename = forenameField.getText();
                                 String surname = surnameField.getText();
-
-                                // try {
-                                //     Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
-  
-                                // } catch (NumberFormatException n) {
-                                //     System.out.println("HouseNumber should contain Number");
-                                // }
 
                                 Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
                                 String postcode = postcodeField.getText();
@@ -169,8 +164,7 @@ public class RegisterView extends JFrame {
                                 try {
                                     if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
                                         User user = new User(uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, postcode, roadName, cityName);
-                                        // databaseOperationsUser.registerUser(connection, uniqueUserID, emailId, passwordChars, forename, surname, houseNumberInt, 
-                                        // postcode, roadName, cityName);
+        
                                         databaseOperationsUser.registerUser(connection, user);
 
                                         // Secure disposal of the password
@@ -187,6 +181,10 @@ public class RegisterView extends JFrame {
                                 } catch (SQLException e1) {
                                     e1.printStackTrace();
                                 }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "House Number should be only number");
+                    }
+                                
                 }
                 else {
                         JOptionPane.showMessageDialog(null, "Invalid Email ID.. ");

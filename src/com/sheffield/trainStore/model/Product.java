@@ -142,7 +142,7 @@ public class Product {
 
     public boolean isProductTypeValid(char typeCode) {
         // emtered in order so they can be searched quicker
-        char[] codes = {'c', 'l', 'm', 'r', 's', 'p'};
+        char[] codes = {'c', 'l', 'm', 'p', 'r', 's'};
         if (Arrays.binarySearch(codes, typeCode) >= 0) {
             return true;
         } return false;

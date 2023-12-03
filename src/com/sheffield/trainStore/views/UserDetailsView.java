@@ -38,6 +38,8 @@ public class UserDetailsView extends JFrame {
     private JTextField postcodeField ;
 
     String previousEmail = "";
+    Boolean bankDetailExists = false;
+
 
     /**
      * Constructor for the LoginView.
@@ -82,10 +84,12 @@ public class UserDetailsView extends JFrame {
         forenameField = new JTextField(20);
         surnameField = new JTextField(20);
         housenumberField = new JTextField(20);
-
+        housenumberField.setEditable(false);
         roadnameField = new JTextField(20);
         citynameField = new JTextField(20);
         postcodeField = new JTextField(20);
+        postcodeField.setEditable(false);
+
 
         // Create a JButton for the login action
         JButton updateButton = new JButton("Update");
@@ -137,14 +141,6 @@ public class UserDetailsView extends JFrame {
             postcodeField.setText(resultSet.getString("postcode"));
             roadnameField.setText(resultSet.getString("roadname"));
             citynameField.setText(resultSet.getString("cityname"));
-
-            // String forename = forenameField.getText();
-            // String surname = surnameField.getText();
-            // // String houseNumber = housenumberField.getText();
-            // Integer houseNumberInt = Integer.parseInt( housenumberField.getText());
-            // String postcode = postcodeField.getText();
-            // String roadName = roadnameField.getText();
-            // String cityName = citynameField.getText();
         }
         else {
 

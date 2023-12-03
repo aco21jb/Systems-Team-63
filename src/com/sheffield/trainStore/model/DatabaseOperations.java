@@ -442,4 +442,43 @@ public class DatabaseOperations {
         preparedStatement.executeBatch();
     }
 
+   /**
+     * to check whether user bank details exists.
+     *
+     * @param connection The database connection.
+     * @param orderNumber  orderNumber .
+
+     * @return true or false.
+     */
+    public Boolean IsUserBankDetailsExists(Connection connection, String orderNumber) {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            // String userId = getUserIdByEmailId(connection, orderNumber);
+
+            String sql = "SELECT o.orderNumber, o.userId, b.userID FROM ORDERS o, bank_details b WHERE o.userId = b.userID  AND o.orderNumber = ? ";
+
+            preparedStatement = connection.prepareStatement(sql);
+            // Set the parameter for the prepared statement
+            preparedStatement.setString(1, orderNumber);
+
+            // Execute the query
+            resultSet = preparedStatement.executeQuery();
+
+            // Check if a result is found
+            if (resultSet.next()) {
+                return true;
+           }
+           else {
+              return false;
+           }
+
+            // return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+        }
+        return null;
+    }        
 }

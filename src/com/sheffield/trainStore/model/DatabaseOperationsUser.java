@@ -417,40 +417,31 @@ public class DatabaseOperationsUser {
             try {
                 ResultSet resultSet = null;
    
-                // String sqlAddress = "SELECT houseNumber, postcode FROM ADDRESS WHERE houseNumber = ? AND postcode = ?";
-
-                // PreparedStatement preparedStatementSql = connection.prepareStatement(sqlAddress);
-
-                // // Set the parameter for the prepared statement
-                // preparedStatementSql.setInt(1, user.getHousenumber());
-                // preparedStatementSql.setString(2, user.getPostcode());
- 
-                // // // Execute the query
-
-                // resultSet = preparedStatementSql.executeQuery();
-                // resultSet.last() ;
-                // int rows = resultSet.getRow() ;
-
-                // if (rows > 1. {
-
-
-                // ///
-
                 String updateSQL = "UPDATE USERS SET email=?, forename=?,"+
                 "surname=? WHERE userId=?";
                 PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
     
                 preparedStatement.setString(1, user.getEmailId());
                 preparedStatement.setString(2, user.getForename());
-                // preparedStatement.setInt(3, surname);
                 preparedStatement.setString(3, user.getSurname());
                 preparedStatement.setString(4, user.getUserId());
-
-                
+               
                 int rowsAffected = preparedStatement.executeUpdate();
-    
+   
                 if (rowsAffected > 0) {
-                    System.out.println(rowsAffected + " row(s) updated successfully.");
+                    String updateSQL1 = "UPDATE ADDRESS SET roadName=?, cityName=? "+
+                    " WHERE houseNumber=? AND postcode = ?";
+                    PreparedStatement preparedStatement1 = connection.prepareStatement(updateSQL1);
+
+                    preparedStatement1.setString(1, user.getRoadname());
+                    preparedStatement1.setString(2, user.getCityname());                    
+                    preparedStatement1.setInt(3, user.getHouseNumber());
+                    preparedStatement1.setString(4, user.getPostcode());
+                    int rowsAffected1 = preparedStatement1.executeUpdate();
+                    if (rowsAffected1 > 0) {
+                       System.out.println(rowsAffected1 + " row(s) updated successfully.");
+                    }
+                                 
                 } else {
                     System.out.println("No rows were updated for UserID: " );
                 }
@@ -544,7 +535,7 @@ public class DatabaseOperationsUser {
     }    
 
     
-    /**
+     /**
      * to check whether user is alrady staff.
      *
      * @param connection The database connection.
@@ -581,7 +572,7 @@ public class DatabaseOperationsUser {
             e.printStackTrace(); // Handle the exception according to your application's needs
         }
         return null;
-    }    
+    }        
 
 }
 
