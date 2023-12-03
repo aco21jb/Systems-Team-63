@@ -84,9 +84,9 @@ public class DatabaseOperations {
             String addStatement = "INSERT INTO ORDERS VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(addStatement);
             //preparedStatement.setInt(1, order.getOrderNumber());
-            preparedStatement.setDate(2, new java.sql.Date(order.getOrderDate().getTime()));
-            preparedStatement.setString(3, order.getOrderStatus().name());
-            preparedStatement.setString(4, order.getUserId());
+            preparedStatement.setDate(1, new java.sql.Date(order.getOrderDate().getTime()));
+            preparedStatement.setString(2, order.getOrderStatus().name());
+            preparedStatement.setString(3, order.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -408,7 +408,7 @@ public class DatabaseOperations {
         }
         return resultSet;
     }
-    
+
     /*public ResultSet getLastOrder(Connection con) throws SQLException {
         ResultSet resultSet = null;
         try {

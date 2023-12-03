@@ -51,15 +51,7 @@ CREATE TABLE `BANK_DETAILS` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
-CREATE TABLE `ORDERS` (
-  `orderNumber` int NOT NULL AUTO_INCREMENT,
-  `orderDate` date DEFAULT NULL,
-  `orderStatus` enum('Pending','Confirmed','Fulfilled') DEFAULT NULL,
-  `userID` varchar(50) NOT NULL,
-  PRIMARY KEY (`orderNumber`),
-  KEY `userID_idx` (`userID`),
-  CONSTRAINT `fk_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 
 
 CREATE TABLE `PRODUCTS` (
@@ -76,6 +68,38 @@ CREATE TABLE `PRODUCTS` (
   UNIQUE KEY `productCode_UNIQUE` (`productCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+CREATE TABLE `ORDERS` (
+  `orderNumber` int NOT NULL AUTO_INCREMENT,
+  `orderDate` date DEFAULT NULL,
+  `orderStatus` enum('Pending','Confirmed','Fulfilled') DEFAULT NULL,
+  `userID` varchar(50) NOT NULL,
+  PRIMARY KEY (`orderNumber`),
+  KEY `userID_idx` (`userID`),
+  CONSTRAINT `fk_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `ORDERS` (
+  `orderNumber` int NOT NULL ,
+  `orderDate` date DEFAULT NULL,
+  `orderStatus` enum('Pending','Confirmed','Fulfilled') DEFAULT NULL,
+  `userID` varchar(50) NOT NULL,
+  PRIMARY KEY (`orderNumber`),
+  KEY `userID_idx` (`userID`),
+  CONSTRAINT `fk_userID` FOREIGN KEY (`userID`) REFERENCES `USERS` (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+CREATE TABLE `ORDER_LINES` (
+  `orderNumber` int NOT NULL,
+  `orderLineNumber` int NOT NULL,
+  `quantity` int DEFAULT NULL,
+  `lineCost` decimal(8,2) NOT NULL,
+  `productCode` varchar(10) NOT NULL,
+  PRIMARY KEY (`orderNumber`,`orderLineNumber`),
+  KEY `fk_productCode_idx` (`productCode`),
+  CONSTRAINT `fk_productCode` FOREIGN KEY (`productCode`) REFERENCES `PRODUCTS` (`productCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 
 CREATE TABLE `ORDER_LINES` (
   `orderNumber` int NOT NULL,
@@ -88,6 +112,7 @@ CREATE TABLE `ORDER_LINES` (
   CONSTRAINT `fk_orderNumber` FOREIGN KEY (`orderNumber`) REFERENCES `ORDERS` (`orderNumber`),
   CONSTRAINT `fk_productCode` FOREIGN KEY (`productCode`) REFERENCES `PRODUCTS` (`productCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 
 CREATE TABLE `SETS` (
   `setCode` varchar(10) NOT NULL,
