@@ -170,11 +170,11 @@ public class ProductsView extends JFrame {
                 CurrentUser currentUser = CurrentUserManager.getCurrentUser();
                 String currentUserID = currentUser.getUserId();
 
-                Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
+                //Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
 
                 DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
 
-                if (databaseOperationsUser.alreadyHasBankDetails(connection, currentUserID) == false) {
+                /*if (databaseOperationsUser.alreadyHasBankDetails(connection, currentUserID) == false) {
                     try {
                         databaseOperations.addOrder(connection, currentOrder);
                         JOptionPane.showMessageDialog(null, "Order confirmed.");
@@ -187,16 +187,25 @@ public class ProductsView extends JFrame {
                         bankDetailsView.setVisible(true);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
-                    }
+                    }*/
                 // Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
                 Order currentOrder = new Order(nextOrderNumber, currentDate, orderStatus, currentUserID, order);
 
-                try {
-                    // databaseOperations.addOrder(connection, currentOrder);
-                    databaseOperations.updateOrderStatus (connection, currentOrder) ;                   
-                    JOptionPane.showMessageDialog(null, "Order confirmed.");
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                if (databaseOperationsUser.alreadyHasBankDetails(connection, currentUserID) == true) {
+                    try {
+                        // databaseOperations.addOrder(connection, currentOrder);
+                        databaseOperations.updateOrderStatus (connection, currentOrder) ;
+                        JOptionPane.showMessageDialog(null, "Order confirmed.");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    try {
+                        BankDetailsView bankDetailsView = new BankDetailsView(connection);
+                        bankDetailsView.setVisible(true);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });

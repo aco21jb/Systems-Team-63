@@ -23,8 +23,7 @@ public class BankDetailsView extends JFrame {
     private JTextField bankCardNameField;
     private JTextField cardHolderNameField;
     private JTextField cardNumberField;
-    private DateFormat dateFormat = new SimpleDateFormat("MM/YY");
-    private JFormattedTextField cardExpiryDateField;
+    private JTextField cardExpiryDateField;
     private JTextField securityCodeField;
     private final DatabaseOperations databaseOperations;
 
@@ -67,7 +66,7 @@ public class BankDetailsView extends JFrame {
         bankCardNameField = new JTextField(30);
         cardHolderNameField = new JTextField(30);
         cardNumberField = new JTextField(30);
-        cardExpiryDateField = new JFormattedTextField(dateFormat);
+        cardExpiryDateField = new JTextField(30);
         securityCodeField = new JTextField(3);
 
         // Create a JButton for the confirm bank details action
@@ -98,39 +97,11 @@ public class BankDetailsView extends JFrame {
                 String bankCardName = bankCardNameField.getText();
                 String cardHolderName = cardHolderNameField.getText();
                 String cardNumber = cardNumberField.getText();
-                String cardExpiryDateString = cardExpiryDateField.getText();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/YY");
-                LocalDate cardExpiryDate = LocalDate.parse(cardExpiryDateString, formatter);
+                String cardExpiryDate = cardExpiryDateField.getText();
                 String securityCode = securityCodeField.getText();
-                //System.out.println(emailId);
-                //System.out.println(new String(passwordChars));
+
                 DatabaseOperationsUser databaseOperationsUser = new DatabaseOperationsUser();
-                // Check if login is successful
-                /*if (databaseOperationsUser.verifyLogin(connection, emailId, passwordChars)) {
-                    // Secure disposal of the password
-                    Arrays.fill(passwordChars, '\u0000');
 
-
-                    try {
-                        // Close the current window
-
-                        dispose();
-                        HomePage HomePage = null;
-
-                        HomePage = new HomePage(connection);
-                        HomePage.setVisible(true);
-
-                    } catch (SQLException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-
-                } else {
-                    // Handle unsuccessful login (show a message, etc.)
-                    JOptionPane.showMessageDialog(LoginView.this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
-                }*/
-                // Secure disposal of the password
-                //Arrays.fill(passwordChars, '\u0000');
                 CurrentUser currentUser = CurrentUserManager.getCurrentUser();
                 String userID = currentUser.getUserId();
                 if (databaseOperationsUser.alreadyHasBankDetails(connection, userID) == false) {

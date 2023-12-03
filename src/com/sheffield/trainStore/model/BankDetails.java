@@ -9,11 +9,11 @@ public class BankDetails {
     private String bankCardName;
     private String cardHolderName;
     private String cardNumber;
-    private LocalDate cardExpiryDate;
+    private String cardExpiryDate;
     private String securityCode;
 
     public BankDetails(String userID, String bankCardName, String cardHolderName, String cardNumber,
-                       LocalDate cardExpiryDate, String securityCode) {
+                       String cardExpiryDate, String securityCode) {
         this.userID = userID;
         this.bankCardName = bankCardName;
         this.cardHolderName = cardHolderName;
@@ -38,7 +38,7 @@ public class BankDetails {
         return cardNumber;
     }
 
-    public LocalDate getCardExpiryDate() {
+    public String getCardExpiryDate() {
         return cardExpiryDate;
     }
 

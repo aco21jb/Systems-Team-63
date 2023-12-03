@@ -569,7 +569,7 @@ public class DatabaseOperations {
             preparedStatement.setString(2, bankDetails.getBankCardName());
             preparedStatement.setString(3, bankDetails.getCardHolderName());
             preparedStatement.setString(4, bankDetails.getCardNumber());
-            preparedStatement.setDate(5, new java.sql.Date(bankDetails.getCardExpiryDate());
+            preparedStatement.setString(5, bankDetails.getCardExpiryDate());
             preparedStatement.setString(6, bankDetails.getSecurityCode());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
