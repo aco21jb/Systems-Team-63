@@ -30,8 +30,13 @@ public class ProductsView extends JFrame {
     private final DatabaseOperations databaseOperations;
     private List<OrderLine> order = new ArrayList<>();
     private int orderNumber;
-    private int orderLineNumber;
+    private int orderLineNumber = 1;
     private OrderStatus orderStatus = null;
+
+    private int nextOrderNumber;
+    private Boolean alreadyInsertedOrder = false;
+
+
 
     /**
      * Constructor for the PromoteUserView.
@@ -115,16 +120,24 @@ public class ProductsView extends JFrame {
                                     CurrentUser tempCurrentUser = CurrentUserManager.getCurrentUser();
                                     String tempCurrentUserID = tempCurrentUser.getUserId();
 
-                                    Order tempOrder = new Order(orderNumber, tempDate, orderStatus, tempCurrentUserID);
-                                    databaseOperations.addOrder(connection, tempOrder);
 
-                                    OrderLine currentOrderLine = new OrderLine(orderNumber, orderLineNumber, quantity,
+                                    // Order tempOrder = new Order(orderNumber, tempDate, orderStatus, tempCurrentUserID);
+                                    // databaseOperations.addOrder(connection, tempOrder);
+                                    // create Order record only for the first time
+                                    if (! alreadyInsertedOrder) {  
+                                        nextOrderNumber = databaseOperations.getNextOrderNumber(connection) ;
+                                        Order tempOrder = new Order(nextOrderNumber, tempDate, orderStatus, tempCurrentUserID);
+                                        databaseOperations.addOrder(connection, tempOrder);
+                                        alreadyInsertedOrder = true;
+                                    }
+
+                                    OrderLine currentOrderLine = new OrderLine(nextOrderNumber, orderLineNumber, quantity,
                                             selectedProductPrice, selectedProductCode);
                                     order.add(currentOrderLine);
                                     databaseOperations.addOrderLine(connection, currentOrderLine);
 
                                     //orderNumber++;
-                                    //orderLineNumber++;
+                                    orderLineNumber++;
 
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Item out of stock.");
@@ -147,7 +160,11 @@ public class ProductsView extends JFrame {
         confirmOrderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                // resetting value to insert order record as current order is confirmed
+                alreadyInsertedOrder = false;
+                 // resetting value to start order line from 1 again for new order
+               
+                orderLineNumber = 1;                
                 orderStatus = OrderStatus.CONFIRMED;
                 Date currentDate = new Date();
                 CurrentUser currentUser = CurrentUserManager.getCurrentUser();
@@ -171,6 +188,15 @@ public class ProductsView extends JFrame {
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
+                // Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
+                Order currentOrder = new Order(nextOrderNumber, currentDate, orderStatus, currentUserID, order);
+
+                try {
+                    // databaseOperations.addOrder(connection, currentOrder);
+                    databaseOperations.updateOrderStatus (connection, currentOrder) ;                   
+                    JOptionPane.showMessageDialog(null, "Order confirmed.");
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
             }
         });

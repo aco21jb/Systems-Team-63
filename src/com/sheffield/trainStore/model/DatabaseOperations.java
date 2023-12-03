@@ -79,14 +79,82 @@ public class DatabaseOperations {
         }
     }
 
+
+    // 
+    public Integer getNextOrderNumber(Connection con) throws SQLException {
+        ResultSet resultSet = null;
+        int sequenceNo = 0;
+
+        PreparedStatement statement = null;
+        try {
+            String query = "SELECT SR_NO FROM ORDERSEQUENCE";
+            statement = con.prepareStatement(query);
+            // statement.setString(1, productInput);
+            resultSet = statement.executeQuery();
+
+             // Check if a result is found
+            if (resultSet.next()) {
+                sequenceNo =resultSet.getInt("SR_NO");
+                sequenceNo++;
+
+                String updateSQL = "UPDATE ORDERSEQUENCE SET SR_NO=?  WHERE CODE=?" ;       
+                PreparedStatement preparedStatement1 = con.prepareStatement(updateSQL);      
+                preparedStatement1.setInt(1, sequenceNo);
+                preparedStatement1.setString(2, "ORDERSEQ");       
+
+                int rowsAffected = preparedStatement1.executeUpdate();
+                if (rowsAffected > 0) {
+                System.out.println(rowsAffected + " row(s) updated successfully.");
+                }                                                            
+
+                return (sequenceNo);
+               
+            }
+            else {
+                return (sequenceNo);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        // return productResult;
+    }
+
+    public void updateOrderStatus (Connection con, Order order) throws SQLException  {
+
+    try {
+
+        String updateSQL = "UPDATE ORDERS SET orderStatus = "  + "\'" + OrderStatus.CONFIRMED + "\'" +  "WHERE orderNumber= ?" ;
+
+        PreparedStatement preparedStatement = con.prepareStatement(updateSQL);
+
+        preparedStatement.setInt(1, order.getOrderNumber());
+
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        if (rowsAffected > 0) {
+            System.out.println(rowsAffected + " row(s) updated successfully.");
+        } else {
+            System.out.println("No rows were updated for Order: " );
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        throw e;// Re-throw the exception to signal an error.
+    }        
+
+    }               
+
+
     public void addOrder(Connection con, Order order) throws SQLException {
         try {
-            String addStatement = "INSERT INTO ORDERS (orderDate, orderStatus, userId) VALUES (?, ?, ?)";
+            String addStatement = "INSERT INTO ORDERS (orderNumber, orderDate, orderStatus, userId) VALUES (?, ?, ?,?)";
             PreparedStatement preparedStatement = con.prepareStatement(addStatement);
-            //preparedStatement.setInt(1, order.getOrderNumber());
-            preparedStatement.setDate(1, new java.sql.Date(order.getOrderDate().getTime()));
-            preparedStatement.setString(2, order.getOrderStatus().name());
-            preparedStatement.setString(3, order.getUserId());
+            preparedStatement.setInt(1, order.getOrderNumber());
+            preparedStatement.setDate(2, new java.sql.Date(order.getOrderDate().getTime()));
+            preparedStatement.setString(3, order.getOrderStatus().name());
+            preparedStatement.setString(4, order.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -408,7 +476,7 @@ public class DatabaseOperations {
         }
         return resultSet;
     }
-
+    
     /*public ResultSet getLastOrder(Connection con) throws SQLException {
         ResultSet resultSet = null;
         try {

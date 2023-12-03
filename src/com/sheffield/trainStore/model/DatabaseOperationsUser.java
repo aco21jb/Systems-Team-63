@@ -406,51 +406,74 @@ public class DatabaseOperationsUser {
         return null;
     }
 
-    /**
+ 
+ /**
      * Update User with changed personal information.
      *
      * @param connection The database connection.
      * @param user object The database connection. 
      */    
 
-     public void updateUser(Connection connection, User user) throws SQLException {                     
-            try {
-                ResultSet resultSet = null;
-   
-                String updateSQL = "UPDATE USERS SET email=?, forename=?,"+
-                "surname=? WHERE userId=?";
-                PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
-    
-                preparedStatement.setString(1, user.getEmailId());
-                preparedStatement.setString(2, user.getForename());
-                preparedStatement.setString(3, user.getSurname());
-                preparedStatement.setString(4, user.getUserId());
-               
-                int rowsAffected = preparedStatement.executeUpdate();
-   
-                if (rowsAffected > 0) {
-                    String updateSQL1 = "UPDATE ADDRESS SET roadName=?, cityName=? "+
-                    " WHERE houseNumber=? AND postcode = ?";
-                    PreparedStatement preparedStatement1 = connection.prepareStatement(updateSQL1);
+    //  public void updateUser(Connection connection, User user) throws SQLException {                     
+    public void updateUser(Connection connection, User user, String previousHouseNumber, String previousPostalCode) throws SQLException {                     
+        try {
+            ResultSet resultSet = null;
 
-                    preparedStatement1.setString(1, user.getRoadname());
-                    preparedStatement1.setString(2, user.getCityname());                    
-                    preparedStatement1.setInt(3, user.getHouseNumber());
-                    preparedStatement1.setString(4, user.getPostcode());
-                    int rowsAffected1 = preparedStatement1.executeUpdate();
-                    if (rowsAffected1 > 0) {
-                       System.out.println(rowsAffected1 + " row(s) updated successfully.");
-                    }
-                                 
-                } else {
-                    System.out.println("No rows were updated for UserID: " );
+            String updateSQL = "UPDATE USERS SET email=?, forename=?, "+
+            "surname=? , houseNumber=?, postcode=? WHERE userId=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSQL);
+
+            preparedStatement.setString(1, user.getEmailId());
+            preparedStatement.setString(2, user.getForename());
+            preparedStatement.setString(3, user.getSurname());
+            preparedStatement.setInt(4, user.getHouseNumber());
+            preparedStatement.setString(5, user.getPostcode());
+            preparedStatement.setString(6, user.getUserId());
+            
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+
+                Integer houseNumberInt = Integer.parseInt(previousHouseNumber);
+
+                if ((previousPostalCode.equals(user.getPostcode())) &&  ( (houseNumberInt == user.getHouseNumber()))) {
+                        
+                        String updateSQL1 = "UPDATE ADDRESS SET roadName=?, cityName=? "+
+                        " WHERE houseNumber=? AND postcode = ?";
+                        PreparedStatement preparedStatement1 = connection.prepareStatement(updateSQL1);
+                        preparedStatement1.setString(1, user.getRoadname());
+                        preparedStatement1.setString(2, user.getCityname());                    
+                        preparedStatement1.setInt(3, user.getHouseNumber());
+                        preparedStatement1.setString(4, user.getPostcode());
+                        int rowsAffected1 = preparedStatement1.executeUpdate();
+                        if (rowsAffected1 > 0) {
+                        System.out.println(rowsAffected1 + " row(s) updated successfully.");
+                        }
+                      
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw e;// Re-throw the exception to signal an error.
+                else {
+                            String insertAddressSQL = "INSERT INTO ADDRESS (housenumber, postcode,"+
+                            "roadName, cityName) VALUES (?, ?, ?, ?)";
+
+                            // Prepare and execute the INSERT statement
+                            PreparedStatement preparedStatement1 = connection.prepareStatement(insertAddressSQL);
+                            preparedStatement1.setInt(1, user.getHouseNumber());
+                            preparedStatement1.setString(2, user.getPostcode());
+                            preparedStatement1.setString(3, user.getRoadname());
+                            preparedStatement1.setString(4, user.getCityname());
+                            int rowsAffected1 = preparedStatement1.executeUpdate();
+                            System.out.println(rowsAffected1 + " row(s) inserted successfully.");
+                }
+            } else {
+                System.out.println("No rows were updated for UserID: " );
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;// Re-throw the exception to signal an error.
         }
-    
+    }
+
+
 
     /**
      * Retrieves a result set all users from the 'Users' table.
