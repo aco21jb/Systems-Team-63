@@ -490,4 +490,24 @@ public class DatabaseOperations {
         }
         return null;
     }
+
+    public void addBankDetails(Connection con, BankDetails bankDetails) throws SQLException {
+        try {
+            String addStatement = "INSERT INTO BANK_DETAILS (userID, bankCardName, cardHolderName, " +
+                    "cardNumber, cardExpiryDate, securityCode) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(addStatement);
+            //preparedStatement.setInt(1, order.getOrderNumber());
+            preparedStatement.setString(1, bankDetails.getUserID());
+            preparedStatement.setString(2, bankDetails.getBankCardName());
+            preparedStatement.setString(3, bankDetails.getCardHolderName());
+            preparedStatement.setString(4, bankDetails.getCardNumber());
+            preparedStatement.setDate(5, new java.sql.Date(bankDetails.getCardExpiryDate());
+            preparedStatement.setString(6, bankDetails.getSecurityCode());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
 }
