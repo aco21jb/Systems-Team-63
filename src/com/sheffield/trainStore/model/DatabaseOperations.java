@@ -81,9 +81,9 @@ public class DatabaseOperations {
 
     public void addOrder(Connection con, Order order) throws SQLException {
         try {
-            String addStatement = "INSERT INTO ORDERS VALUES (?, ?, ?, ?)";
+            String addStatement = "INSERT INTO ORDERS VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(addStatement);
-            preparedStatement.setInt(1, order.getOrderNumber());
+            //preparedStatement.setInt(1, order.getOrderNumber());
             preparedStatement.setDate(2, new java.sql.Date(order.getOrderDate().getTime()));
             preparedStatement.setString(3, order.getOrderStatus().name());
             preparedStatement.setString(4, order.getUserId());
@@ -408,6 +408,15 @@ public class DatabaseOperations {
         }
         return resultSet;
     }
+    
+    /*public ResultSet getLastOrder(Connection con) throws SQLException {
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT LAST(orderNumber) AS orderNumber ORDER";
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+        }
+    }*/
 
     public void addTrainSet(Connection con, String[] codes, String setCode) throws SQLException {
         String query = "INSERT INTO SETS (setCode,productCode) VALUES (?,?)";

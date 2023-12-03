@@ -123,6 +123,9 @@ public class ProductsView extends JFrame {
                                     order.add(currentOrderLine);
                                     databaseOperations.addOrderLine(connection, currentOrderLine);
 
+                                    //orderNumber++;
+                                    //orderLineNumber++;
+
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Item out of stock.");
                                 }
@@ -153,6 +156,7 @@ public class ProductsView extends JFrame {
                 Order currentOrder = new Order(orderNumber, currentDate, orderStatus, currentUserID, order);
                 try {
                     databaseOperations.addOrder(connection, currentOrder);
+                    JOptionPane.showMessageDialog(null, "Order confirmed.");
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
