@@ -40,6 +40,9 @@ public class UserDetailsView extends JFrame {
     String previousEmail = "";
     Boolean bankDetailExists = false;
 
+    String  previousHouseNumber = "";
+    String  previousPostalCode = "";    
+
 
     /**
      * Constructor for the LoginView.
@@ -84,14 +87,14 @@ public class UserDetailsView extends JFrame {
         forenameField = new JTextField(20);
         surnameField = new JTextField(20);
         housenumberField = new JTextField(20);
-        housenumberField.setEditable(false);
+        // housenumberField.setEditable(false);
         roadnameField = new JTextField(20);
         citynameField = new JTextField(20);
         postcodeField = new JTextField(20);
-        postcodeField.setEditable(false);
+        // postcodeField.setEditable(false);
 
 
-        // Create a JButton for the login action
+           // Create a JButton for the login action
         JButton updateButton = new JButton("Update");
         // JButton loginButton = new JButton("Existing User");
 
@@ -136,9 +139,13 @@ public class UserDetailsView extends JFrame {
 
             forenameField.setText(resultSet.getString("forename"));
             surnameField.setText(resultSet.getString("surname"));
+
             housenumberField.setText(resultSet.getString("housenumber"));
+            previousHouseNumber = resultSet.getString("housenumber");
 
             postcodeField.setText(resultSet.getString("postcode"));
+            previousPostalCode =resultSet.getString("postcode");
+
             roadnameField.setText(resultSet.getString("roadname"));
             citynameField.setText(resultSet.getString("cityname"));
         }
@@ -183,8 +190,11 @@ public class UserDetailsView extends JFrame {
                         if (! previousEmail.equals(emailId)) {
                             if( ! databaseOperationsUser.verifyEmailID(connection, emailId)) {
 
-                                // databaseOperationsUser.updateUser(connection, userID, emailId, forename, surname, houseNumberInt, postcode,roadName, cityName);
-                                databaseOperationsUser.updateUser(connection, user);
+                                // databaseOperationsUser.updateUser(connection, user);
+                                // passing previousPostalCode and previousHousenumber foreign key constraint in the code
+                                // instead of database level
+                                databaseOperationsUser.updateUser(connection, user, previousHouseNumber, previousPostalCode);
+
 
                             }
                             else {
@@ -193,7 +203,9 @@ public class UserDetailsView extends JFrame {
                         }
                         else {
                             // databaseOperationsUser.updateUser(connection, userID, emailId, forename, surname, houseNumberInt, postcode,roadName, cityName);
-                                databaseOperationsUser.updateUser(connection, user);
+                                // databaseOperationsUser.updateUser(connection, user);
+                                databaseOperationsUser.updateUser(connection, user, previousHouseNumber, previousPostalCode);
+
 
                         }
                        
