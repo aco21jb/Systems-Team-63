@@ -81,7 +81,7 @@ public class DatabaseOperations {
 
     public void addOrder(Connection con, Order order) throws SQLException {
         try {
-            String addStatement = "INSERT INTO ORDERS VALUES (?, ?, ?)";
+            String addStatement = "INSERT INTO ORDERS (orderDate, orderStatus, userId) VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = con.prepareStatement(addStatement);
             //preparedStatement.setInt(1, order.getOrderNumber());
             preparedStatement.setDate(1, new java.sql.Date(order.getOrderDate().getTime()));
