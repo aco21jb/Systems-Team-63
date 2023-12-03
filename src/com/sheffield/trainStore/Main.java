@@ -4,6 +4,7 @@ package com.sheffield.trainStore;
 import com.sheffield.trainStore.model.DatabaseConnectionHandler;
 import com.sheffield.trainStore.model.DatabaseOperations;
 import com.sheffield.trainStore.model.Product;
+import com.sheffield.trainStore.views.BankDetailsView;
 import com.sheffield.trainStore.views.LoginView;
 import com.sheffield.trainStore.views.ProductsPage;
 import com.sheffield.trainStore.views.RegisterView;
@@ -32,6 +33,8 @@ public class Main {
                 RegisterView.setVisible(true);
                 // productsPage = new ProductsPage(databaseConnectionHandler.getConnection());
                 // productsPage.setVisible(true);
+                //BankDetailsView bankDetailsView = new BankDetailsView(databaseConnectionHandler.getConnection());
+                //bankDetailsView.setVisible(true);
 
             } catch (Throwable t) {
                 // Close connection if database crashes.

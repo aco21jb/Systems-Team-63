@@ -40,7 +40,7 @@ public class BankDetailsView extends JFrame {
         // Create the JFrame in the constructor
         this.setTitle("Bank Details");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(300, 150);
+        this.setSize(400, 200);
 
         // this.setSize(500, 300);
         this.setLocationRelativeTo(null);
@@ -50,7 +50,7 @@ public class BankDetailsView extends JFrame {
         this.add(panel);
 
         // Set a layout manager for the panel (e.g., GridLayout)
-        panel.setLayout(new GridLayout(5, 2));
+        panel.setLayout(new GridLayout(8, 3));
 
         Border blackline = BorderFactory.createLineBorder(Color.BLACK);
         panel.setBorder(blackline);
