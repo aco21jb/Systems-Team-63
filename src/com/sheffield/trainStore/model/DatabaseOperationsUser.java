@@ -595,7 +595,38 @@ public class DatabaseOperationsUser {
             e.printStackTrace(); // Handle the exception according to your application's needs
         }
         return null;
-    }        
+    }
+
+    public Boolean alreadyHasBankDetails(Connection connection, String userID) {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+
+            //String userId = getUserIdByEmailId(connection, emailId);
+
+            String sql = "SELECT userID FROM BANK_DETAILS WHERE userID = ?";
+            preparedStatement = connection.prepareStatement(sql);
+            // Set the parameter for the prepared statement
+            preparedStatement.setString(1, userID);
+
+            // Execute the query
+            resultSet = preparedStatement.executeQuery();
+
+            // Check if a result is found
+            if (resultSet.next()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
+            // return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception according to your application's needs
+        }
+        return null;
+    }
 
 }
 
