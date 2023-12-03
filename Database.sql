@@ -28,6 +28,22 @@ CREATE TABLE `USERS` (
   CONSTRAINT `houseNumberpostcode` FOREIGN KEY (`houseNumber`, `postcode` ) REFERENCES `ADDRESS` (`houseNumber`, `postcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+CREATE TABLE `USERS` (
+  `userID` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `passwordHash` varchar(100) NOT NULL,
+  `lastLogin` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `failedLoginAttempts` int DEFAULT '0',
+  `accountLocked` tinyint DEFAULT '0',
+  `forename` varchar(50) DEFAULT NULL,
+  `surname` varchar(50) DEFAULT NULL,
+  `houseNumber` int NOT NULL,
+  `postcode` varchar(30) NOT NULL,
+  PRIMARY KEY (`userID`),
+  KEY `houseNumber_idx` (`houseNumber`) /*!80000 INVISIBLE */,
+  KEY `postcode_idx` (`postcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 
 CREATE TABLE `ROLES` (
   `userID` varchar(50) NOT NULL,
@@ -144,15 +160,16 @@ INSERT INTO USERS (email, forename, surname , password_hash)
 VALUES
     ( 'manager@example.com',  'manager', 'manager', '423e16e053d0121774ce4e0a42556837fbfe0d9f74dcd4ef3966a5e5194ceceb') ;  -- User: Manager
 
--- Insert sample data into the 'Roles' table to associate users with roles
+--turn a user into a manager
 INSERT INTO ROLES (userId, role)
 VALUES
-    ('<User ID from Users table>', 'Manager');   -- Manager
+    ('userID', 'Manager');
 
 --turn a user into a manager
 INSERT INTO ROLES (userId, role)
 VALUES
-    ('1998c6f7-cf0b-41e2-9958-000065a9270e', 'Manager');
+    ('userID', 'Staff');
+
 
 
 INSERT INTO ROLES (userId, role)
